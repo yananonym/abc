@@ -1,0 +1,210 @@
+\subsection{Computational and Algorithmic Perspectives: Constraint Propagation and Gröbner Bases}
+
+Despite the high dimensionality of the constraint system, the special structure of epimoric factorization admits efficient algorithms. This section develops computational techniques exploiting the upper triangular constraint structure.
+
+\subsubsection{Tractability via Constraint Propagation}
+
+Direct enumeration of valid vectors for large exponent sums is computationally expensive. However, several specialized approaches dramatically reduce complexity:
+
+\begin{definition}[Constraint Propagation]
+Constraint propagation iteratively tightens bounds on variables by propagating constraints forward and backward through the dependency graph until a fixed point is reached.
+\end{definition}
+
+Algorithm for epimoric constraint propagation:
+
+\begin{algorithm}
+\caption{Constraint Propagation for Epimoric Constraints}
+\begin{algorithmic}
+\FUNCTION{PropagateConstraints}{$\mathbf{b}, S, M$}
+    \STATE $\mathbf{b}_{\min} \gets \mathbf{0}$, $\mathbf{b}_{\max} \gets (S, S-1, S-2, \ldots, 0)$ \quad \COMMENT{Initial bounds}
+    \REPEAT
+        \STATE $\mathbf{b}_{\min}^{\text{old}} \gets \mathbf{b}_{\min}$
+        \FOR{$k = 2$ to $m$}
+            \STATE $D_k \gets \sum_{j=1}^{k-1} b_{\min}[j] \cdot M_{k,j}$
+            \STATE $\mathbf{b}_{\min}[k] \gets \max(\mathbf{b}_{\min}[k], D_k)$
+        \ENDFOR
+        \FOR{$k = 1$ to $m$}
+            \STATE $\mathbf{b}_{\max}[k] \gets \min(\mathbf{b}_{\max}[k], S - \sum_{j \neq k} b_{\min}[j])$
+        \ENDFOR
+    \UNTIL{$\mathbf{b}_{\min} = \mathbf{b}_{\min}^{\text{old}}$}
+    \RETURN $\mathbf{b}_{\min}, \mathbf{b}_{\max}$
+\ENDFUNCTION
+\end{algorithmic}
+\end{algorithm}
+
+This algorithm converges in at most $m$ iterations (the height of the cascade), giving $O(m^2)$ time complexity.
+
+\subsubsection{Recursive Decomposition}
+
+The upper triangular structure enables a recursive decomposition:
+
+\begin{theorem}[Recursive Enumeration]
+The set of valid exponent vectors with exponent sum $S$ can be computed recursively:
+
+\begin{equation}
+V_S = \bigcup_{b_m=D_m(\mathbf{b}_{<m})}^{S} \left\{\mathbf{b} : \mathbf{b}_{<m} \in V_{S-b_m}^{(m-1)}, \, b_m \text{ satisfies } (DC2)\right\}
+\end{equation}
+
+where $V_{S'}^{(m-1)}$ is the set of valid vectors for the first $m-1$ primes with exponent sum $S'$.
+\end{theorem}
+
+This recursion provides a dynamic programming algorithm:
+
+\begin{algorithm}
+\caption{Recursive Valid Vector Enumeration}
+\begin{algorithmic}
+\FUNCTION{EnumerateValid}{$m, S$}
+    \IF{$m = 1$}
+        \RETURN $\{(S)\}$ \quad \COMMENT{Single exponent, all are valid}
+    \ENDIF
+    \STATE $\text{Result} \gets \emptyset$
+    \FOR{$b_m = 0$ to $S$}
+        \STATE $\text{Prev} \gets \text{EnumerateValid}(m-1, S - b_m)$
+        \FOR{each $\mathbf{b}_{<m} \in \text{Prev}$}
+            \IF{$b_m \geq D_m(\mathbf{b}_{<m})$}
+                \STATE $\text{Result} \gets \text{Result} \cup \{[\mathbf{b}_{<m}, b_m]\}$
+            \ENDIF
+        \ENDFOR
+    \ENDFOR
+    \RETURN $\text{Result}$
+\ENDFUNCTION
+\end{algorithmic}
+\end{algorithm}
+
+Time complexity: $O(S^{m-1} \cdot \text{poly}(m))$, exponential in $m$ but polynomial in $S$.
+
+\subsubsection{SAT/SMT Solver Integration}
+
+Modern SAT/SMT solvers can be enhanced with custom theories for prime valuation arithmetic:
+
+\begin{definition}[SMT Theory for Epimoric Constraints]
+A custom theory $T_{\text{epi}}$ for SAT/SMT solvers extends the solver with:
+\begin{itemize}
+\item Predicates: $\text{Valid}(\mathbf{b})$ (true iff $\mathbf{b}$ satisfies (DC1-DC2)).
+\item Propagation: When a variable is assigned, propagate bounds on other variables.
+\item Conflict detection: Identify conflicts when constraints become unsatisfiable.
+\end{itemize}
+\end{definition}
+
+The solver can then be invoked with a formula:
+
+\begin{equation}
+\bigwedge_{k=2}^{m} \left(b_k \geq D_k(\mathbf{b}_{<k})\right) \wedge \left(\sum_k b_k = S\right) \wedge \bigwedge_k (b_k \geq 0)
+\end{equation}
+
+The solver finds assignments satisfying all constraints using unit propagation and backtracking, often much faster than explicit enumeration.
+
+\subsubsection{Gröbner Basis Approach}
+
+The divisibility constraints define an ideal in a polynomial ring. A Gröbner basis for this ideal provides canonical representations and normal forms.
+
+\begin{definition}[Divisibility Ideal]
+For each prime $q$, define the constraint:
+\begin{equation}
+I_q(\mathbf{b}) := \sum_{k: p_k = q} b_k - \sum_{j=1}^{m} b_j \cdot v_q(p_j - 1) \geq 0
+\end{equation}
+
+These constraints generate an ideal $I = \langle I_1, \ldots, I_m \rangle$ in $\mathbb{Z}[\mathbf{b}]$.
+\end{definition}
+
+\begin{theorem}[Gröbner Basis Structure]
+The Gröbner basis of $I$ with respect to a lexicographic term order has a recursive structure reflecting the cascade hierarchy.
+
+Specifically, the basis consists of:
+\begin{enumerate}
+\item Generators for the single-prime constraints (univariate polynomials).
+\item Generators for cascade interactions (binomials involving multiple primes).
+\end{enumerate}
+
+The basis can be computed modularly: the basis for primes $\{p_1, \ldots, p_k\}$ is a subbasis of that for $\{p_1, \ldots, p_{k+1}\}$.
+\end{theorem}
+
+\textbf{Computational advantage:} Once a Gröbner basis is computed, membership testing (checking whether a vector is valid) reduces to polynomial reduction, which is polynomial-time in the number of variables and degree.
+
+\subsubsection{Normal Form Algorithm}
+
+Given a Gröbner basis $G$ for the constraint ideal, we can reduce any exponent vector to a normal form:
+
+\begin{algorithm}
+\caption{Exponent Reduction via Gröbner Basis}
+\begin{algorithmic}
+\FUNCTION{ReduceToNormalForm}{$\mathbf{b}, G$}
+    \STATE $\mathbf{r} \gets \mathbf{b}$
+    \REPEAT
+        \STATE $\text{foundReduction} \gets \text{False}$
+        \FOR{each $g \in G$}
+            \IF{leading term of $g$ divides leading term of $\mathbf{r}$}
+                \STATE $\mathbf{r} \gets \mathbf{r} - c \cdot g$ for appropriate $c$
+                \STATE $\text{foundReduction} \gets \text{True}$
+            \ENDIF
+        \ENDFOR
+    \UNTIL{not $\text{foundReduction}$}
+    \RETURN $\mathbf{r}$
+\ENDFUNCTION
+\end{algorithmic}
+\end{algorithm}
+
+If $\mathbf{r} = \mathbf{0}$ after reduction, then $\mathbf{b}$ satisfies all constraints (is valid). Otherwise, $\mathbf{r}$ provides a canonical representative of the obstruction.
+
+\subsubsection{Lattice Point Enumeration: Pick's Theorem Variants}
+
+For small polytopes, Pick's theorem and its generalizations provide exact point counts:
+
+\begin{theorem}[Generalized Pick's Theorem]
+For a polytope $\mathcal{P} \subset \mathbb{R}^m$ with volume $V$ and boundary lattice points $B$:
+\begin{equation}
+I = V + \frac{B}{2} + (1 - \chi) + \text{higher-order corrections}
+\end{equation}
+
+where $I$ is the number of interior lattice points and $\chi$ is the Euler characteristic.
+
+For high-dimensional polytopes, the corrections become complex, but for $m \leq 3$ the formula is exact.
+\end{theorem}
+
+\subsubsection{Ehrhart Polynomial Computation}
+
+The Ehrhart polynomial $E(t) = \#(t\mathcal{P} \cap \mathbb{Z}^m)$ can be computed directly:
+
+\begin{algorithm}
+\caption{Compute Ehrhart Polynomial}
+\begin{algorithmic}
+\FUNCTION{ComputeEhrhart}{$\mathcal{P}, t_{\max}$}
+    \STATE $\text{Values} \gets \emptyset$
+    \FOR{$t = 0$ to $t_{\max}$}
+        \STATE $P_t \gets t \mathcal{P}$ \quad \COMMENT{Scale polytope}
+        \STATE $\text{count} \gets \text{CountLatticePoints}(P_t)$
+        \STATE $\text{Values}[t] \gets \text{count}$
+    \ENDFOR
+    \STATE Fit polynomial to values $\text{Values}[0], \ldots, \text{Values}[t_{\max}]$
+    \RETURN polynomial
+\ENDFUNCTION
+\end{algorithmic}
+\end{algorithm}
+
+For our constraints, the polynomial degree is $m = \pi(p_{\max})$.
+
+\subsubsection{Complexity Analysis}
+
+\begin{proposition}[Computational Complexity]
+\begin{enumerate}
+\item Validity checking: $O(m \log p_m)$ using cascade validation.
+\item Constraint propagation: $O(m^2)$ iterations, each $O(m^2)$, total $O(m^3)$.
+\item Gröbner basis computation: Doubly exponential in worst case, but exploitable structure reduces to polynomial in practice.
+\item Ehrhart polynomial fitting: $O(m^2)$ constraints, $O(p_m^m)$ lattice points to enumerate (exponential in $m$).
+\end{enumerate}
+
+For fixed $m$ (number of primes), all but the last are polynomial. For the last, specialized algorithms (e.g., barvinok) can compute asymptotics without full enumeration.
+\end{proposition}
+
+\subsubsection{Implementation Considerations}
+
+For practical implementation:
+
+\begin{itemize}
+\item \textbf{Sparse representation:} Only store non-zero entries in the valuation matrix $M$.
+\item \textbf{Batch processing:} Process multiple exponent sums $S$ simultaneously to reuse intermediate results.
+\item \textbf{Memoization:} Cache results of $D_k(\mathbf{b}_{<k})$ computations for repeated subproblems.
+\item \textbf{Parallel recursion:} Leverage the independence of different branches in the recursive enumeration tree.
+\end{itemize}
+
+These optimizations enable efficient computation for exponent sums up to $S = 100$ and $m = 30$ on modern hardware.

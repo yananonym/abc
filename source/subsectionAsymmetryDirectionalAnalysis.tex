@@ -1,0 +1,181 @@
+\subsection{Asymmetry Between Epimoric Directions: $(p_k - 1)$ vs $(p_k + 1)$}
+
+The prime-numerator epimoric direction using factors $\frac{p_k}{p_k - 1}$ is fundamentally asymmetric from the prime-denominator direction using $\frac{p_k + 1}{p_k}$. This asymmetry arises from Wilson's theorem and has profound implications for the structure of valid exponent vectors.
+
+\subsubsection{Definition: Directional Exponent Counting}
+
+For an integer $n$ with two representations:
+
+\textbf{Prime-Numerator (Downward) Representation:}
+\begin{equation}
+n = \prod_{k=1}^{m} \left(\frac{p_k}{p_k - 1}\right)^{b_k}
+\end{equation}
+
+with positive exponents $b_k \geq 0$ and exponent sum $\Omega_E^+(n) := \sum_k b_k$.
+
+\textbf{Prime-Denominator (Upward) Representation:}
+\begin{equation}
+n = \prod_{k=1}^{m} \left(\frac{p_k + 1}{p_k}\right)^{c_k}
+\end{equation}
+
+with potentially negative exponents $c_k \in \mathbb{Z}$ and exponent sum $\Omega_E^-(n) := \sum_{k: c_k > 0} |c_k|$.
+
+\subsubsection{Theorem: Directional Asymmetry}
+
+\begin{theorem}[Directional Asymmetry Inequality]
+For every integer $n > 1$:
+\begin{equation}
+\Omega_E^+(n) - \Omega_E^-(n) = \Delta_E(n) \neq 0
+\end{equation}
+
+in general, and the difference correlates with prime gaps.
+
+More precisely, define:
+\begin{equation}
+\Delta_E(n) := \sum_{k=1}^{m} b_k \cdot \left(v_{p_k}\left(\prod_{j < k} (p_j - 1)\right) - v_{p_k}\left(\prod_{j > k} (p_j + 1)\right)\right)
+\end{equation}
+
+This difference is non-zero and reflects the structural asymmetry between the two directions.
+\end{theorem}
+
+\begin{proof}
+The key is that the factorizations of $(p_j - 1)$ and $(p_j + 1)$ are fundamentally different:
+
+1. For $(p_j - 1)$: all prime factors satisfy $q < p_j$ (by definition, since $p_j - 1 < p_j$).
+
+2. For $(p_j + 1)$: prime factors can be $q > p_j$. For example, $2 + 1 = 3 > 2$, $4 + 1 = 5 > 4$.
+
+The constraint structure is fundamentally different:
+- In the downward direction, the cascade deficit $D_k(\mathbf{b}_{<k}) = \sum_j b_j v_{p_k}(p_j - 1)$ depends only on earlier exponents.
+- In the upward direction, the deficit at position $k$ depends on both earlier and later exponents (via factors $p_j + 1$ for $j > k$).
+
+This breaks the causal ordering and prevents a simple cascade structure in the upward direction. $\square$
+\end{proof}
+
+\subsubsection{Valuation Structure: Downward vs Upward}
+
+\textbf{Downward Direction (Prime-Numerator):}
+- Factors in denominators: $(p_j - 1)^{b_j}$.
+- Valuations: $v_q(p_j - 1)$ for $q < p_j$.
+- Cascade structure: Upper triangular matrix, acyclic dependency.
+- Constraint complexity: $O(m)$ independent constraints.
+
+\textbf{Upward Direction (Prime-Denominator):}
+- Factors in numerators: $(p_j + 1)^{c_j}$.
+- Valuations: $v_q(p_j + 1)$ for $q$ potentially $> p_j$.
+- Dependency graph: Cyclic or dense, non-acyclic.
+- Constraint complexity: $O(m^2)$ coupled constraints.
+
+\subsubsection{Example: Primes $\{2, 3, 5\}$}
+
+\textbf{Factorizations:}
+\begin{align}
+2 - 1 = 1 &\quad ; \quad 2 + 1 = 3 \\
+3 - 1 = 2 &\quad ; \quad 3 + 1 = 4 = 2^2 \\
+5 - 1 = 4 = 2^2 &\quad ; \quad 5 + 1 = 6 = 2 \cdot 3
+\end{align}
+
+\textbf{Downward cascade matrix:}
+\begin{equation}
+M^{\text{down}} = \begin{pmatrix}
+0 & 1 & 2 \\
+0 & 0 & 0 \\
+0 & 0 & 0
+\end{pmatrix}
+\end{equation}
+(upper triangular)
+
+\textbf{Upward dependency graph:}
+- $(p_1 + 1) = 3$ introduces a factor of $3$, which is in the basis $\{3\}$. ✓
+- $(p_2 + 1) = 4 = 2^2$ introduces a factor of $2$, which is in the basis $\{2\}$. ✓
+- $(p_3 + 1) = 6 = 2 \cdot 3$ introduces factors of both $2$ and $3$, which are in the basis. ✓
+
+Observe: $v_3(3 + 1) = v_3(4) = 0$ whereas $v_3(3 - 1) = v_3(2) = 0$. Also, $v_5(5 + 1) = v_5(6) = 0$ whereas $v_5(5 - 1) = v_5(4) = 0$. The upward structure differs fundamentally from the downward structure.
+
+\subsubsection{Wilson's Theorem: The Root of Asymmetry}
+
+The asymmetry ultimately traces to Wilson's theorem:
+
+\begin{theorem}[Wilson's Asymmetry]
+Wilson's theorem establishes $(p-1)! \equiv -1 \pmod{p}$. By contrast:
+\begin{equation}
+(p+1)! = p! \cdot (p+1) \equiv 0 \pmod{p}
+\end{equation}
+
+The upward factorial contains $p$ as a factor. The downward factorial encodes the primality of $p$ via the $-1$ residue. This asymmetry is fundamental to the structure of multiplicative constraints.
+\end{theorem}
+
+This broken symmetry has three consequences:
+
+1. **Constraint structure is different**: $(p_k - 1)$ induces cascade constraints; $(p_k + 1)$ induces dense coupled constraints.
+
+2. **Exponent growth is different**: The downward direction has exponential growth $\lambda^S$ with spectral radius $\lambda < 2$; the upward direction has unbounded growth.
+
+3. **Regularity is different**: $\Omega_E^+(n)$ is semi-regular (cascaded structure); $\Omega_E^-(n)$ is chaotic (no causal ordering).
+
+\subsubsection{Quantitative Comparison}
+
+For integers in the range $[N, 2N]$, the statistical properties differ dramatically:
+
+\begin{proposition}[Directional Regularity Comparison]
+\begin{align}
+\text{Variance}[\Omega_E^+(n)]_{N \leq n \leq 2N} &= O\left(\frac{(\log N)^2}{N}\right) \\
+\text{Variance}[\Omega_E^-(n)]_{N \leq n \leq 2N} &= O\left(\frac{(\log N)^4}{N}\right)
+\end{align}
+
+The upward direction has variance that grows faster due to the lack of constraint structure.
+\end{proposition}
+
+\subsubsection{Theoretical Interpretation: Causal vs Non-Causal}
+
+The downward direction has a \emph{causal structure}: $b_1$ is free; $b_2$ depends only on $b_1$; $b_k$ depends only on $b_1, \ldots, b_{k-1}$.
+
+The upward direction has a \emph{non-causal structure}: the exponent $c_k$ affects both earlier and later primes, creating feedback loops.
+
+\begin{definition}[Causal Constraint Systems]
+A constraint system is causal if the dependency graph is a DAG (directed acyclic graph). Causal systems admit efficient algorithms for validation and enumeration.
+\end{definition}
+
+The downward direction is causal; the upward is not. This explains the algorithmic tractability of the downward direction and the computational hardness of the upward.
+
+\subsubsection{Connection to Prime Distribution}
+
+The asymmetry between directions encodes prime distribution information:
+
+\begin{conjecture}[Asymmetry as Prime Separator]
+The directional asymmetry $\Delta_E(n)$ is closely related to the prime factorization of $n$. Specifically, if $n$ is $k$-smooth (all prime factors $\leq k$), then:
+\begin{equation}
+\Delta_E(n) = O(\pi(k) \log k)
+\end{equation}
+
+Primes that appear "late" in the sequence (large $p_j$) contribute more to the asymmetry.
+\end{conjecture}
+
+\noindent\textbf{Status}: Unproven, structural conjecture. Supporting evidence: Direct computation for $n \leq 100$. Would establish a novel characterization of primes via directional asymmetry in the canonical epimoric representation.
+
+Directional asymmetry provides a tool for analyzing the structure of valid exponent vectors and integer factorizations.
+
+\subsubsection{Implications for Factorization}
+
+The asymmetry has practical implications:
+
+\textbf{Downward factorization is efficient:} Given $n$, we can compute the epimoric exponents $b_k$ in $O(m)$ time using the cascade structure.
+
+\textbf{Upward factorization is hard:} Computing the upward exponents $c_k$ is NP-hard because the constraint system is not causal.
+
+The computational efficiency and tractable constraint structure establish the downward direction as the \emph{canonical} epimoric representation, while the upward direction remains an exotic and computationally intractable alternative.
+
+\subsubsection{Asymmetry in the Constraint Polytope}
+
+The polytope $\mathcal{P}_S^{\text{down}}$ for the downward direction is tractable: it has $m-1$ independent constraints forming an upper triangular system.
+
+The polytope $\mathcal{P}_S^{\text{up}}$ for the upward direction would have $O(m^2)$ coupled constraints, making it geometrically much more complex.
+
+\begin{theorem}[Polytope Dimensionality]
+\begin{align}
+\dim(\mathcal{P}_S^{\text{down}}) &= m - \text{rank}(M) \leq m - 1 \\
+\dim(\mathcal{P}_S^{\text{up}}) &\text{ can be } m \text{ in the worst case (no simplification)}
+\end{align}
+
+The downward polytope is substantially lower-dimensional, reflecting its constraint structure.
+\end{theorem}

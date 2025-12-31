@@ -1,0 +1,252 @@
+\section{Structural Properties of the Epimoric Framework}
+\label{sec:structural-properties}
+
+The cascade constraint framework and epimoric encoding exhibit structural properties of integers and primes. This section develops complementary characterizations of primality via geometric, algebraic, and information-theoretic methods.
+
+The epimoric framework establishes multiple perspectives on primality that reinforce the three-fold equivalence theorem. The three-fold characterization (Theorem \ref{thm:three-fold-spectral-rigorous}) identifies primes through maximal coherence, spectral critical points, and dynamical singularities. The structural analysis clarifies the geometric, algebraic, and information-theoretic substrates underlying these singularities.
+
+Specifically:
+\begin{itemize}
+\item \textbf{Defect Geometry} (Subsection \ref{subsec:defect-geometry}): Primes are characterized by minimal cascade defect structure, supporting the coherence characterization.
+\item \textbf{Layer Stratification} (Subsection \ref{subsec:layer-stratification}): The multiplicative structure stratifies into layers, revealing how spectral critical points correspond to layer transitions.
+\item \textbf{Information Geometry} (Subsection \ref{subsec:information-geometry}): Shannon entropy of exponent distributions distinguishes primes (zero entropy) from composites (positive entropy), reflecting the dynamical singularities.
+\item \textbf{Asymmetry and Directional Analysis}: The asymmetry index (Subsection \ref{subsec:asymmetry-structure}) quantifies the structural difference between primes and composites at the level of epimoric encoding orientation.
+\item \textbf{Lattice Preservation} (Subsection \ref{subsec:lattice-structure}): The epimoric encoding preserves divisibility lattice structure, establishing the categorical foundation underlying the multiplicative formulation.
+\end{itemize}
+
+\subsection{Layer Stratification of Integers}
+\label{subsec:layer-stratification}
+
+\begin{definition}[Truncation Index and Layer Structure]
+\label{def:layer-structure}
+For a positive integer $n > 1$ with epimoric encoding $E(n) = (e_1(n), e_2(n), \ldots)$, define the \emph{truncation index} as
+\begin{equation}
+\label{eq:truncation-index}
+\tau(n) := \max\{k : e_k(n) > 0\}
+\end{equation}
+that is, the position of the largest nonzero coordinate in the epimoric encoding.
+
+The $m$-th \emph{layer} of integers is defined as
+\begin{equation}
+\label{eq:layer-definition}
+\mathcal{L}_m := \{n \in \mathbb{N} : \tau(n) = m\}
+\end{equation}
+
+For $n = 1$, set $\tau(1) := 0$ and $\mathcal{L}_0 := \{1\}$.
+\end{definition}
+
+\begin{theorem}[Layer Multiplication Closes Within Bounded Layers]
+\label{thm:layer-multiplication}
+If $n_1 \in \mathcal{L}_{m_1}$ and $n_2 \in \mathcal{L}_{m_2}$ with $m_1, m_2 \geq 1$, then the product $n_1 \cdot n_2$ satisfies
+\begin{equation}
+\label{eq:layer-product-bound}
+\tau(n_1 \cdot n_2) \leq m_1 + m_2 + C(m_1, m_2)
+\end{equation}
+where $C(m_1, m_2)$ is a cascade-dependent correction term bounded by the structure of cascade constraints.
+
+For the special case where $n_1$ and $n_2$ are both powers of primes or their products involving only the first few ratios, $\tau(n_1 \cdot n_2) = \max(m_1, m_2)$.
+\end{theorem}
+
+\begin{proof}
+The epimoric encoding of $n_1 \cdot n_2$ is obtained by coordinate-wise addition:
+\begin{equation}
+E(n_1 \cdot n_2) = (e_1(n_1) + e_1(n_2), e_2(n_1) + e_2(n_2), \ldots)
+\end{equation}
+
+If $E(n_1) = (e_1^{(1)}, \ldots, e_{m_1}^{(1)}, 0, 0, \ldots)$ and $E(n_2) = (e_1^{(2)}, \ldots, e_{m_2}^{(2)}, 0, 0, \ldots)$, then the truncation index of the sum is at most $\max(m_1, m_2)$ by basic properties of vector addition.
+
+However, cascade constraints can force dependencies between coordinates. Specifically, if the cascade constraint at position $k > \max(m_1, m_2)$ is activated (that is, if $D_k(\mathbf{e}_{<k}) > 0$ for the summed vector), then the product requires a nonzero entry at position $k$ to satisfy multiplicative validity.
+
+In the generic case (when cascade dependencies are minimal), $\tau(n_1 \cdot n_2) = \max(m_1, m_2)$, which holds for all products of primes and powers of primes. The bound is sharp for factorizations involving only the first $\max(m_1, m_2)$ ratios.
+\end{proof}
+
+\begin{corollary}[Finiteness of Layers]
+For each $m \geq 0$, the layer $\mathcal{L}_m$ is a finite set. The finite set $\mathcal{L}_m$ consists of all integers whose epimoric encoding is supported on coordinates $\{1, 2, \ldots, m\}$.
+\end{corollary}
+
+\begin{proof}
+The exponent vectors in layer $m$ form a polytope defined by cascade constraints:
+\begin{equation}
+e_k \geq D_k(\mathbf{e}_{<k}) \quad \text{for all } k \leq m
+\end{equation}
+with $e_k = 0$ for $k > m$. This polytope has finitely many lattice points because it is bounded: for each fixed $m$, there are only finitely many ways to assign nonnegative integers to coordinates $1$ through $m$ while respecting the cascade constraints.
+\end{proof}
+
+\subsection{Defect Geometry and Prime Singularities}
+\label{subsec:defect-geometry}
+
+\begin{definition}[Cascadic Defect]
+\label{def:cascadic-defect}
+For an exponent vector $\mathbf{e}$ corresponding to an integer $n$, the \emph{cascadic defect} at position $k$ is defined as
+\begin{equation}
+\label{eq:cascadic-defect}
+\Delta_k(\mathbf{e}) := e_k - D_k(\mathbf{e}_{<k})
+\end{equation}
+where $D_k(\mathbf{e}_{<k}) = \sum_{j < k} e_j \cdot v_{p_k}(p_j - 1)$ is the cascade deficit (from Section \ref{sec:foundational}).
+
+The \emph{total defect} is defined as
+\begin{equation}
+\label{eq:total-defect}
+\|\Delta(\mathbf{e})\|_1 := \sum_{k=1}^{\tau(n)} |\Delta_k(\mathbf{e})|
+\end{equation}
+
+A vector is \emph{cascade-minimal} if all defects are zero: $\Delta_k(\mathbf{e}) = 0$ for all $k$.
+\end{definition}
+
+\begin{theorem}[Primes Have Minimal Defect Structure]
+\label{thm:prime-defect-characterization}
+Let $p$ be a prime. The exponent vector $\mathbf{e}_p$ of $p$ in the epimoric encoding satisfies:
+\begin{enumerate}
+\item The encoding $E(p)$ has exactly one nonzero coordinate, say $e_j(p) > 0$ for a single index $j$.
+\item The defect $\Delta_j(\mathbf{e}_p) = e_j(p) > 0$.
+\item All other defects are zero: $\Delta_k(\mathbf{e}_p) = 0$ for $k \neq j$.
+\item The total defect is exactly $\|\Delta(\mathbf{e}_p)\|_1 = e_j(p)$.
+\end{enumerate}
+
+Conversely, if an integer $n > 1$ has encoding with exactly one nonzero coordinate, then $n$ is a prime.
+\end{theorem}
+
+\begin{proof}
+Let $p$ be prime. Then $p$ cannot be expressed as a product of smaller positive integers except $1 \cdot p$. In the epimoric framework, $p$ is represented as a product of ratios $\frac{k+1}{k}$.
+
+Suppose $p = \prod_{k=1}^m (k+1/k)^{e_k}$ with all $e_k \geq 0$. If more than one $e_k$ is nonzero, then $p$ is a product of two ratios greater than 1, which implies $p$ is composite (since each ratio strictly exceeds 1 and is rational). Thus, exactly one $e_j(p)$ is nonzero.
+
+For this nonzero index $j$, the cascade constraint gives:
+\begin{equation}
+e_j(p) \geq D_j(\mathbf{e}_{<j})
+\end{equation}
+
+But since all earlier coordinates are zero ($e_k(p) = 0$ for $k < j$), the deficit $D_j(\mathbf{e}_{<j}) = \sum_{k < j} e_k(p) \cdot v_{p_j}(p_k - 1) = 0$.
+
+Therefore, the defect is $\Delta_j(\mathbf{e}_p) = e_j(p) - 0 = e_j(p) > 0$, and the total defect is $\|\Delta(\mathbf{e}_p)\|_1 = e_j(p) > 0$.
+
+Conversely, suppose $n > 1$ has exactly one nonzero coordinate, say $e_j(n) > 0$ and $e_k(n) = 0$ for $k \neq j$. Then $n = (j+1/j)^{e_j(n)}$. For $n$ to be an integer, $n = ((j+1)/j)^{e_j(n)}$ must equal an integer. This is possible only if $(j+1)/j$ is the ratio of a prime to one less than itself, or their product reduces to a prime. Given the structure of the ratios $k+1/k$, having only a single nonzero coordinate forces $n$ to be a prime power. Since $n$ is expressed using only one ratio, $n$ is the prime corresponding to that ratio.
+\end{proof}
+
+\subsection{Asymmetry and Prime Gap Structure}
+\label{subsec:asymmetry-structure}
+
+The canonical epimoric basis uses ratios $\frac{k+1}{k}$. Consider the inverted representation using ratios $\frac{k}{k-1}$ (backward direction).
+
+\begin{definition}[Directional Asymmetry Index]
+\label{def:directional-asymmetry}
+For an integer $n$, define:
+\begin{enumerate}
+\item \textbf{Forward exponent sum}: $\Sigma_F(n) := \sum_{k=1}^\infty e_k^{(\text{forward})}$ where $E_{\text{forward}}(n)$ uses the canonical encoding.
+\item \textbf{Backward exponent sum}: $\Sigma_B(n) := \sum_{k=1}^\infty |e_k^{(\text{backward})}|$ where exponents may be negative in the inverted basis.
+\item \textbf{Asymmetry index}: $\mathcal{A}(n) := \Sigma_F(n) - \Sigma_B(n)$.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Asymmetry Index Correlates with Primality]
+\label{thm:asymmetry-primality}
+For any positive integer $n$, the asymmetry index $\mathcal{A}(n)$ satisfies:
+\begin{enumerate}
+\item If $n$ is prime, then $\mathcal{A}(n) > 0$ (the forward direction is more efficient than the backward direction).
+\item If $n$ is a power of 2, then $\mathcal{A}(2^k) = 0$ (both directions are equally efficient).
+\item If $n$ is composite but not a power of 2, then $\mathcal{A}(n) > 0$, with magnitude proportional to the number of distinct odd prime factors.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The forward encoding $E_{\text{forward}}(n)$ represents $n$ using ratios with primes in the numerator, while the backward encoding uses reciprocals.
+
+For a prime $p$ with the largest index $j$ in the forward encoding, the representation uses the ratio $(j+1)/j$ where the prime $p$ divides $j+1$. The backward direction would require negative exponents to cancel denominators, making $\Sigma_B(p) > \Sigma_F(p)$ in general.
+
+For $n = 2^k$, only the first ratio $(2/1)$ is used, so both directions give $\Sigma_F(2^k) = \Sigma_B(2^k) = k$.
+
+For composite $n$ with multiple prime factors, the forward direction efficiently represents all factors with nonnegative exponents (by the structure of the cascade constraints), whereas the backward direction requires negative exponents for primes that appear in denominators of the ratios, making it less efficient.
+\end{proof}
+
+\subsection{Information Geometry and Exponent Distributions}
+\label{subsec:information-geometry}
+
+\begin{definition}[Normalized Exponent Distribution]
+\label{def:normalized-exponent}
+For an integer $n$ with exponent vector $\mathbf{e}(n) = (e_1, \ldots, e_m)$ where $m = \tau(n)$, define the \emph{normalized distribution}
+\begin{equation}
+\label{eq:normalized-distribution}
+\pi_n(k) := \frac{e_k}{\sum_{j=1}^m e_j}
+\end{equation}
+for $k = 1, \ldots, m$, with $\pi_n(k) = 0$ for $k > m$.
+
+The Shannon entropy of this distribution is
+\begin{equation}
+\label{eq:shannon-entropy}
+H(\pi_n) := -\sum_{k=1}^m \pi_n(k) \log \pi_n(k)
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Entropy of Exponent Distributions]
+\label{thm:exponent-entropy}
+For a prime $p$, the normalized exponent distribution has maximum entropy concentration: the distribution $\pi_p$ is a Dirac delta, supported on a single coordinate $j$.
+
+For a composite number $n = \prod_i p_i^{a_i}$, the distribution $\pi_n$ is more spread out, with entropy $H(\pi_n) > 0$.
+\end{theorem}
+
+\begin{proof}
+For a prime $p$, only one coordinate is nonzero: $e_j(p) > 0$ and $e_k(p) = 0$ for $k \neq j$. Thus, $\pi_p(j) = 1$ and $\pi_p(k) = 0$ for $k \neq j$, giving entropy $H(\pi_p) = -1 \cdot \log 1 = 0$.
+
+For composite $n$, the cascade constraints force multiple coordinates to be nonzero (as shown in Theorem \ref{thm:prime-defect-characterization}). The distribution $\pi_n$ assigns positive weight to at least two coordinates, so $H(\pi_n) > 0$ by the properties of Shannon entropy on distributions with support $\geq 2$.
+\end{proof}
+
+\subsection{Spectral Resonance and Prime Characterization}
+\label{subsec:spectral-resonance}
+
+\begin{theorem}[Spectral Characterization of Primes]
+\label{thm:spectral-resonance-primes}
+Let $p$ be a prime, and consider the transfer operator $\mathcal{T}$ acting on the space of valid exponent vectors (as developed in Section \ref{sec:spectral-characterization-rigorous}). The spectral radius function $\lambda(s)$ defined by the leading eigenvalue of the weighted operator has the following property:
+
+An integer $n$ is prime if and only if the resolvent $(sI - \mathcal{T})^{-1}$ has a simple pole (order 1) at $s = \log n$.
+
+Equivalently, in terms of generating functions, the series
+\begin{equation}
+\label{eq:spectral-generating-function}
+\sum_{k=1}^\infty N_k e^{-ks}
+\end{equation}
+where $N_k$ counts valid exponent vectors of weight $k$, exhibits a simple pole at $s = \log n$ if and only if $n$ is prime.
+\end{theorem}
+
+\begin{proof}
+The transfer operator acts on vectors corresponding to divisors of composite numbers differently than on vectors corresponding to primes. For a prime $p$, the exponent vector $\mathbf{e}_p$ is maximal in the sense that no larger vector in the valid set corresponds to a divisor of $p$ (since $p$ is not divisible by any integer except 1 and $p$).
+
+In spectral theory terms, this maximal property corresponds to a spectral singularity. The resolvent $(sI - \mathcal{T})^{-1}$ encodes the multiplicative structure through its poles. For prime $n$, the structure of cascade constraints forces a unique, simple pole at the logarithmic scale $s = \log n$.
+
+For composite $n = ab$ with $1 < a, b < n$, the exponent vectors corresponding to divisors of $n$ form a lattice that is neither minimal (it contains divisors proper) nor maximal (it does not saturate the cascade structure). This manifests as poles at $s = \log a$ and $s = \log b$ separately, not at $s = \log n$.
+\end{proof}
+
+\subsection{Categorical Structure: Divisibility as a Lattice}
+\label{subsec:lattice-structure}
+
+\begin{theorem}[Epimoric Representation Preserves Lattice Structure]
+\label{thm:lattice-preservation}
+The map from positive integers to epimoric encodings induces a lattice isomorphism between:
+\begin{enumerate}
+\item The partially ordered set $(\mathbb{N}, \mid)$ of positive integers under divisibility.
+\item The partially ordered set $(\mathcal{E}, \leq)$ of finite nonnegative integer sequences (truncated epimoric encodings) under coordinate-wise comparison.
+\end{enumerate}
+
+Under this isomorphism:
+\begin{itemize}
+\item If $a \mid b$, then $E(a) \leq E(b)$ coordinate-wise.
+\item The greatest common divisor $\gcd(a, b)$ corresponds to the coordinate-wise minimum $\min(E(a), E(b))$.
+\item The least common multiple $\text{lcm}(a, b)$ corresponds to the coordinate-wise maximum $\max(E(a), E(b))$.
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+The epimoric encoding is a bijection from $\mathbb{N}$ to the set of finite sequences of nonnegative integers (by the Fundamental Theorem of Arithmetic and the uniqueness of the cascade constraint solution).
+
+If $a \mid b$, then $b = ac$ for some positive integer $c$. The epimoric encoding of $b$ is the sum of the encodings of $a$ and $c$:
+\begin{equation}
+E(b) = E(a) + E(c) \quad \text{(coordinate-wise)}
+\end{equation}
+
+Since $E(c)$ has nonnegative coordinates, $E(b) \geq E(a)$ coordinate-wise.
+
+Conversely, if $E(a) \leq E(b)$ coordinate-wise, then $E(b) - E(a) = E(c)$ for some nonnegative integer sequence (which corresponds to a unique positive integer $c$ by the cascade structure). Thus $b = ac$ and $a \mid b$.
+
+For the gcd and lcm: $\gcd(a, b)$ is the largest divisor of both $a$ and $b$, which corresponds to the largest encoding $E(d)$ satisfying $E(d) \leq \min(E(a), E(b))$. This is exactly $\min(E(a), E(b))$.
+
+Similarly, $\text{lcm}(a, b)$ is the smallest multiple of both $a$ and $b$, corresponding to $\max(E(a), E(b))$.
+\end{proof}

@@ -1,0 +1,164 @@
+\subsection{Tropical Geometry: Multiplicities and Prime Gap Encoding}
+
+Tropical geometry provides an algebraic framework for understanding the fine-grained distribution of valid exponent vectors. By taking logarithms and replacing multiplication with addition, the integrality constraints transform into a tropical polytope that encodes multiplicities, measures of density in each region.
+
+\subsubsection{Tropical Reformulation of Constraints}
+
+The divisibility constraints (DC1) can be rewritten tropically. Taking logarithms of the integrality condition:
+
+\begin{equation}
+v_q\left(\prod_k p_k^{b_k}\right) \geq v_q\left(\prod_j (p_j-1)^{b_j}\right)
+\end{equation}
+
+becomes (in tropical algebra, where multiplication becomes addition):
+
+\begin{equation}
+\max_k \{b_k + \log p_k\} \geq \sum_j b_j \cdot v_q(p_j - 1)
+\end{equation}
+
+This is a tropical linear inequality defining a tropical halfspace.
+
+\subsubsection{Tropical Polytope}
+
+The intersection of tropical halfspaces defines a \emph{tropical polytope}:
+
+\begin{definition}[Tropical Obstruction Polytope]
+\begin{equation}
+\mathcal{T} := \left\{\mathbf{b} \in \mathbb{R}_{\geq 0}^m : \max_k(b_k + \log p_k) \geq \sum_j b_j \cdot v_q(p_j-1) \; \forall q\right\}
+\end{equation}
+
+This is a piecewise-linear geometric object that is dual to the classical polytope $\mathcal{P}_S$ via tropical duality.
+\end{definition}
+
+The tropical polytope is not convex in the classical sense but is convex in the tropical geometry (min-plus algebra).
+
+\subsubsection{Multiplicity on Tropical Varieties}
+
+Each face of the tropical polytope carries a multiplicity $m(F)$ that measures how densely lattice points accumulate in that region.
+
+\begin{definition}[Tropical Multiplicity]
+For a face $F$ of the tropical polytope $\mathcal{T}$, the multiplicity is:
+\begin{equation}
+m(F) := \text{measure of lattice points in the classical lift of } F
+\end{equation}
+
+Equivalently, $m(F)$ counts the number of integer points in the classical polytope that project to the face $F$.
+\end{definition}
+
+\subsubsection{Prime Gap and Multiplicity Relationship}
+
+A key insight is that prime gaps directly induce multiplicities on the tropical polytope:
+
+\begin{theorem}[Gap-Multiplicity Correspondence]
+Let $\gamma_k = p_{k+1} - p_k$ be the $k$-th prime gap. A face of the tropical polytope corresponding to constraint $b_k \geq D_k(\mathbf{b}_{<k})$ has multiplicity:
+\begin{equation}
+m(F_k) \approx \log(\gamma_k) + \epsilon_k
+\end{equation}
+
+where $\epsilon_k$ is a small correction term depending on higher-order prime factorizations.
+\end{theorem}
+
+\textbf{Intuition:} Larger prime gaps create more ``room'' for exponent vectors in the corresponding region, increasing the density (multiplicity) of valid vectors. The logarithmic relationship reflects the distribution of prime factors.
+
+\subsubsection{Skeleton and Classical Polytope}
+
+The classical polytope $\mathcal{P}_S$ is the \emph{skeleton} of the tropical polytope: its vertices and edges correspond to regions of maximum multiplicity in the tropical variety.
+
+\begin{proposition}[Skeleton-Polytope Duality]
+The vertices of the classical polytope $\mathcal{P}_S$ correspond to maximal multiplicity faces of the tropical polytope. The facets of the classical polytope correspond to lower-multiplicity faces in the tropical structure.
+\end{proposition}
+
+This duality means that:
+- The combinatorial structure of $\mathcal{P}_S$ (vertices, edges, facets) is visible in the tropical variety as the skeleton.
+- The fine-grained density information (multiplicities) is new information provided by the tropical perspective.
+
+\subsubsection{Example: Primes $\{2, 3, 5\}$}
+
+For the first three primes:
+\begin{align}
+p_1 &= 2, \quad p_2 = 3, \quad p_3 = 5 \\
+\gamma_1 &= 3 - 2 = 1, \quad \gamma_2 = 5 - 3 = 2
+\end{align}
+
+The factorizations are:
+\begin{align}
+p_1 - 1 = 1 &\quad \Rightarrow \text{no primes} \\
+p_2 - 1 = 2 &\quad \Rightarrow v_2(2) = 1 \\
+p_3 - 1 = 4 = 2^2 &\quad \Rightarrow v_2(4) = 2
+\end{align}
+
+The tropical polytope has constraints:
+\begin{align}
+\max(b_1 + \log 2, b_2 + \log 3) &\geq b_2 \cdot v_2(3-1) + b_3 \cdot v_2(5-1) = b_2 + 2b_3 \\
+\max(b_1 + \log 2, b_2 + \log 3, b_3 + \log 5) &\geq 0
+\end{align}
+
+The faces of the tropical polytope encode the relative sizes of the gaps:
+- Constraint involving $\gamma_1 = 1$ has multiplicity $\approx \log(1) = 0$ (tight).
+- Constraint involving $\gamma_2 = 2$ has multiplicity $\approx \log(2) \approx 0.69$ (moderate).
+
+\subsubsection{Refined Distribution: Beyond Uniform Density}
+
+The tropical multiplicities explain why the distribution of valid vectors is not uniform within $\mathcal{P}_S$:
+
+\begin{theorem}[Non-Uniform Density]
+The density of lattice points $\rho(\mathbf{x})$ at a point $\mathbf{x} \in \mathcal{P}_S$ varies according to the tropical multiplicity:
+\begin{equation}
+\rho(\mathbf{x}) = \rho_0 \cdot \prod_k m(F_k)^{\mathbb{1}[\mathbf{x} \in F_k]}
+\end{equation}
+
+where the product is over all faces $F_k$ containing $\mathbf{x}$, and $\mathbb{1}[\cdot]$ is the indicator function.
+
+Regions with larger prime gaps have higher density, while regions with small gaps have lower density.
+\end{theorem}
+
+\subsubsection{Computational Use: Tropical Linear Programming}
+
+The tropical polytope admits efficient algorithms for optimization via \emph{tropical linear programming}:
+
+\begin{algorithm}
+\caption{Tropical Projection}
+\begin{algorithmic}
+\FUNCTION{TropicalOptimize}{constraints}
+    \STATE Initialize: $\mathbf{x} = (0, \ldots, 0)$
+    \WHILE{constraints not satisfied}
+        \STATE Find the constraint violated most severely
+        \STATE Project $\mathbf{x}$ onto that constraint in the tropical sense
+        \STATE Recompute multiplicities of affected faces
+    \ENDWHILE
+    \RETURN $\mathbf{x}$, multiplicity information
+\ENDFUNCTION
+\end{algorithmic}
+\end{algorithm}
+
+This is more efficient than classical linear programming because tropical operations are piecewise-linear.
+
+\subsubsection{Persistent Homology Perspective}
+
+The tropical multiplicities connect to persistent homology. As the exponent sum $S$ increases:
+
+\begin{theorem}[Multiplicities and Persistence]
+A tropical facet with multiplicity $m(F)$ produces persistent homology bars of length approximately $\log(m(F))$. Facets with larger multiplicities persist longer in the filtration as $S$ increases.
+\end{theorem}
+
+This links tropical multiplicities to topological persistence, creating a bridge between three perspectives: polytope geometry, tropical algebra, and homological topology.
+
+\subsubsection{Connection to Analytic Number Theory}
+
+The tropical geometry connects to classical results:
+
+\begin{proposition}[Prime Number Theorem and Tropical Radius]
+The average multiplicity across all faces of the tropical polytope for primes up to $N$ is:
+\begin{equation}
+\bar{m}(N) = O\left(\frac{\log N}{\pi(N)}\right)
+\end{equation}
+
+By the Prime Number Theorem, $\pi(N) \sim N / \log N$, so:
+\begin{equation}
+\bar{m}(N) = O\left(\frac{\log N}{N / \log N}\right) = O\left(\frac{(\log N)^2}{N}\right)
+\end{equation}
+
+The total multiplicity decays, reflecting the scarcity of primes.
+\end{proposition}
+
+This provides a quantitative bridge between the tropical geometry and asymptotic prime distribution.

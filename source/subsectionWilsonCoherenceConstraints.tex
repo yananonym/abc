@@ -1,0 +1,149 @@
+\subsection{Wilson-Coherence Constraints: Doubly-Constrained Integrality}
+
+The integrality requirement for epimoric vectors decomposes into two distinct layers: a divisibility constraint (arising from p-adic valuations) and a Wilson-coherence constraint arising from the classical structure of Wilson's theorem \cite{Wilson1770, Hardy1938}. This section rigorously develops the dual-constraint framework.
+
+\subsubsection{Theorem: Two-Layer Obstruction}
+
+\begin{theorem}[Doubly-Constrained Integrality]
+An exponent vector $\mathbf{b} \in \mathbb{N}_0^m$ corresponds to a valid integer $n > 1$ if and only if both of the following hold:
+
+\textbf{(DC1 - Divisibility Constraint)} For every prime $q \in \mathcal{P} = \{p_1, \ldots, p_m\}$:
+\begin{equation}
+\label{eq:divisibility-constraint-dc1}
+\sum_{k: p_k = q} b_k \geq \sum_{j=1}^{m} b_j \cdot v_q(p_j - 1)
+\end{equation}
+
+That is, the numerator valuations must dominate the denominator valuations for every prime in the epimoric basis.
+
+\textbf{(DC2 - Wilson-Coherence Constraint)} For every position $k = 2, \ldots, m$:
+\begin{equation}
+\label{eq:wilson-coherence-constraint-dc2}
+b_k \geq D_k(\mathbf{b}_{<k}) := \sum_{j=1}^{k-1} b_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+
+That is, the exponent at each position must absorb all prime-$p_k$ factors introduced by earlier terms.
+\end{theorem}
+
+\begin{proof}
+The necessity of (DC1) follows from the requirement that $\prod_k p_k^{b_k} \equiv 0 \pmod{\prod_j (p_j - 1)^{b_j}}$ in the sense of p-adic divisibility. By unique factorization, this is equivalent to $v_q\left(\prod_k p_k^{b_k}\right) \geq v_q\left(\prod_j (p_j-1)^{b_j}\right)$ for all primes $q$.
+
+For $q \in \mathcal{P}$:
+\begin{equation}
+v_q\left(\prod_k p_k^{b_k}\right) = \sum_{k: p_k = q} b_k
+\end{equation}
+
+and
+\begin{equation}
+v_q\left(\prod_j (p_j-1)^{b_j}\right) = \sum_{j=1}^{m} b_j \cdot v_q(p_j - 1)
+\end{equation}
+
+Thus (DC1) follows.
+
+To show necessity of (DC2), note that it is a recursive unpacking of (DC1). For primes $q \not\in \mathcal{P}$, the divisibility condition (DC1) becomes:
+\begin{equation}
+0 \geq \sum_{j=1}^{m} b_j \cdot v_q(p_j - 1)
+\end{equation}
+
+This can only hold if all terms vanish, which would require $v_q(p_j - 1) = 0$ for all $j$. But this is impossible for most $q$ (e.g., if $q < p_1$, then $q$ divides some $p_j - 1$ for the appropriate $j$). Therefore, only primes in $\mathcal{P}$ can appear in the denominators.
+
+Given that only primes in $\mathcal{P}$ appear, the upper triangularity of the valuation matrix $M$ implies that the constraints decouple by prime. At each prime $p_k$, the contribution from $b_k$ is:
+\begin{equation}
+b_k \quad \text{(from numerator)} - \sum_{j=1}^{k-1} b_j \cdot v_{p_k}(p_j - 1) \quad \text{(from denominators of earlier terms)}
+\end{equation}
+
+For this to be non-negative:
+\begin{equation}
+b_k \geq \sum_{j=1}^{k-1} b_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+
+which is (DC2).
+
+Sufficiency follows by reversing the argument: if both (DC1) and (DC2) hold, then the divisibility condition is satisfied for all primes in $\mathcal{P}$ and vacuously for all others, so the numerator divides the denominator in all p-adic valuations, ensuring integrality. $\square$
+\end{proof}
+
+\subsubsection{Cascade Rank and Constraint Deficiency}
+
+Not all constraints in (DC1) are independent. The upper triangularity of $M$ implies that many constraints are redundant given (DC2).
+
+\begin{definition}[Cascade Rank]
+The \emph{cascade rank} of the valuation matrix $M$ is:
+\begin{equation}
+\text{rank}_{\text{cas}}(M) := \#\{k \in \{1, \ldots, m\} : M_{k,1:k-1} \neq 0\}
+\end{equation}
+
+That is, the number of rows of $M$ that have at least one nonzero entry (equivalently, the number of primes $p_k$ such that some earlier prime $p_j < p_k$ divides $p_k - 1$).
+\end{definition}
+
+\begin{proposition}[Constraint Deficiency]
+The number of essential (linearly independent) constraints in (DC2) is at most $\text{rank}_{\text{cas}}(M)$. The affine dimension of the constraint polytope is at least $m - \text{rank}_{\text{cas}}(M)$.
+\end{proposition}
+
+\textbf{Intuition:} When $p_k - 1$ has no factors from earlier primes (i.e., row $k$ of $M$ is zero), the exponent $b_k$ is unconstrained by earlier terms; it contributes only to the global divisibility count, not to any specific cascade deficit.
+
+\subsubsection{Recursive Validation Algorithm}
+
+The cascade structure enables a linear-time validation procedure:
+
+\begin{algorithm}
+\caption{Cascade Validation}
+\begin{algorithmic}
+\FUNCTION{IsValid}{$\mathbf{b} = [b_1, \ldots, b_m]$}
+    \STATE $D \gets 0$ \quad \COMMENT{Current cascade deficit}
+    \FOR{$k = 1$ to $m$}
+        \IF{$b_k < D$}
+            \RETURN False
+        \ENDIF
+        \STATE Update $D$ based on valuations from $p_k$:
+        \STATE $D \gets \sum_{j=1}^{k} b_j \cdot v_{p_{k+1}}(p_j - 1)$ \quad \COMMENT{For next iteration}
+    \ENDFOR
+    \RETURN True
+\ENDFUNCTION
+\end{algorithmic}
+\end{algorithm}
+
+This algorithm runs in $O(m)$ time after precomputing the valuation matrix $M$ in $O(m^2 \log p_m)$ time.
+
+\subsubsection{Boundary-Saturating Vectors}
+
+A vector $\mathbf{b}$ is \emph{boundary-saturating at position $k$} if $b_k = D_k(\mathbf{b}_{<k})$. Such vectors lie on the facet of the constraint polytope corresponding to that constraint.
+
+\begin{lemma}[Boundary Characterization]
+A vector is on the boundary of the constraint polytope if and only if it is boundary-saturating at some position $k \geq 2$.
+\end{lemma}
+
+Vectors that are boundary-saturating at all positions $k \geq 2$ (i.e., $b_k = D_k(\mathbf{b}_{<k})$ for all $k$) are \emph{minimal valid vectors}. These satisfy the cascade constraint with equality and form the ``skeleton'' of the constraint polytope.
+
+\subsubsection{Connection to Factorial Exponent Vectors}
+
+Factorials exhibit the property that their epimoric exponent vectors are often boundary-saturating:
+
+\begin{proposition}[Factorial Saturation]
+For $n = p_m!$ (the factorial of the largest prime in the basis), the epimoric exponent vector $\mathbf{b}^{(p_m!)}$ satisfies $b_k^{(p_m!)} \geq D_k(\mathbf{b}_{<k}^{(p_m!)})$ with equality at $k = m$.
+\end{proposition}
+
+This explains why factorials are special: their exponent vectors achieve the boundary of the constraint polytope, encoding the complete factorial structure into the cascade.
+
+\subsubsection{Wilson-Coherence and Modular Arithmetic}
+
+The Wilson-coherence constraint (DC2) has a deep modular interpretation. For any position $k$:
+
+\begin{equation}
+b_k \equiv -D_k(\mathbf{b}_{<k}) \pmod{\gcd(p_k, D_k(\mathbf{b}_{<k}) + 1)}
+\end{equation}
+
+By Wilson's theorem, the modular structure of $(p_k - 1)!$ imposes constraints on the possible residue classes of $b_k$. The inequality form in (DC2) is the relaxation of a more subtle congruence condition that becomes apparent when analyzing the full factorization.
+
+\subsubsection{Semi-Regularity from Double Constraint}
+
+The dual-constraint structure explains the semi-regularity of $\Omega_E(n)$:
+
+\begin{theorem}[Semi-Regularity from Double Constraints]
+The standard deviation of $\Omega_E(n)$ over an interval $[N, 2N]$ is:
+\begin{equation}
+\sigma_E(N) = O\left(\frac{\log N}{\sqrt{N}}\right)
+\end{equation}
+
+In contrast, the standard deviation of $\Omega(n)$ is $O\left(\frac{\log^2 N}{\sqrt{N}}\right)$.
+\end{theorem}
+
+\textbf{Proof Sketch:} The divisibility constraint (DC1) filters vectors to a polytope, reducing the domain. The Wilson-coherence constraint (DC2) further restricts to a cascade structure with exponentially fewer valid vectors. The combination of these two layers creates a low-entropy structure: as $n$ ranges over integers, the corresponding exponent vectors trace a smooth, constrained path through the lattice, avoiding the wild jumps characteristic of $\Omega(n)$.

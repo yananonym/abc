@@ -1,0 +1,254 @@
+\subsection{Constraint Recovery Algorithms: Spectral Reconstruction}
+
+\subsubsection{Overview: Inferring Structure from Observations}
+
+The fundamental challenge of constraint recovery is: given a finite set of observed valid exponent vectors $\mathcal{B} \subseteq \mathbb{N}_0^m$, determine the minimal constraint structure $(\mathcal{V}, \{\mu_v\}, \{\delta_{v,k}\})$ that explains the observations.
+
+This is an \textit{inverse problem}: we observe consequences (valid vectors) and must deduce causes (constraints, valuations, deficits). The algorithms in this subsection transform this geometric inference problem into tractable computational procedures.
+
+\subsubsection{Algorithm 1: Monoid Factorization and Cascade Extraction}
+
+\paragraph{Principle.}
+
+The valid exponent vectors form a sub-monoid $\mathcal{V}_{\text{valid}} \subseteq \mathbb{N}_0^m$. This monoid has an inherent cascade structure: exponent $b_k$ can only take values determined by the prior exponents $(b_1, \ldots, b_{k-1})$.
+
+By analyzing the Hasse diagram of divisibility relations, we extract this cascade structure without knowing the underlying primes.
+
+\paragraph{Algorithm (Extract Cascade Profiles).}
+
+\textbf{Input:} Finite set $\mathcal{B} = \{\mathbf{b}^{(1)}, \ldots, \mathbf{b}^{(N)}\} \subseteq \mathbb{N}_0^m$ of observed valid exponent vectors.
+
+\textbf{Output:} Cascade profiles $\{M_k : k = 1, \ldots, m\}$, where $M_k : \mathbb{N}_0^{k-1} \to \mathbb{N}_0$ encodes the maximum exponent at stage $k$ given prior exponents.
+
+\begin{enumerate}
+
+\item \textbf{Initialization:} For each position $k = 1, \ldots, m$, create a dictionary $M_k := \{\}$.
+
+\item \textbf{Profile Construction:} For each observed vector $\mathbf{b} = (b_1, \ldots, b_m) \in \mathcal{B}$:
+  \begin{enumerate}
+  \item For each position $k = 1, \ldots, m$:
+    \begin{enumerate}
+    \item Extract the prefix: $\mathbf{prefix}_k := (b_1, \ldots, b_{k-1})$.
+    \item Extract the current exponent: $b_k$.
+    \item Update the profile:
+    \begin{equation}
+    M_k[\mathbf{prefix}_k] := \max(M_k[\mathbf{prefix}_k], b_k)
+    \end{equation}
+    \end{enumerate}
+  \end{enumerate}
+
+\item \textbf{Output:} Return the profiles $\{M_k\}_{k=1}^m$.
+
+\end{enumerate}
+
+\paragraph{Complexity.}
+
+The algorithm runs in $O(N \cdot m)$ time and $O(\sum_k |M_k|)$ space, where $|M_k|$ is the size of the $k$-th profile dictionary. For typical integer sets, $|M_k|$ grows polynomially in $m$, making the algorithm efficient.
+
+\paragraph{Interpretation.}
+
+Each profile $M_k$ describes a function from $(b_1, \ldots, b_{k-1})$ to the maximum allowable $b_k$. These functions encode the constraint structure in a factorized form, without reference to specific primes.
+
+\subsubsection{Algorithm 2: Linear Constraint Inference}
+
+\paragraph{Principle.}
+
+Assuming the constraint structure is linear (which it is for the epimoric system), we model the profile at stage $k$ as:
+\begin{equation}
+M_k(b_1, \ldots, b_{k-1}) = \alpha_k + \sum_{j=1}^{k-1} \beta_{jk} b_j
+\end{equation}
+
+The coefficients $\alpha_k, \beta_{jk}$ encode the deficit structure.
+
+\paragraph{Algorithm (Infer Linear Constraints).}
+
+\textbf{Input:} Cascade profiles $\{M_k\}_{k=1}^m$ from Algorithm 1.
+
+\textbf{Output:} Estimated coefficients $\{\alpha_k, \beta_{jk}\}$ and constraint functions $C_k$.
+
+\begin{enumerate}
+
+\item \textbf{For each position} $k = 2, \ldots, m$:
+  \begin{enumerate}
+  \item Extract all $(b_1, \ldots, b_{k-1})$ prefixes that appear in the profile.
+  \item For each prefix, record the observed maximum $b_k = M_k(b_1, \ldots, b_{k-1})$.
+  \item Construct a linear system: treat the pairs $([\mathbf{prefix}, M_k[\mathbf{prefix}]])$ as a point cloud.
+  \item Use least-squares regression to fit:
+    \begin{equation}
+    M_k \approx \alpha_k + \sum_{j=1}^{k-1} \beta_{jk} b_j
+    \end{equation}
+  \item Let $\hat{\alpha}_k, \hat{\beta}_{jk}$ be the regression coefficients.
+  \end{enumerate}
+
+\item \textbf{Refinement:} For integer constraints, round coefficients to nearest integers:
+  \begin{equation}
+  \alpha_k := \text{round}(\hat{\alpha}_k), \quad \beta_{jk} := \text{round}(\hat{\beta}_{jk})
+  \end{equation}
+
+\item \textbf{Construct constraint functions:}
+  \begin{equation}
+  C_k(b_1, \ldots, b_{k-1}) := \alpha_k + \sum_{j=1}^{k-1} \beta_{jk} b_j
+  \end{equation}
+
+\item \textbf{Output:} Constraint functions $\{C_k\}_{k=2}^m$ (and implicit $C_1 = \alpha_1$ for stage 1).
+
+\end{enumerate}
+
+\paragraph{Justification.}
+
+For the epimoric system, the deficit structure $\{\delta_{v,k}\}$ is intrinsically linear in the prior exponents (since valuations are additive and deficits are fixed per valuation). Thus linear regression is well-justified.
+
+\subsubsection{Algorithm 3: Consistency Testing and Validation}
+
+\paragraph{Principle.}
+
+Not every inferred constraint structure correctly explains all valid vectors. To validate inferred constraints, we test their predictive power on held-out vectors.
+
+\paragraph{Algorithm (Consistency Check).}
+
+\textbf{Input:} Inferred constraint functions $\{C_k\}$, and a validation set $\mathcal{B}_{\text{val}} \subseteq \mathbb{N}_0^m$ of exponent vectors not in the training set $\mathcal{B}$.
+
+\textbf{Output:} Accuracy metrics (precision, recall, F1 score).
+
+\begin{enumerate}
+
+\item \textbf{For each vector} $\mathbf{b} = (b_1, \ldots, b_m) \in \mathcal{B}_{\text{val}}$:
+  \begin{enumerate}
+  \item \textbf{Predict:} Determine validity of $\mathbf{b}$ according to inferred constraints:
+    \begin{equation}
+    \text{predicted\_valid}(\mathbf{b}) := \begin{cases} \text{true} & \text{if } \forall k : b_k \leq C_k(b_1, \ldots, b_{k-1}) \\ \text{false} & \text{otherwise} \end{cases}
+    \end{equation}
+  \item \textbf{Observe:} Check whether $\mathbf{b}$ is actually in the empirical valid set (e.g., corresponds to an integer that factorizes correctly).
+  \end{enumerate}
+
+\item \textbf{Compute metrics:}
+  \begin{align}
+  \text{TP} &:= |\{\mathbf{b} : \text{predicted\_valid}(\mathbf{b}) = \text{true and } \mathbf{b} \in \mathcal{V}_{\text{valid}}\}|\\
+  \text{FP} &:= |\{\mathbf{b} : \text{predicted\_valid}(\mathbf{b}) = \text{true and } \mathbf{b} \notin \mathcal{V}_{\text{valid}}\}|\\
+  \text{FN} &:= |\{\mathbf{b} : \text{predicted\_valid}(\mathbf{b}) = \text{false and } \mathbf{b} \in \mathcal{V}_{\text{valid}}\}|\\
+  \text{Precision} &:= \frac{\text{TP}}{\text{TP} + \text{FP}}, \quad \text{Recall} := \frac{\text{TP}}{\text{TP} + \text{FN}}, \quad \text{F1} := \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+  \end{align}
+
+\item \textbf{Output:} The metrics $(\text{Precision}, \text{Recall}, \text{F1})$ quantify the predictive quality.
+
+\end{enumerate}
+
+\paragraph{Interpretation.}
+
+High precision and recall (both $> 90\%$) indicate that the inferred constraints accurately capture the structure. The inferred constraints enable downstream applications including testing congruence conditions and algorithmic sieve design.
+
+\subsubsection{Algorithm 4: Integer Programming Formulation}
+
+\paragraph{Principle.}
+
+Constraint recovery can also be formulated as an optimization problem: find the minimal constraint structure that explains all observations.
+
+\paragraph{Formulation.}
+
+Minimize:
+\begin{equation}
+\text{Objective} := |\mathcal{V}| + \sum_{v \in \mathcal{V}, k \in [m]} |\delta_{v,k}|
+\end{equation}
+
+(the sum of the number of valuations and the sparsity of the deficit matrix).
+
+Subject to:
+
+\begin{enumerate}
+
+\item \textbf{Coverage constraint:} For each observed valid vector $\mathbf{b} \in \mathcal{B}$:
+  \begin{equation}
+  \forall v \in \mathcal{V} : \mu_v(\mathbf{b}) \geq \sum_k b_k \delta_{v,k}
+  \end{equation}
+
+\item \textbf{Exclusion constraint:} For each vector $\mathbf{b}' \notin \mathcal{B}$ (or in a "negative set" $\mathcal{B}_{\text{neg}}$):
+  \begin{equation}
+  \exists v \in \mathcal{V} : \mu_v(\mathbf{b}') < \sum_k b'_k \delta_{v,k}
+  \end{equation}
+
+\end{enumerate}
+
+\paragraph{Solution Methods.}
+
+Exact integer programming solvers (e.g., CPLEX, Gurobi) can solve this for small $m$ and $|\mathcal{V}|$. For larger instances, use:
+
+\begin{enumerate}
+
+\item \textbf{Greedy algorithm:} Iteratively add valuations that cover the most uncovered invalid vectors, until all observations are explained.
+
+\item \textbf{Simulated annealing:} Start with a random constraint structure; perturb it (add/remove valuations, adjust deficits); accept improvements and some bad moves (with decreasing probability).
+
+\item \textbf{Branch and bound:} Use bounds to prune the search space.
+
+\end{enumerate}
+
+\paragraph{Complexity.}
+
+The integer programming formulation is NP-hard in general (it's a set cover variant). For the epimoric system with small $m$ (typically $m \leq 15$), heuristic methods find good solutions in reasonable time.
+
+\subsubsection{Theorem: Constraint Recovery Correctness}
+
+\paragraph{Theorem 6 (Recovery Correctness Under Sampling).}
+
+Let $\mathcal{V}_{\text{true}}$ be the true constraint structure for the epimoric system with primes $\{p_1, \ldots, p_m\}$.
+
+Let $\mathcal{B} \subseteq \mathcal{V}_{\text{valid}} \subseteq \mathbb{N}_0^m$ be a random sample of valid vectors, with $|\mathcal{B}| = N$.
+
+Define the recovered constraint structure as $\widehat{\mathcal{V}} := $ output of Algorithms 1--3 applied to $\mathcal{B}$.
+
+\begin{enumerate}
+
+\item If $N \geq C \cdot m^3 \cdot \log(m)$ for a sufficiently large constant $C$, then with high probability ($1 - O(\exp(-m))$), the inferred constraint functions $\{C_k\}$ satisfy:
+  \begin{equation}
+  C_k(b_1, \ldots, b_{k-1}) = C_k^{\text{true}}(b_1, \ldots, b_{k-1}) + O(1)
+  \end{equation}
+  for all prefixes $(b_1, \ldots, b_{k-1})$ appearing in $\mathcal{B}$.
+
+\item The consistency test (Algorithm 3) achieves precision and recall both $> 1 - O(1/N)$.
+
+\end{enumerate}
+
+\begin{proof}[Proof Sketch]
+
+The cascade profiles $M_k$ are sampled from the true profile set with probability proportional to the density of valid vectors at each $(b_1, \ldots, b_{k-1})$.
+
+For linear constraints, the regression fit is accurate if the sample covers the support of the constraint region sufficiently. By a covering argument (using $N = \Omega(m^3 \log m)$ samples and standard VC dimension theory), the regression coefficients converge to the true coefficients.
+
+Once coefficients are accurate, the induced constraint functions correctly classify held-out vectors, giving high accuracy in the consistency test.
+
+\end{proof}
+
+\subsubsection{Empirical Conjectures}
+
+\paragraph{Conjecture 1 (Prime-Numerator System Recovery).}
+
+For the canonical epimoric system with $m$ primes $\{p_1, \ldots, p_m\}$, applying Algorithms 1--3 to the first $N = 10m^3$ integers (converted to exponent vectors) recovers:
+
+\begin{enumerate}
+
+\item Exactly $m$ constraint valuations (the number of independent prime gaps up to $p_m$).
+
+\item The inferred deficit matrix $\{\hat{\delta}_{v,k}\}$ matches the true valuations $\{v_q(p_k - 1)\}$ with error $< 5\%$ (measured as the Frobenius norm $\|\hat{\delta} - \delta_{\text{true}}\|_F$).
+
+\item The consistency test achieves $> 95\%$ F1 score on held-out integers.
+
+\end{enumerate}
+
+Constraint recovery is empirically feasible, requiring only a polynomial sample of the valid vector set.
+
+\paragraph{Conjecture 2 (Scalability and Accuracy).}
+
+For $m \leq 20$ (primes up to 71), Algorithms 1--3 scale to $N = 10^6$ vectors, recovering all constraints with $> 90\%$ accuracy and validating on held-out sets with $> 90\%$ F1 score. Constraint recovery serves as a practical tool for analyzing factorization systems at scale.
+
+\subsubsection{Connection to Polytope Facets}
+
+The inferred constraint functions $\{C_k\}$ directly correspond to the facets of the obstruction polytope $\mathcal{P}_m$.
+
+Specifically, each constraint $b_k \leq C_k(b_1, \ldots, b_{k-1})$ defines a facet-defining inequality:
+\begin{equation}
+b_k - \sum_{j < k} \beta_{jk} b_j \leq \alpha_k
+\end{equation}
+
+The normal vector to this facet is $(\ldots, -\beta_{jk}, \ldots, 1, 0, \ldots, 0)$ (with a 1 in position $k$).
+
+Recovering the facet normals is thus equivalent to recovering the polytope's geometry, which in turn reveals the prime structure.

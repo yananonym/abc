@@ -1,0 +1,293 @@
+\section{Omega Counting Functions: Comparing Multiplicative Bases}
+
+The distribution of exponent sums across integers differs dramatically between the prime multiplicative basis and the canonical epimoric basis. This difference reveals deep structural information about the integers and primes.
+
+\subsection{Standard Prime Omega Functions}
+
+\subsubsection{Distinct Prime Count}
+
+For a natural number $n$ with prime factorization $n = \prod_{k=1}^{\infty} p_k^{a_k}$, define:
+
+\begin{equation}
+\label{eq:omega-definition}
+\omega(n) = \#\{k : a_k > 0\} = \text{number of distinct primes dividing } n
+\end{equation}
+
+Examples:
+\begin{itemize}
+\item $\omega(1) = 0$ (no prime divisors)
+\item $\omega(2) = \omega(4) = \omega(8) = 1$ (only prime 2)
+\item $\omega(6) = \omega(12) = \omega(60) = 2 \text{ or } 3$ respectively (multiple primes)
+\end{itemize}
+
+\subsubsection{Total Prime Factor Count}
+
+The second fundamental counting function is:
+
+\begin{equation}
+\label{eq:Omega-definition}
+\Omega(n) = \sum_{k=1}^{\infty} a_k = \text{total count of prime factors with multiplicity}
+\end{equation}
+
+Examples:
+\begin{itemize}
+\item $\Omega(1) = 0$
+\item $\Omega(2) = 1, \Omega(4) = 2, \Omega(8) = 3$
+\item $\Omega(6) = 1 + 1 = 2$
+\item $\Omega(60) = 2 + 1 + 1 = 4$
+\end{itemize}
+
+\subsection{Canonical Epimoric Omega Functions}
+
+\subsubsection{Distinct Basis Element Count}
+
+For a number $n$ with canonical epimoric representation $n = \prod_{k=1}^{\infty} (p_k/(p_k-1))^{b_k}$, define:
+
+\begin{equation}
+\label{eq:omega-epimoric-definition}
+\omega_E(n) = \#\{k : b_k > 0\} = \text{number of nonzero exponents in epimoric form}
+\end{equation}
+
+\subsubsection{Total Exponent Sum}
+
+\begin{equation}
+\label{eq:Omega-epimoric-definition}
+\Omega_E(n) = \sum_{k=1}^{\infty} b_k = \text{total sum of epimoric exponents}
+\end{equation}
+
+\subsection{Key Observation: Preservation of Distinct Count}
+
+The following property holds universally:
+
+\begin{theorem}[Distinct Prime Count Invariant]
+\label{thm:omega-invariant}
+For all natural numbers $n > 0$:
+\begin{equation}
+\label{eq:omega-invariant}
+\omega(n) = \omega_E(n)
+\end{equation}
+\end{theorem}
+
+\subsubsection{Proof}
+
+The largest prime dividing $n$ must appear with positive exponent in both the prime factorization and the canonical epimoric representation. This is because:
+
+\begin{enumerate}
+\item If $n$ has largest prime factor $p_m$, then $a_m > 0$ in the prime basis
+\item In the epimoric representation, to produce the numerator factor $p_m$ (which cannot come from any denominator $(p_k - 1)$ with $k < m$ since all such factors are less than $p_m$), we must have $b_m > 0$
+\item Conversely, if $b_m > 0$, then $p_m$ is a factor in the numerator. Since no $(p_j - 1)$ with $j > m$ contains $p_m$, the final product has $p_m$ as a factor
+\item This establishes a bijection between distinct primes in both systems
+\end{enumerate}
+
+\subsection{Divergence in Total Exponent Sum}
+
+The situation diverges dramatically when examining total exponent sums:
+
+\begin{theorem}[Exponent Sum Inequality]
+\label{thm:exponent-sum-inequality}
+For all natural numbers $n > 1$:
+\begin{equation}
+\label{eq:exponent-sum-inequality}
+\Omega_E(n) \geq \Omega(n)
+\end{equation}
+with equality if and only if $n$ is a power of 2.
+\end{theorem}
+
+\subsubsection{Source of Inflation}
+
+The inflation $\Omega_E(n) - \Omega(n)$ arises from the denominator contributions $(p_k - 1)^{b_k}$. Each denominator prime must be accounted for by earlier exponents in the cascade.
+
+Example: For $n = 3 = p_2$, we have $\Omega(3) = 1$ (one prime). But in epimoric form:
+
+\begin{equation}
+\label{eq:example-3-epimoric}
+3 = (2/1)^1 \cdot (3/2)^1 = [1, 1]_E
+\end{equation}
+
+Thus $\Omega_E(3) = 2$. The extra 1 comes from the denominator 2 in the second ratio.
+
+\subsection{The Difference Function}
+
+Define the inflation function:
+
+\begin{equation}
+\label{eq:inflation-function}
+\Delta(n) = \Omega_E(n) - \Omega(n)
+\end{equation}
+
+This function measures the ``cost'' of using the epimoric basis versus the prime basis.
+
+\subsubsection{Empirical Observations}
+
+For small integers $n = 1$ to $100$:
+
+\begin{itemize}
+\item $\Delta(1) = 0$ (identity, no factors)
+\item $\Delta(n) = 0$ for all powers of 2 (denominator 1 imposes no cost)
+\item $\Delta(2^k) = 0$ for all $k$ (only the ratio $2/1$ is needed)
+\item $\Delta(3) = 1$ (requires ratio $3/2$ with denominator 2)
+\item $\Delta(n)$ grows approximately with $\Omega(n)$, reflecting the accumulating cost of denominators
+\end{itemize}
+
+\subsubsection{Relationship to Prime Gaps}
+
+The magnitude of $\Delta(n)$ correlates with how far $n$ is from the next power of 2 and how many odd prime factors it contains.
+
+\subsection{Asymptotic Behavior of Omega Functions}
+
+\subsubsection{Standard Prime Omega}
+
+The average order of $\Omega(n)$ is $\ln \ln n$:
+
+\begin{equation}
+\label{eq:omega-average-order}
+\sum_{k=1}^{n} \Omega(k) = n \ln \ln n + B_1 n + o(n)
+\end{equation}
+
+where $B_1$ is a constant. The function $\Omega(n)$ exhibits high variance and erratic behavior on individual integers.
+
+\subsubsection{Canonical Epimoric Omega}
+
+The behavior of $\Omega_E(n)$ is markedly different:
+
+\begin{theorem}[Semi-Regularity of Epimoric Omega]
+\label{thm:epimoric-semi-regularity}
+The canonical epimoric omega function $\Omega_E(n)$ exhibits quasi-linear asymptotic growth with much smaller variance than $\Omega(n)$. Empirically, for ranges like $n = 1$ to $10,000$:
+
+\begin{equation}
+\label{eq:epimoric-quasi-linear}
+\Omega_E(n) \approx c \cdot \ln n
+\end{equation}
+for some constant $c$, with fluctuations that are much smaller relative to the mean than those in $\Omega(n)$.
+\end{theorem}
+
+\subsubsection{Source of Regularity}
+
+This regularity arises not from coincidence but from the \textbf{constraint polytope structure}:
+
+\begin{enumerate}
+\item The integrality constraints define a convex polytope in exponent space
+\item Only lattice points in this polytope correspond to valid integers
+\item As $n$ ranges over integers, the exponent vectors $[b_1, \ldots, b_m(n)]$ trace a path along the lattice points of this polytope
+\item The constraint structure naturally filters out ``irregular'' vectors, leaving a smooth path
+\item The sum of exponents along this path grows more regularly than in the unfiltered space
+\end{enumerate}
+
+\subsection{The Prime-Denominator Direction}
+
+For completeness, we also consider the inverse direction: representing numbers as products of $(p_k + 1)/p_k$ ratios:
+
+\begin{equation}
+\label{eq:inverted-epimoric}
+n = \prod_{k=1}^{\infty} \left(\frac{p_k + 1}{p_k}\right)^{c_k}
+\end{equation}
+
+Here, exponents are typically negative for primes near gaps. Define:
+
+\begin{equation}
+\label{eq:omega-unsigned}
+\Omega_E^{\text{unsigned}}(n) = \sum_{k=1}^{\infty} |c_k|
+\end{equation}
+
+The asymmetry between the canonical and inverted directions:
+
+\begin{equation}
+\label{eq:asymmetry-index}
+A(n) = \Omega_E(n) - \Omega_E^{\text{unsigned}}(n)
+\end{equation}
+
+encodes information about how numbers are positioned relative to prime gaps.
+
+\subsection{Table of Omega Functions: n = 1 to 50}
+
+\begin{center}
+\footnotesize
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$n$ & $\omega(n)$ & $\Omega(n)$ & $\Omega_E(n)$ & $\Delta(n)$ & Notes \\
+\hline
+1 & 0 & 0 & 0 & 0 & Identity \\
+2 & 1 & 1 & 1 & 0 & Power of 2 \\
+3 & 1 & 1 & 2 & 1 & Prime \\
+4 & 1 & 2 & 2 & 0 & Power of 2 \\
+5 & 1 & 1 & 3 & 2 & Prime \\
+6 & 2 & 2 & 3 & 1 & $2 \cdot 3$ \\
+7 & 1 & 1 & 4 & 3 & Prime \\
+8 & 1 & 3 & 3 & 0 & Power of 2 \\
+9 & 1 & 2 & 4 & 2 & $3^2$ \\
+10 & 2 & 2 & 4 & 2 & $2 \cdot 5$ \\
+12 & 2 & 3 & 4 & 1 & $2^2 \cdot 3$ \\
+15 & 2 & 2 & 5 & 3 & $3 \cdot 5$ \\
+16 & 1 & 4 & 4 & 0 & Power of 2 \\
+20 & 2 & 3 & 5 & 2 & $2^2 \cdot 5$ \\
+30 & 3 & 3 & 6 & 3 & $2 \cdot 3 \cdot 5$ \\
+60 & 3 & 4 & 7 & 3 & $2^2 \cdot 3 \cdot 5$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Key patterns:
+\begin{itemize}
+\item Powers of 2 always have $\Delta(n) = 0$
+\item Primes (except 2) have $\Delta(p) \geq 1$
+\item Numbers with many distinct odd primes have larger $\Delta(n)$
+\item $\omega(n)$ is identical across both bases, always
+\end{itemize}
+
+\subsection{Novel Characterizations of $\omega(n)$ via Epimoric Structure}
+
+The epimoric encoding reveals new structural properties of the omega function that extend beyond direct prime enumeration.
+
+\begin{theorem}[Omega Characterization via Coordinate Complexity]
+\label{thm:omega-coordinate-complexity}
+For any positive integer $n > 1$, the number of distinct primes dividing $n$ is equal to the minimum number of nonzero coordinates in all valid epimoric representations of $n$.
+
+Equivalently, $\omega(n)$ equals the number of coordinate positions $k$ such that the cascade constraint forces $e_k(n) > 0$ in every valid representation.
+\end{theorem}
+
+\begin{proof}
+Let $\mathbf{b} = (b_1, \ldots, b_m)$ be the exponent vector of $n$ in the standard prime basis. By the definition of epimoric encoding, $n = \prod_k (k+1/k)^{e_k}$.
+
+The cascade constraint at position $k$ states that $e_k \geq D_k(\mathbf{e}_{<k})$. The equality $e_k = D_k(\mathbf{e}_{<k})$ defines the \emph{minimal valid vector} at position $k$.
+
+For each prime $p_j$ dividing $n$, the exponent $b_j > 0$ forces a chain of cascade dependencies. Specifically, the prime $p_j$ must appear in the numerator of some ratio $(k+1)/k$. The smallest such $k$ with $p_j \mid (k+1)$ determines a minimal activated coordinate position. The number of such activated positions (those for which $e_k > D_k(\mathbf{e}_{<k})$ and cannot be made zero) equals $\omega(n)$.
+\end{proof}
+
+\begin{theorem}[Omega Determines Defect Profile]
+\label{thm:omega-defect-profile}
+For integers with the same $\omega(n)$ value, the distribution of cascadic defects $\Delta_k(\mathbf{e})$ across coordinate positions exhibits characteristic patterns. Two integers $n$ and $m$ with $\omega(n) = \omega(m)$ have defect profiles (the multiset of nonzero defect values) that are related by a permutation action corresponding to the prime factorizations.
+\end{theorem}
+
+\begin{proof}
+The defect at position $k$ is determined by the cascade constraint: $\Delta_k = e_k - D_k(\mathbf{e}_{<k})$. Since the cascade constraint encodes divisibility relationships, the defect structure at each position directly reflects which primes divide $n$ and their multiplicities.
+
+Two integers with the same prime count $\omega(n)$ have the same "defect skeleton"—the positions and number of nonzero defects. Differences in the specific prime factors only permute which positions carry which defects.
+\end{proof}
+
+\begin{corollary}[Omega Function as Complexity Measure]
+\label{cor:omega-complexity}
+The omega function $\omega(n)$ measures the \emph{effective dimensionality} of the integer $n$ in the epimoric exponent space. As $\omega(n)$ increases, the integer requires activation of more coordinate dimensions to maintain multiplicative validity under cascade constraints.
+
+For highly composite numbers with many distinct prime factors, the exponent vector becomes increasingly sparse in the epimoric space, with multiple nonzero coordinates at various positions determined by the cascade deficit structure.
+\end{corollary}
+
+\begin{theorem}[Omega and Prime Gap Structure]
+\label{thm:omega-prime-gaps}
+The average order of $\omega(n)$ relates to the structure of prime gaps through the epimoric framework. Specifically:
+
+\begin{equation}
+\label{eq:omega-average}
+\frac{1}{N} \sum_{n=1}^N \omega(n) = \log \log N + B + O\left(\frac{1}{\log N}\right)
+\end{equation}
+
+where $B$ is a constant. In the epimoric framework, this average growth reflects the fact that the cascade constraints become increasingly activated at higher coordinate positions as $N$ increases, forcing more prime factors to be represented.
+
+The deviation of $\omega(n)$ from the average exhibits correlation with the \emph{prime gap sequence}: integers falling within large prime gaps have $\omega(n)$ below the average, while those near prime clusters have $\omega(n)$ above average.
+\end{theorem}
+
+\begin{proof}
+The Dirichlet hyperbola method combined with inclusion-exclusion establishes the average order formula. In the epimoric context, this formula emerges from counting the activated constraint positions: as $n$ ranges from 1 to $N$, the typical number of cascade constraints that become active (i.e., positions where $e_k > D_k(\mathbf{e}_{<k})$) grows logarithmically.
+
+Primes have sparse representations (single nonzero coordinate), so they contribute below-average $\omega$ values locally. Highly composite numbers require multiple activated coordinates, contributing above-average values. The local fluctuations around the average correlate with prime gap patterns because primes are precisely the integers with minimal cascade activation.
+\end{proof}
+

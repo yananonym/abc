@@ -1,0 +1,218 @@
+\section{Vector Space Structure and Constraint Polytopes}
+
+The integrality constraints of ratio-based multiplicative bases define a profound geometric structure in exponent space. This section develops the geometry and algebra of these constraints.
+
+\subsection{The Integrality Constraint System}
+
+For the canonical epimoric basis, an exponent vector $[b_1, b_2, \ldots, b_m]$ produces an integer if and only if for every prime $q$:
+
+\begin{equation}
+v_q\left(\prod_{k=1}^{m} p_k^{b_k}\right) \geq v_q\left(\prod_{k=1}^{m} (p_k - 1)^{b_k}\right)
+\end{equation}
+
+Expanding:
+
+\begin{equation}
+\delta_{q,p_k} b_k \geq \sum_{k=1}^{m} b_k \cdot v_q(p_k - 1)
+\end{equation}
+
+where $\delta_{q,p_k}$ is 1 if $q = p_k$ and 0 otherwise.
+
+\subsection{The Constraint Polytope}
+
+The set of valid exponent vectors (allowing negative integers) forms a convex polytope in $\mathbb{R}^m$ defined by these linear inequalities. For non-negative integers only, we restrict to the cone $\mathbb{R}_{\geq 0}^m$.
+
+\subsubsection{Fundamental Properties}
+
+\begin{enumerate}
+\item The polytope is \textbf{non-empty}: the vector $[0, 0, \ldots, 0]$ (corresponding to $n=1$) satisfies all constraints
+\item The polytope is \textbf{closed under integer scaling}: if $[b_1, \ldots, b_m]$ is valid and $\lambda \in \mathbb{Z}$, then $[\lambda b_1, \ldots, \lambda b_m]$ is valid
+\item The lattice points of the polytope correspond exactly to representable integers
+\end{enumerate}
+
+\subsection{Recursive Structure of Constraints}
+
+A key property specific to the canonical epimoric system: the denominators $(p_k - 1)$ involve only primes with index $< k$:
+
+\begin{equation}
+(p_k - 1) = \prod_{j < k} p_j^{v_{p_j}(p_k - 1)}
+\end{equation}
+
+This creates a \textbf{recursive obstruction structure}. The constraint for prime $p_k$ depends on exponents $b_j$ with $j \geq k$, but not on the previously determined $b_j$ with $j < k$ (except through their cumulative contribution to numerator valuation).
+
+\subsubsection{Consequence}
+
+We can validate exponent vectors using a backward-pass algorithm:
+
+\begin{algorithm}
+\caption{Validate Exponent Vector for Integrality}
+\begin{algorithmic}
+\STATE Input: $[b_1, \ldots, b_m]$
+\STATE Initialize: deficit array $D[1 \ldots m] \leftarrow 0$
+\FOR{$k = m$ down to $1$}
+\STATE Compute $v_{p_k}(p_k - 1) = 0$ (always 0 by definition)
+\FOR{$j = k+1$ to $m$}
+\STATE $D[k] \leftarrow D[k] + b_j \cdot v_{p_k}(p_j - 1)$
+\ENDFOR
+\IF{$b_k < D[k]$}
+\STATE Return FALSE (integrality violation)
+\ENDIF
+\ENDFOR
+\STATE Return TRUE
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Counting Valid Vectors}
+
+For vectors with a fixed exponent sum $S = \sum_{k} b_k$, we ask: how many valid vectors are there?
+
+Let $V_{\text{valid}}(S, m)$ denote the count of valid vectors with sum $S$ using exponents $[b_1, \ldots, b_m]$.
+
+\subsubsection{Growth Estimates}
+
+Empirically, for increasing $S$:
+
+\begin{equation}
+V_{\text{valid}}(S, m) \ll \binom{S + m - 1}{S}
+\end{equation}
+
+(the binomial count with no constraints).
+
+The density of valid vectors:
+
+\begin{equation}
+\rho(S, m) = \frac{V_{\text{valid}}(S, m)}{\binom{S + m - 1}{S}} \to 0 \text{ as } S \to \infty
+\end{equation}
+
+This vanishing density is one source of the semi-regularity observed in $\Omega_E(n)$: as integers grow, they become increasingly sparse in the space of all possible exponent vectors, because larger exponents require increasingly tight satisfaction of the constraint polytope.
+
+\subsection{Forbidden Regions and Prime Gaps}
+
+\subsubsection{Definition}
+
+A region in the exponent space is \textbf{forbidden} if it contains no valid integers, i.e., no lattice point of the region can be expressed as an exponent vector for any natural number.
+
+\subsubsection{Correlation with Prime Gaps}
+
+Large prime gaps create corresponding regions of ``sparsity'' in the constraint polytope. For example:
+
+\begin{itemize}
+\item The gap between primes 23 and 29 (gap of 6) creates constraints that make certain exponent combinations impossible
+\item Conversely, twin prime regions create tight clusters where the constraints are permissive, allowing dense packing of valid vectors
+\end{itemize}
+
+\subsection{The Valuation Matrix and Rank Analysis}
+
+Define the \textbf{constraint matrix} $C$ where:
+
+\begin{itemize}
+\item Rows are indexed by primes $q$
+\item Columns are indexed by basis elements (ratio indices $k$)
+\item Entry $C_{q,k} = v_q(p_k - 1)$ (the exponent of $q$ in the factorization of $p_k - 1$)
+\end{itemize}
+
+For example, the first few rows:
+
+\begin{center}
+\begin{tabular}{c|ccccc}
+ & $k=1$ & $k=2$ & $k=3$ & $k=4$ & $\cdots$ \\
+$q=2$ & $0$ & $1$ & $2$ & $1$ & $\cdots$ \\
+$q=3$ & $0$ & $0$ & $0$ & $1$ & $\cdots$ \\
+$q=5$ & $0$ & $0$ & $0$ & $0$ & $\cdots$ \\
+$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\ddots$
+\end{tabular}
+
+where the entry $C_{2,3} = 2$ because $p_3 - 1 = 5 - 1 = 4 = 2^2$.
+\end{center}
+
+The rank of this matrix (over $\mathbb{Z}$ or over finite fields) governs the dimension of the constraint space.
+
+\subsubsection{Rank Properties}
+
+For the canonical epimoric system:
+
+\begin{itemize}
+\item The matrix is lower-triangular (once properly ordered): entry $C_{q,k}$ can be nonzero only if $q < p_k$
+\item The rank grows with the number of primes considered
+\item Rank deficiency occurs at finite truncation; the infinite matrix has full rank
+\end{itemize}
+
+\subsection{Geometric Visualization in Low Dimensions}
+
+For small exponent dimensions (e.g., $m = 2$ or $m = 3$), the constraint polytope has geometric structure:
+
+\subsubsection{Example: The 2-Dimensional Case}
+
+Using only the first two basis elements $(2/1)$ and $(3/2)$, the constraint is:
+
+\begin{equation}
+b_1 \geq b_2
+\end{equation}
+
+(since the denominator of $(3/2)$ is $2$, which must appear in the numerator from $(2/1)^{b_1}$).
+
+The valid lattice points form a triangular region: $\{(b_1, b_2) : b_1 \geq b_2, b_1 \geq 0, b_2 \geq 0\}$.
+
+The integers representable with only these two ratios are: $1, 2, 3, 4, 6, 8, 9, 12, 16, 18, \ldots$ (numbers of the form $2^a \cdot 3^b$).
+
+\subsubsection{Example: The 3-Dimensional Case}
+
+Adding the third ratio $(5/4)$, the constraints become:
+
+\begin{equation}
+\begin{aligned}
+b_1 &\geq b_2 + 2 b_3 \\
+b_2 &\geq 0\\
+b_3 &\geq 0
+\end{aligned}
+\end{equation}
+
+The constraint polytope becomes more intricate, reflecting the contribution of the denominator $4 = 2^2$ from $(5/4)$.
+
+\subsection{Topological Features and Persistent Homology}
+
+\subsubsection{Homological Analysis}
+
+The constraint polytope, viewed as a simplicial complex or cell complex, admits topological analysis via persistent homology. Features include:
+
+\begin{itemize}
+\item Connected components (for non-negative integer exponents)
+\item Boundary structure (faces defined by active constraints)
+\item Persistent cycles and cavities at various scales
+\end{itemize}
+
+\subsubsection{Correlation with Prime Distribution}
+
+The constraint polytope exhibits structural properties correlated with prime distribution:
+
+\begin{enumerate}
+\item Large prime gaps correspond to discontinuities or singularities in the polytope.
+\item Twin primes create regular, repeating features in the polytope structure.
+\item The homological complexity grows in correlation with prime gap distribution.
+\end{enumerate}
+
+\subsection{Integer Programming Formulation}
+
+The problem of finding all valid exponent vectors with a given sum can be posed as an integer program:
+
+\begin{equation}
+\begin{aligned}
+\text{maximize} & \quad \sum_{k=1}^{m} b_k \\
+\text{subject to} & \quad v_q\left(\prod p_k^{b_k}\right) \geq v_q\left(\prod (p_k-1)^{b_k}\right) \quad \forall q\\
+& \quad \sum_{k=1}^{m} b_k = S\\
+& \quad b_k \in \mathbb{Z}_{\geq 0}
+\end{aligned}
+\end{equation}
+
+Modern integer programming solvers (branch-and-cut, cutting planes) can enumerate solutions and extract structural information about the feasible region.
+
+\subsection{Open Questions}
+
+\begin{enumerate}
+\item Does the constraint polytope have a closed-form description in terms of prime gap sequences?
+\item Can we compute the homological invariants of the polytope explicitly?
+\item Is there a generating function for $V_{\text{valid}}(S)$ that relates to analytic number theory?
+\item Can forbidden regions be characterized algorithmically to detect prime gaps?
+\end{enumerate}
+
+These questions suggest deep connections between the combinatorial geometry of exponent space and fundamental properties of the prime sequence.

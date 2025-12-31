@@ -1,0 +1,152 @@
+\subsection{Information Entropy and Information-Theoretic Analysis of Factorization}
+
+\subsubsection{Shannon Entropy of Normalized Exponents}
+
+For an integer $n$ with normalized exponent vector $\mathbf{w}(n) = (w_1(n), w_2(n), \ldots)$ where $\sum_k w_k(n) = 1$ and $w_k(n) \geq 0$, define the \emph{Shannon entropy}:
+
+\begin{equation}
+H(n) = H(\mathbf{w}(n)) = -\sum_{k : w_k(n) > 0} w_k(n) \log w_k(n)
+\end{equation}
+
+The entropy $H(n)$ measures the \emph{information density} or \emph{uncertainty} in the distribution of prime factors:
+
+\begin{itemize}
+\item $H(n) = 0$ when $n = p_k^a$ is a prime power (all weight on one prime)
+\item $H(n) = \log \omega(n)$ when $n$ is a product of $\omega(n)$ equal powers (uniform distribution)
+\item $0 < H(n) < \log \omega(n)$ for typical integers (mixed distribution)
+\end{itemize}
+
+\subsubsection{Minimum and Maximum Entropy States}
+
+For an integer with exactly $\omega(n)$ distinct prime factors:
+
+\begin{enumerate}
+\item \textbf{Minimum entropy}: Achieved when one prime dominates. If $n = p_1^{a_1} p_2^{a_2} \cdots p_k^{a_k}$ with $a_1 \gg a_i$ for $i > 1$, then:
+\begin{equation}
+H_{\min}(n) \approx -\frac{a_1}{a_1 + O(1)} \log \frac{a_1}{a_1 + O(1)} - O\left(\frac{1}{\log n}\right)
+\end{equation}
+
+\item \textbf{Maximum entropy}: Achieved when all primes contribute equally. If $a_1 = a_2 = \cdots = a_k = a$, then:
+\begin{equation}
+H_{\max}(n) = \log \omega(n)
+\end{equation}
+\end{enumerate}
+
+The entropy is bounded:
+\begin{equation}
+0 \leq H(n) \leq \log \omega(n) \leq \log \log n
+\end{equation}
+
+\subsubsection{Entropy as a Measure of Primality and Distribution}
+
+The entropy of $n$ encodes information about how \emph{evenly distributed} its prime factors are relative to the total exponent sum $\Omega(n) = \sum_k a_k$. Consider:
+
+\begin{equation}
+H(n) = \log \Omega(n) - \frac{\sum_k a_k \log a_k}{\Omega(n)}
+\end{equation}
+
+This can be rewritten as:
+\begin{equation}
+H(n) = \mathbb{E}[\log a_k] + \text{variance term}
+\end{equation}
+
+Integers with \emph{high entropy} (relative to their size) have prime factors distributed more evenly across the prime spectrum. This is related to the notion of ``smooth'' numbers and $k$-smooth integers used in factorization algorithms.
+
+\subsubsection{Kullback-Leibler Divergence Between Factorizations}
+
+Compare two integers $n$ and $m$ with normalized exponent distributions $\mathbf{w}(n)$ and $\mathbf{w}(m)$. The \emph{Kullback-Leibler divergence} (relative entropy) is:
+
+\begin{equation}
+D_{\text{KL}}(\mathbf{w}(n) || \mathbf{w}(m)) = \sum_{k} w_k(n) \log \frac{w_k(n)}{w_k(m)}
+\end{equation}
+
+This divergence satisfies:
+\begin{itemize}
+\item $D_{\text{KL}} \geq 0$ with equality iff $\mathbf{w}(n) = \mathbf{w}(m)$
+\item $D_{\text{KL}}$ is \emph{asymmetric}: $D_{\text{KL}}(\mathbf{w}(n) || \mathbf{w}(m)) \neq D_{\text{KL}}(\mathbf{w}(m) || \mathbf{w}(n))$ in general
+\end{itemize}
+
+For the symmetric case, use the \emph{Jensen-Shannon divergence}:
+
+\begin{equation}
+D_{\text{JS}}(\mathbf{w}(n), \mathbf{w}(m)) = \frac{1}{2} D_{\text{KL}}(\mathbf{w}(n) || \mathbf{w}_{\text{avg}}) + \frac{1}{2} D_{\text{KL}}(\mathbf{w}(m) || \mathbf{w}_{\text{avg}})
+\end{equation}
+
+where $\mathbf{w}_{\text{avg}} = \frac{1}{2}(\mathbf{w}(n) + \mathbf{w}(m))$.
+
+\subsubsection{Mutual Information and Prime Dependencies}
+
+For two primes $p_i, p_j$, the \emph{mutual information} measures their correlation in factorizations:
+
+\begin{equation}
+I(p_i ; p_j) = \sum_{n \in \mathbb{N}} P(\text{both divide } n) \log \frac{P(\text{both divide } n)}{P(p_i | n) P(p_j | n)}
+\end{equation}
+
+where probabilities are computed with respect to a suitable probability measure on integers (e.g., uniform on $\{1, \ldots, N\}$ or a weighted measure from the simplex structure).
+
+High mutual information between $p_i$ and $p_j$ indicates that their occurrence in factorizations is \emph{correlated}, revealing hidden structure in the prime distribution.
+
+\subsubsection{Information Geometry and Fisher Metric}
+
+The space of probability distributions on the prime field $\mathbb{P}$ forms a \emph{statistical manifold}. The \emph{Fisher information metric} on $\Delta^{\infty}$ is:
+
+\begin{equation}
+g_{ij} = \mathbb{E}\left[\frac{\partial \log p(\mathbf{w})}{\partial w_i} \frac{\partial \log p(\mathbf{w})}{\partial w_j}\right] = \frac{\delta_{ij}}{w_i}
+\end{equation}
+
+where $p(\mathbf{w})$ is the probability density of the normalized exponent distribution.
+
+The Fisher metric induces a Riemannian structure on $\Delta^{\infty}$, with geodesic distances:
+
+\begin{equation}
+d_{\text{Fisher}}(\mathbf{w}, \mathbf{w}') = \sqrt{\sum_k \frac{(w_k - w_k')^2}{w_k}}
+\end{equation}
+
+This is the \emph{Hellinger distance}, a fundamental metric in probability theory and information geometry.
+
+\subsubsection{Entropy and Prime Gap Distribution}
+
+The entropy of an integer is sensitive to the \emph{gap structure} of its prime factors. For an integer with consecutive primes $p_k, p_{k+1}$:
+
+\begin{equation}
+g_k = p_{k+1} - p_k
+\end{equation}
+
+Large gaps reduce the entropy by concentrating weight on fewer primes. Conversely, numbers composed of primes from a dense cluster have higher entropy.
+
+Define the \emph{entropy spectrum}:
+
+\begin{equation}
+\mathcal{E}(k) = \{ H(n) : \omega(n) = k \}
+\end{equation}
+
+The distribution of entropies on $\mathcal{E}(k)$ reveals the \emph{fine structure of primes} at different scales.
+
+\subsubsection{Total Information Content of Integers}
+
+The total information content (in bits) of representing an integer $n$ using the normalized simplex structure is:
+
+\begin{equation}
+\mathcal{I}(n) = \log \Omega(n)! - \sum_k a_k! + H(n) \cdot \Omega(n)
+\end{equation}
+
+This combines:
+\begin{itemize}
+\item The combinatorial complexity of arranging exponents (multinomial coefficient)
+\item The entropy penalty for uneven distribution
+\item The expected logarithmic magnitude
+\end{itemize}
+
+Minimizing $\mathcal{I}(n)$ over all factorizations yields the \emph{economical} representation of $n$ in the simplex.
+
+\subsubsection{Asymptotic Entropy Behavior}
+
+As $n \to \infty$, the average entropy of integers grows as:
+
+\begin{equation}
+\lim_{N \to \infty} \frac{1}{N} \sum_{n \leq N} H(n) = \log \log N + C + o(1)
+\end{equation}
+
+for some constant $C$. This reflects the fact that large integers tend to have more distinct prime factors (growing like $\log \log n$), and their entropy is typically well-distributed across these factors.
+
+The variance of entropy around this mean provides a measure of the ``typical'' deviation from balanced factorization, which is a new window into prime distribution anomalies.

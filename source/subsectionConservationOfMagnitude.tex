@@ -1,0 +1,158 @@
+\subsection{Conservation of Magnitude and Uniqueness Theorems}
+
+\subsubsection{Theorem 1: Uniqueness of Normalized Representations}
+
+\begin{theorem}[Uniqueness of Normalized Exponents]
+For any positive integer $n$ and any multiplicative basis (standard primes, shifted primes, or generalized systems), the normalized exponent vector $\mathbf{w}(n)$ is \emph{unique} in the following strong sense:
+
+If $n = \prod_k b_k^{(1)}$ and $n = \prod_k b_k^{(2)}$ are two different factorizations of $n$ in the same basis, then their normalized weight vectors are identical:
+
+\begin{equation}
+\frac{b_k^{(1)}}{\sum_j |b_j^{(1)}|} = \frac{b_k^{(2)}}{\sum_j |b_j^{(2)|}}, \quad \text{for all } k
+\end{equation}
+
+In other words, the position of $n$ in the normalized simplex $\Delta^{\infty}$ is \emph{uniquely determined}, regardless of how the factorization is written.
+\end{theorem}
+
+\emph{Proof}: Suppose two factorizations exist:
+\begin{equation}
+n = \prod_k (p_k + q)^{b_k^{(1)}} = \prod_k (p_k + q)^{b_k^{(2)}}
+\end{equation}
+
+Then:
+\begin{equation}
+\prod_k (p_k + q)^{b_k^{(1)} - b_k^{(2)}} = 1
+\end{equation}
+
+By the uniqueness of factorization in the basis $\{p_k + q\}$, we must have $b_k^{(1)} - b_k^{(2)} = 0$ for all $k$, so $b_k^{(1)} = b_k^{(2)}$. The normalized weights are then identical. \qed
+
+\subsubsection{Implication: Normalization as a Canonical Form}
+
+The uniqueness theorem establishes that \emph{normalization is a canonical form} for representing integers. Each integer $n$ has a unique canonical representative:
+
+\begin{equation}
+[n]_{\text{norm}} = \mathbf{w}(n) \in \Delta^{\infty}
+\end{equation}
+
+This canonical form enables:
+\begin{itemize}
+\item \textbf{Unambiguous comparison}: Two integers have the same canonical form iff they have identical factorization structure (up to total magnitude)
+\item \textbf{Unique reconstruction}: From $\mathbf{w}(n)$ and the total exponent sum $\Omega(n)$, we can uniquely recover $n$
+\item \textbf{Invariant representation}: Equivalent integers under certain group actions (e.g., $n$ vs. $n \cdot p^a$ for large $a$) are distinguished in a canonical way
+\end{itemize}
+
+\subsubsection{Theorem 2: Conservation of Magnitude Under Multiplication}
+
+\begin{theorem}[Conservation of Magnitude]
+For any integers $n, m$ and any multiplicative basis, the total exponent sum (magnitude) is conserved additively under multiplication:
+
+\begin{equation}
+\Omega(n \cdot m) = \Omega(n) + \Omega(m)
+\end{equation}
+
+More generally, for the generalized Omega function in shifted systems:
+
+\begin{equation}
+\Omega_E(n \cdot m) = \Omega_E(n) + \Omega_E(m) - \text{(interaction term)}
+\end{equation}
+
+where the interaction term vanishes when $n$ and $m$ have disjoint prime supports.
+\end{theorem}
+
+This conservation law is fundamental and reflects the additive structure of logarithms:
+
+\begin{equation}
+\log(n \cdot m) = \log n + \log m
+\end{equation}
+
+In the normalized setting, conservation of magnitude translates to a conservation of the ``geometric scale'' at which we observe the integer in the simplex.
+
+\subsubsection{Reconstruction Theorem: Recovering $n$ from Normalized Data}
+
+\begin{theorem}[Reconstruction from Simplex Coordinates]
+An integer $n$ is uniquely determined (up to the choice of basis) by the pair $(\mathbf{w}(n), \Omega(n))$:
+
+\begin{equation}
+n = \prod_{k=1}^{\infty} p_k^{\Omega(n) \cdot w_k(n)}
+\end{equation}
+
+Conversely, given only $\mathbf{w}(n)$ without $\Omega(n)$, the set of integers with that normalized exponent vector is exactly:
+
+\begin{equation}
+\mathcal{I}(\mathbf{w}) = \left\{ \prod_{k=1}^{\infty} p_k^{m \cdot w_k} : m \in \mathbb{Z}^+, \; m \cdot w_k \in \mathbb{Z} \forall k \right\}
+\end{equation}
+
+This set is either empty or infinite.
+\end{theorem}
+
+\emph{Proof sketch}: The exponents are $a_k = \Omega(n) \cdot w_k(n)$, which must be integers. The set of valid $m$ values is determined by the requirement that all $m \cdot w_k$ be integers, which is equivalent to $m$ being a multiple of the LCM of the denominators of the $w_k$ when written in lowest terms. \qed
+
+\subsubsection{Magnitude Conservation in Shifted Systems}
+
+In shifted systems with displacement $q$, the conservation law becomes more subtle. For the epimoric system $(p_k - 1)/p_k$ or the generalized $(p_k + q)/p_k$:
+
+\begin{equation}
+\Omega_E(n \cdot m) = \Omega_E(n) + \Omega_E(m) - \langle \mathbf{b}(n), \mathbf{b}(m) \rangle_{\text{Wilson}}
+\end{equation}
+
+where $\langle \cdot, \cdot \rangle_{\text{Wilson}}$ is an inner product defined by the Wilson cocycle constraints. The interaction term encodes how Wilson's theorem couples the factorizations of $n$ and $m$ at the modular level.
+
+\subsubsection{Metric Structure Induced by Magnitude}
+
+Define a \emph{magnitude-weighted metric} on the simplex:
+
+\begin{equation}
+d_{\Omega}(n, m) = \sqrt{\Omega(n) + \Omega(m)} \cdot d_{\text{Hellinger}}(\mathbf{w}(n), \mathbf{w}(m))
+\end{equation}
+
+where the Hellinger distance is:
+
+\begin{equation}
+d_{\text{Hellinger}}(\mathbf{w}, \mathbf{w}') = \sqrt{\frac{1}{2} \sum_k \left(\sqrt{w_k} - \sqrt{w_k'}\right)^2}
+\end{equation}
+
+This metric is \emph{scale-aware}: integers of vastly different sizes are automatically placed at greater distance, reflecting the intuition that their factorization structures are ``more different'' when viewed at different scales.
+
+\subsubsection{Invariance and Symmetries}
+
+The conservation of magnitude implies several invariance properties:
+
+\begin{enumerate}
+\item \textbf{Translation invariance}: For any integer $d$, the map $n \mapsto n \cdot d$ changes $\Omega(n)$ by $\Omega(d)$ but preserves the normalized weights of $n$ (up to the weighted combination). The simplex geometry is \emph{affinely invariant} under such translations.
+
+\item \textbf{Scaling invariance}: Prime powers $n$ and $n^k$ satisfy $\Omega(n^k) = k \Omega(n)$, but their normalized weights are identical: $\mathbf{w}(n^k) = \mathbf{w}(n)$. This reflects the projective nature of the simplex representation.
+
+\item \textbf{Shift invariance}: In shifted systems, the normalized weights $\mathbf{w}^{(q)}(n)$ vary with $q$, but their position in the projective simplex is invariant under simultaneous shift of all primes: $q \mapsto q + c$.
+\end{enumerate}
+
+\subsubsection{Extremal Principles and Minimality}
+
+Among all factorizations of $n$, the normalized representation is \emph{minimal} in a convex-geometric sense:
+
+\begin{theorem}[Minimality of Normalized Factorization]
+For any integer $n$ with normalized exponent vector $\mathbf{w}(n)$, the representation:
+
+\begin{equation}
+n = \prod_k b_k^{\Omega(n) w_k(n)}
+\end{equation}
+
+minimizes the functional:
+
+\begin{equation}
+\mathcal{E}[\mathbf{a}] = \sum_k a_k^2 \quad \text{subject to} \; \prod_k b_k^{a_k} = n
+\end{equation}
+
+In other words, the normalized exponents are the \emph{Euclidean projection} of any exponent vector onto the simplex constraint.
+\end{theorem}
+
+This extremal property connects to the variational formulation of integer factorization, enabling the use of calculus of variations to study prime distribution.
+
+\subsubsection{Conservation Laws and Symmetry}
+
+By Noether's theorem (in the abstract setting of variational principles), each conservation law corresponds to an underlying symmetry. The conservation of magnitude corresponds to the \emph{scale symmetry} of multiplicative structure:
+
+\begin{equation}
+\text{Symmetry}: \quad n \mapsto n^{\lambda}, \quad \Omega(n) \mapsto \lambda \Omega(n)
+\end{equation}
+
+The existence of this symmetry guarantees that the total exponent sum is conserved across multiplicative operations, providing a deep connection between symmetry and conservation in number theory.
