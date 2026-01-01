@@ -275,41 +275,41 @@ The following provides an explicit algorithm: a concrete, step-by-step procedure
 \caption{Epimoric Encoding Computation}
 \begin{algorithmic}
 \REQUIRE A positive integer $n$ with prime factorization $n = \prod_i p_i^{a_i}$
-\ENSURE The epimoric encoding $E(n) = (e_1, e_2, \ldots, e_m)$ such that $n = \prod_{k=1}^m \left(\frac{k+1}{k}\right)^{e_k}$
+\ENSURE The epimoric encoding $E(n) = (e_1, e_2, \ldots, e_m)$ such that $n = \prod_{k=1}^m \left(\frac{p_k}{p_k-1}\right)^{e_k}$ where $p_k$ is the $k$-th prime
 
 \STATE \textbf{Input:} Prime factorization as pairs $(p_i, a_i)$ or as a list of exponents $[a_1, a_2, \ldots, a_\pi(p_m)]$ where $a_i = v_{p_i}(n)$
 
 \STATE \textbf{Step 1:} Initialize an array $e = [0, 0, \ldots, 0]$ of size $m_{\max}$ (large enough to accommodate all exponents)
 
-\STATE \textbf{Step 2:} For each epimoric ratio index $k = 1, 2, 3, \ldots$ in increasing order:
+\STATE \textbf{Step 2:} For each prime index $k = 1, 2, 3, \ldots, m$ in increasing order (where $p_k$ is the $k$-th prime):
 \FOR{$k = 1$ to $m_{\max}$}
-  \STATE \textbf{Step 2a:} Compute the prime factorization of the ratio $\frac{k+1}{k}$:
-  \STATE \quad $\frac{k+1}{k} = \prod_p p^{w_p(k)}$ where $w_p(k) := v_p(k+1) - v_p(k)$
+  \STATE \textbf{Step 2a:} The ratio at index $k$ is $\frac{p_k}{p_k-1}$, which has prime factorization:
+  \STATE \quad $\frac{p_k}{p_k-1} = \prod_p p^{v_p(p_k) - v_p(p_k-1)}$
 
-  \STATE \textbf{Step 2b:} For each prime $p$, check the constraint:
-  \FOR{each prime $p$ dividing $n$}
-    \STATE Compute $w_p(k) = v_p(k+1) - v_p(k)$ using Legendre's formula or direct prime factorization
+  \STATE \textbf{Step 2b:} For each prime $q$ dividing $n$, compute the contribution from this ratio:
+  \FOR{each prime $q$ dividing $n$}
+    \STATE Compute the $q$-adic valuation: $w_q(k) := v_q(p_k) - v_q(p_k-1)$
   \ENDFOR
 
   \STATE \textbf{Step 2c:} Greedily assign the maximum exponent $e_k$ such that the denominators don't exceed the numerator:
-  \STATE For each prime $p$, the contribution from $e_1, \ldots, e_k$ to the denominator is:
+  \STATE For each prime $q$, the contribution from $e_1, \ldots, e_k$ to the denominator is:
   \begin{equation}
-  D_p(e_1, \ldots, e_k) := \sum_{j=1}^k e_j \cdot v_p(j) \quad \text{(denominator exponent at } p \text{)}
+  D_q(e_1, \ldots, e_k) := \sum_{j=1}^k e_j \cdot v_q(p_j - 1) \quad \text{(denominator exponent at } q \text{)}
   \end{equation}
-  \STATE The numerator exponent at $p$ is $a_p = v_p(n)$.
-  \STATE The constraint is: for all primes $p$, we need $a_p \geq D_p(e_1, \ldots, e_k)$.
+  \STATE The numerator exponent at $q$ is $a_q = v_q(n)$.
+  \STATE The constraint is: for all primes $q$, we need $a_q \geq D_q(e_1, \ldots, e_k)$.
 
-  \STATE \textbf{Step 2d:} Find the maximum valid $e_k$ such that for all primes $p$ with $w_p(k) > 0$:
+  \STATE \textbf{Step 2d:} Find the maximum valid $e_k$ satisfying the cascade constraint at position $k$:
   \begin{equation}
-  e_k \leq \left\lfloor \frac{a_p - D_p(e_1, \ldots, e_{k-1})}{w_p(k)} \right\rfloor
+  e_k = \max\{e : e_k \geq \sum_{j < k} e_j \cdot v_{p_k}(p_j - 1)\}
   \end{equation}
-  \STATE Set $e_k$ to the minimum across all constraints (the bottleneck prime).
+  Specifically, set $e_k$ to the minimum across all constraint bounds from all primes $q$.
 
-  \STATE \textbf{Step 2e:} If $e_k = 0$ and we have exhausted all primes (i.e., $D_p(e_1, \ldots, e_k) = a_p$ for all $p$), terminate the loop.
+  \STATE \textbf{Step 2e:} If $e_k = 0$ and $D_q(e_1, \ldots, e_k) = a_q$ for all primes $q$ dividing $n$, terminate the loop.
 
-  \STATE \textbf{Step 2f:} Update denominators: for each prime $p$,
+  \STATE \textbf{Step 2f:} Update denominators: for each prime $q$,
   \begin{equation}
-  D_p(e_1, \ldots, e_k) \gets D_p(e_1, \ldots, e_{k-1}) + e_k \cdot w_p(k)
+  D_q(e_1, \ldots, e_k) \gets D_q(e_1, \ldots, e_{k-1}) + e_k \cdot v_q(p_k - 1)
   \end{equation}
 \ENDFOR
 
