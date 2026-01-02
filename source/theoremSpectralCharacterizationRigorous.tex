@@ -72,16 +72,15 @@ d(\mathbf{b}, \mathbf{b}') := \min\{n : \exists \text{ valid path } \mathbf{b} =
 \end{equation}
 \end{definition}
 
-\begin{lemma}[Explicit Reachability Bound]
+\begin{lemma}[Explicit Reachability Bound and Strong Connectivity]
 \label{lem:reachability-bound}
 
-For any valid exponent vector $\mathbf{b}^* = (b_1^*, \ldots, b_m^*) \in \mathcal{V}_{\text{valid}}$ with exponent sum $S^* = |\mathbf{b}^*| = \sum_{j=1}^m b_j^*$, the reachability distance from the zero vector is bounded by:
+For any valid exponent vector $\mathbf{b}^* = (b_1^*, \ldots, b_m^*) \in \mathcal{V}_{\text{valid}}$ with exponent sum $S^* = |\mathbf{b}^*| = \sum_{j=1}^m b_j^*$, the reachability distance from the zero vector satisfies:
 \begin{equation}
-d(\mathbf{0}, \mathbf{b}^*) \leq S^* \leq m \cdot \log_2(\prod_{j=1}^m (j+1)^{b_j^*}) = m \cdot \log_2 n^*
+d(\mathbf{0}, \mathbf{b}^*) = S^*
 \end{equation}
-where $n^* = \prod_{k=1}^m (k+1/k)^{e_k}$ is the corresponding integer, and $m$ is the size of the prime basis.
 
-More explicitly, a path exists that increments exactly $b_1^*$ copies of $\mathbf{e}_1$, then $b_2^*$ copies of $\mathbf{e}_2$, ..., then $b_m^*$ copies of $\mathbf{e}_m$, for a total path length of $S^*$.
+That is, the minimum number of coordinate increments required to reach $\mathbf{b}^*$ from $\mathbf{0}$ while maintaining validity equals the sum of all exponents. An explicit path achieving this bound exists: increment coordinate 1 exactly $b_1^*$ times, then coordinate 2 exactly $b_2^*$ times, continuing through coordinate $m$. Every intermediate vector on this path satisfies the cascade constraints.
 
 \end{lemma}
 
@@ -117,16 +116,12 @@ For constraints at positions $k > i$ (which we have not yet incremented), those 
 
 Therefore, every vector on the path is valid.
 
-\textbf{Path Length:} The total number of increments is:
+\textbf{Path Length and Optimality:} The total number of increments along the constructed path is:
 \begin{equation}
 \text{Length} = \sum_{j=1}^m b_j^* = S^*
 \end{equation}
 
-For the bound relating $S^*$ to the integer: we have
-\begin{equation}
-n^* = \prod_{k=1}^m (k+1/k)^{e_k} \implies \log n^* = \sum_{k=1}^m e_k \log(k+1/k)
-\end{equation}
-where $E(n^*) = (e_1, \ldots, e_m)$ is the epimoric encoding. By the properties of epimoric encodings (from Definition \ref{def:epimoric-encoding}), we relate $S^*$ (exponent sum in prime basis) to $e_k$ (epimoric exponents). The bound $S^* \leq m \log n^*$ follows from the fact that each epimoric coordinate $e_k$ contributes up to $O(\log k)$ to the prime exponent sum.
+This is optimal because any path from $\mathbf{0}$ to $\mathbf{b}^*$ must increase the coordinate sum from 0 to $S^*$. Each step increases the coordinate sum by exactly 1 (when incrementing a single coordinate by 1). Therefore, any path requires at least $S^*$ steps. The constructed sequential path achieves this bound, proving that $d(\mathbf{0}, \mathbf{b}^*) = S^*$.
 
 \end{proof}
 
