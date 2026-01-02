@@ -155,16 +155,16 @@ where $|\mathbf{b}| := \sum_j b_j$ is the $\ell^1$ norm (exponent sum).
 The exponent change $|\mathbf{b}'| - |\mathbf{b}|$ equals 1 in all transitions (incrementing one coordinate by one).
 \end{definition}
 
-\begin{theorem}[Spectral Radius Function]
+\begin{theorem}[Spectral Radius Function and Observable Non-Analyticity]
 \label{thm:spectral-radius-function}
-Let $\lambda(s)$ be the Perron-Frobenius eigenvalue of $\mathbf{T}_s$. Then:
+Let $\lambda(s)$ be the Perron-Frobenius eigenvalue of $\mathbf{T}_s$, and let observables $O_k(s)$ be functions constructed from the dominant eigenvector. Then:
 
 \begin{enumerate}
 \item $\lambda(s)$ is a strictly decreasing function of $s$.
 \item There exists a unique value $s_0 > 0$ such that $\lambda(s_0) = 1$ (the \emph{entropy exponent}).
 \item The topological entropy is $h_{\text{top}} = s_0$.
-\item The Perron-Frobenius eigenvalue $\lambda(s)$ is entirely analytic in $s$ for all $s \in \mathbb{R}$, with no critical points.
-\item Observables constructed from the dominant eigenvector exhibit critical points at $s = \log p_k$ for each basis prime $p_k$, corresponding to phase transitions where cascade constraints transition from slack to tight in the dominant growth mode.
+\item The Perron-Frobenius eigenvalue $\lambda(s)$ is entirely analytic in $s$ for all $s \in \mathbb{R}$, with no critical points or singularities. The eigenvalue remains smooth across all arguments.
+\item The observables $O_k(s)$ constructed from the dominant eigenvector exhibit jump discontinuities at $s = \log p_k$ for each basis prime $p_k$. These observable discontinuities represent phase transitions where cascade constraints transition from slack to tight in the dominant growth mode.
 \end{enumerate}
 \end{theorem}
 
@@ -680,9 +680,9 @@ This irreducibility of constraints for primes is reflected in the spectral, cohe
 
 For small bases $\mathcal{P} = \{2, 3, 5\}$, numerical computation confirms the three-fold characterization:
 \begin{enumerate}
-\item Critical points of $\lambda(s)$ occur at $s \approx \log 2, \log 3, \log 5$.
-\item No critical points occur at $s = \log 4, \log 6, \log 9$ (composites).
+\item Critical points of observables constructed from the dominant eigenvector occur at $s \approx \log 2, \log 3, \log 5$. The Perron-Frobenius eigenvalue $\lambda(s)$ itself remains analytic throughout with no singularities.
+\item No observable critical points occur at $s = \log 4, \log 6, \log 9$ (composites). The eigenvalue $\lambda(s)$ remains smooth at these arguments.
 \item Character analysis confirms maximal coherence for $\mathbf{e}_2, \mathbf{e}_3, \mathbf{e}_5$ but not for composite combinations.
-\item Entropy exhibits discontinuous derivatives at $s = \log p$ for primes.
+\item Observables measuring constraint-tightness fractions exhibit discontinuous jumps at $s = \log p$ for primes only.
 \end{enumerate}
 
