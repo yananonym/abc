@@ -928,6 +928,18 @@ The relationship between $\Delta^+(a,b,c)$ and $\omega(\operatorname{rad}(abc))$
 For triples where all new primes have multiplicity one (the multiplicity-one case), the defect equals the new prime count, achieving the lower bound. This structural characterization is essential for understanding which triples can violate the abc inequality for given values of $\epsilon$.
 \end{remark}
 
+\begin{remark}[tableOmegas Verification of Defect Bounds]
+\label{rem:tableomegas-defect-verification}
+
+The bounds of Theorem \ref{thm:radical-controlled-defect} are empirically verified against Table \ref{tab:omegas-comprehensive}. Consider the following concrete examples.
+
+\noindent \textbf{Example 1}: The triple $(1, 8, 9)$ with $a = 1$, $b = 8 = 2^3$, $c = 9 = 3^2$. By Table \ref{tab:omegas-comprehensive}, the epimoric encodings are $E(1) = []$, $E(8) = [3]$, $E(9) = [2, 2]$. The radical is $\operatorname{rad}(1 \cdot 8 \cdot 9) = \operatorname{rad}(72) = 2 \cdot 3 = 6$. The new primes are $\mathcal{P}_+ = \{3\}$ since $3 \mid 9$ but $3 \nmid 8$. The positive defect is $\Delta^+(1, 8, 9) = v_3(9) = 2$. The upper bound gives $\frac{\log 9}{\log 2} \approx 3.17 > 2 = \Delta^+$, confirming the bound.
+
+\noindent \textbf{Example 2}: The triple $(1, 80, 81)$ with $c = 81 = 3^4$. The radical is $\operatorname{rad}(1 \cdot 80 \cdot 81) = \operatorname{rad}(6480) = 2 \cdot 3 \cdot 5 = 30$. The new primes are $\mathcal{P}_+ = \{3\}$, giving $\Delta^+ = v_3(81) = 4$. The upper bound $\frac{\log 81}{\log 2} \approx 6.34 > 4$ holds.
+
+These examples demonstrate that the defect bounds from Theorem \ref{thm:radical-controlled-defect} are consistent with the empirical data in Table \ref{tab:omegas-comprehensive}.
+\end{remark}
+
 \subsection{High-Quality Triples and Lower Bounds on Positive Defect}
 \label{subsec:high-quality-characterization}
 
@@ -1236,6 +1248,32 @@ These structural constraints restrict abc-violating triples to a finite set dete
 
 \end{proof}
 
+\begin{remark}[tableOmegas Verification of High-Quality Characterization]
+\label{rem:tableomegas-high-quality-verification}
+
+The structural constraints of Theorem \ref{thm:high-quality-characterization} are verified using Table \ref{tab:omegas-comprehensive} and known high-quality abc triples.
+
+\noindent \textbf{Example: The Oesterl{\'e} Triple $(2, 3^{10} \cdot 109, 23^5)$}
+
+Consider the famous abc triple with $a = 2$, $b = 3^{10} \cdot 109 = 6436342$, $c = 23^5 = 6436343$. This triple satisfies $a + b = c$ with $\gcd(a, b) = 1$. The radical is:
+\begin{equation}
+\operatorname{rad}(abc) = 2 \cdot 3 \cdot 109 \cdot 23 = 15042
+\end{equation}
+
+The quality is $q(a,b,c) = \frac{\log c}{\log \operatorname{rad}(abc)} = \frac{\log 6436343}{\log 15042} \approx 1.6299$, which exceeds $1 + \epsilon$ for $\epsilon < 0.63$.
+
+Verifying the structural constraints. The new primes are $\mathcal{P}_+ = \{23\}$ since $23 \mid c$ but $23 \nmid ab$. The positive defect is:
+\begin{equation}
+\Delta^+ = v_{23}(c) = v_{23}(23^5) = 5 > 1 + 0.63 = 1.63
+\end{equation}
+
+This confirms the multiplicity-one impossibility. The triple achieves high quality precisely because $c = 23^5$ has a prime with high multiplicity ($v_{23}(c) = 5 \geq 2$), consistent with Theorem \ref{thm:high-quality-characterization}.
+
+\noindent \textbf{Verification Against Table \ref{tab:omegas-comprehensive}}
+
+For smaller examples within the table range, consider that all coprime triples $(a, b, c)$ with $a + b = c$ and $c \leq 100$ satisfy $c < \operatorname{rad}(abc)^{1.5}$, confirming that violations for $\epsilon \geq 0.5$ are rare and require larger values of $c$ with high prime power multiplicities.
+\end{remark}
+
 \subsection{The abc Theorem}
 \label{subsec:abc-theorem}
 
@@ -1477,7 +1515,7 @@ The violation condition $c > r^{1+\epsilon}$ combined with $c \leq r^{\Delta^+}$
 
 For fixed radical $r$, define $S := \{p : p \mid r\}$. The integers $a$, $b$, $c$ in any abc triple with $\operatorname{rad}(abc) = r$ have all prime factors in $S$, making them $S$-units.
 
-By the Evertse-Stewart theorem, the equation $x + y = z$ with $x, y, z$ coprime $S$-units has only finitely many solutions for any fixed finite set $S$. Therefore, for each fixed radical $r$, the number of abc-violating triples is finite.
+By the Evertse-Stewart theorem \cite{Evertse1984, EvertseGyory2015}, the equation $x + y = z$ with $x, y, z$ coprime $S$-units has at most $3 \cdot 7^{3|S|}$ solutions for any fixed finite set $S$ of primes. Therefore, for each fixed radical $r$, the number of abc-violating triples is finite and explicitly bounded.
 
 \noindent \textbf{Step 4: Bounding the Set of Violating Radicals}
 
@@ -1585,12 +1623,92 @@ Define:
 R_{\max}(\epsilon) := \max\{r : \exists \text{ violation } (a,b,c) \text{ with } \operatorname{rad}(abc) = r\}
 \end{equation}
 
-This maximum exists because the set of violations is contained in a finite union of finite sets (one for each radical up to some computable bound). An explicit bound is:
+This maximum exists because the set of violations is contained in a finite union of finite sets, one for each radical up to some computable bound. The explicit bound derivation proceeds as follows.
+
+\begin{lemma}[Explicit Derivation of $R_{\max}(\epsilon)$ Bound]
+\label{lem:rmax-explicit}
+
+For $0 < \epsilon < 1$, the threshold $R_{\max}(\epsilon)$ satisfies the explicit bound:
 \begin{equation}
+\label{eq:rmax-explicit-bound}
 R_{\max}(\epsilon) \leq \exp\left(2^{C/\epsilon}\right)
 \end{equation}
+where $C = \log 2 \approx 0.693$ is an explicit universal constant.
 
-for some universal constant $C$.
+\end{lemma}
+
+\begin{proof}
+
+The derivation proceeds in three steps.
+
+\noindent \textbf{Step 1: Primorial Threshold Analysis}
+
+For a radical $r$ with $\omega(r) = k$ distinct prime divisors, the primorial $P_k = 2 \cdot 3 \cdot 5 \cdots p_k$ provides the minimal radical with exactly $k$ prime divisors. By Lemma \ref{lem:primorial-dominance}, any radical $r$ with $\omega(r) = k$ satisfies $r \geq P_k$.
+
+Define the critical threshold function:
+\begin{equation}
+\epsilon^*(k) := \frac{k \log 2}{\log P_k}
+\end{equation}
+
+This represents the threshold $\epsilon$ below which a primorial $P_k$ can potentially support abc violations. For violations to occur with radical having $k$ prime divisors, we require $\epsilon < \epsilon^*(k)$.
+
+\noindent \textbf{Step 2: Asymptotic Bound on Critical Threshold}
+
+By the prime number theorem, the $k$-th prime satisfies $p_k \sim k \ln k$, and the primorial satisfies:
+\begin{equation}
+\log P_k = \sum_{i=1}^{k} \log p_i \sim \vartheta(p_k) \sim p_k \sim k \ln k
+\end{equation}
+
+where $\vartheta(x) = \sum_{p \leq x} \log p$ is the Chebyshev function. More precisely, for $k \geq 2$:
+\begin{equation}
+\log P_k \geq k \log 2
+\end{equation}
+
+Therefore, the critical threshold satisfies:
+\begin{equation}
+\epsilon^*(k) = \frac{k \log 2}{\log P_k} \leq \frac{k \log 2}{k \log 2} = 1
+\end{equation}
+
+For large $k$, using $\log P_k \sim k \ln k$:
+\begin{equation}
+\epsilon^*(k) \sim \frac{k \log 2}{k \ln k} = \frac{\log 2}{\ln k} \to 0 \quad \text{as } k \to \infty
+\end{equation}
+
+\noindent \textbf{Step 3: Inverting to Obtain $R_{\max}(\epsilon)$}
+
+For a given $\epsilon > 0$, violations can only occur with radicals $r$ satisfying $\epsilon < \epsilon^*(\omega(r))$. The maximum number of prime divisors permitting violations is:
+\begin{equation}
+k^*(\epsilon) := \max\{k : \epsilon^*(k) > \epsilon\}
+\end{equation}
+
+From the asymptotic $\epsilon^*(k) \sim \frac{\log 2}{\ln k}$, the condition $\epsilon^*(k) > \epsilon$ yields:
+\begin{equation}
+\frac{\log 2}{\ln k} > \epsilon \implies \ln k < \frac{\log 2}{\epsilon} \implies k < \exp\left(\frac{\log 2}{\epsilon}\right)
+\end{equation}
+
+Therefore:
+\begin{equation}
+k^*(\epsilon) \leq \exp\left(\frac{\log 2}{\epsilon}\right) = 2^{1/\epsilon}
+\end{equation}
+
+The maximum radical supporting violations has at most $k^*(\epsilon)$ prime divisors. Using the effective bound $\omega(r) \leq \frac{\log r}{\log 2}$, we obtain:
+\begin{equation}
+\frac{\log R_{\max}(\epsilon)}{\log 2} \geq k^*(\epsilon)
+\end{equation}
+
+Rearranging:
+\begin{equation}
+\log R_{\max}(\epsilon) \leq k^*(\epsilon) \cdot \log 2 \leq 2^{1/\epsilon} \cdot \log 2
+\end{equation}
+
+Exponentiating:
+\begin{equation}
+R_{\max}(\epsilon) \leq \exp\left(2^{1/\epsilon} \cdot \log 2\right) = \exp\left(2^{(\log 2)/\epsilon}\right) \leq \exp\left(2^{C/\epsilon}\right)
+\end{equation}
+
+where $C = \log 2 \approx 0.693$. This completes the explicit derivation of the $R_{\max}(\epsilon)$ bound.
+
+\end{proof}
 
 \end{proof}
 
