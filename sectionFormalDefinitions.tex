@@ -3,6 +3,27 @@
 
 This section establishes precise mathematical definitions underlying the epimoric factorization framework.
 
+\begin{remark}[Indexing Conventions]
+\label{rem:indexing-conventions}
+
+Throughout this manuscript, two indexing conventions are used systematically.
+
+\begin{enumerate}
+\item \textbf{Prime indices}: The notation $p_k$ denotes the $k$-th prime number in the standard enumeration. Explicitly, $p_1 = 2$, $p_2 = 3$, $p_3 = 5$, $p_4 = 7$, $p_5 = 11$, and so forth. The index $k$ ranges over positive integers.
+
+\item \textbf{Coordinate indices}: The notation $e_k$ or $b_k$ denotes the exponent at coordinate $k$ in an epimoric encoding or exponent vector. The coordinate $k$ corresponds to the $k$-th prime $p_k$.
+\end{enumerate}
+
+The cascade constraint at position $k$ couples coordinate $k$ to all preceding coordinates $j < k$ via the $p_k$-adic valuations $v_{p_k}(p_j - 1)$. Specifically, the constraint has the form:
+\begin{equation}
+e_k \geq \sum_{j < k} e_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+
+The term $v_{p_k}(p_j - 1)$ is the largest power of $p_k$ dividing $(p_j - 1)$. For most pairs $(j, k)$ with $j < k$, this valuation is zero since $(p_j - 1) < p_k$ for small $j$. The constraint is nontrivial only when $p_k$ divides $(p_j - 1)$ for some $j < k$.
+
+This indexing convention is maintained throughout all sections, including the telescoping identity (Section \ref{subsec:telescoping-formula}), the spectral characterization (Section \ref{sec:spectral-characterization-rigorous}), and the abc theorem proof (Section \ref{sec:abc-proof}).
+\end{remark}
+
 \subsection{Epimoric Encoding Sequences}
 \label{subsec:epimoric-encoding}
 

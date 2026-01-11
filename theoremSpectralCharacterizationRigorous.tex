@@ -150,6 +150,25 @@ where $|\mathbf{b}| := \sum_j b_j$ is the $\ell^1$ norm (exponent sum).
 The exponent change $|\mathbf{b}'| - |\mathbf{b}|$ equals 1 in all transitions (incrementing one coordinate by one).
 \end{definition}
 
+\begin{definition}[Constraint-Tight Observable]
+\label{def:constraint-tight-observable}
+
+For the weighted transfer operator $\mathbf{T}_s$, let $\mathbf{v}(s) = (v_{\mathbf{b}}(s))_{\mathbf{b} \in \mathcal{V}_{\text{valid}}}$ denote the Perron-Frobenius eigenvector, normalized so that $\|\mathbf{v}(s)\|_1 = 1$. For each basis prime $p_k$, define the \emph{constraint-tight observable} as:
+\begin{equation}
+\label{eq:constraint-tight-observable}
+O_k(s) := \sum_{\mathbf{b} \in \mathcal{V}_k^{\text{tight}}} v_{\mathbf{b}}(s)
+\end{equation}
+
+where the \emph{constraint-tight set} at position $k$ is:
+\begin{equation}
+\mathcal{V}_k^{\text{tight}} := \left\{\mathbf{b} \in \mathcal{V}_{\text{valid}} : b_k = D_k(\mathbf{b}_{<k}) = \sum_{j < k} b_j \cdot v_{p_k}(p_j - 1)\right\}
+\end{equation}
+
+This observable measures the fraction of the dominant eigenvector's $\ell^1$ mass concentrated on exponent vectors where the cascade constraint at position $k$ is satisfied with equality, rather than with strict inequality.
+
+\noindent \textbf{Interpretation}: The value $O_k(s)$ quantifies the importance of constraint-tight configurations in the dominant growth mode at spectral parameter $s$. A jump discontinuity in $O_k(s)$ indicates a phase transition where the cascade constraint at position $k$ transitions from predominantly slack to predominantly tight among the configurations driving maximal growth.
+\end{definition}
+
 \begin{theorem}[Spectral Radius Function and Observable Non-Analyticity]
 \label{thm:spectral-radius-function}
 Let $\lambda(s)$ be the Perron-Frobenius eigenvalue of $\mathbf{T}_s$, and let observables $O_k(s)$ be functions constructed from the dominant eigenvector. Then:
