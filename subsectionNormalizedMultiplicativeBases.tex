@@ -1,0 +1,101 @@
+\subsection{Normalized Multiplicative Bases and Weighted Arithmetic}
+
+\subsubsection{The Normalization Apparatus: Multiplicative Barycentrics}
+
+The standard multiplicative basis framework represents each integer $n$ as a product of basis elements (primes or shifted primes) with integer exponents:
+\begin{equation}
+n = \prod_{k=1}^{\infty} p_k^{a_k}, \quad a_k \in \mathbb{Z}, \; \text{finite support}
+\end{equation}
+
+We extend this to a \emph{normalized weighted representation} by introducing a constraint that weights sum to unity. For an integer $n$ with standard prime factorization, define the \emph{Normalized Form} $\hat{n}$ as:
+
+\begin{equation}
+\hat{n}(N) = \prod_{k=1}^{\infty} \left(\frac{p_k}{N}\right)^{w_k}, \quad \sum_{k=1}^{\infty} w_k = 1
+\end{equation}
+
+where:
+\begin{itemize}
+\item $N$ is the \textit{normalization constant} (the grounding value), typically $N = \prod_{k=1}^{m} p_k^{c_k}$ for some finite $m$
+\item $w_k = \frac{a_k}{\sum_{j} |a_j|}$ is the \emph{normalized weight} of prime $p_k$
+\item The constraint $\sum w_k = 1$ places the weight vector on an infinite-dimensional simplex $\Delta^{\infty}$
+\end{itemize}
+
+This transformation maps the discrete lattice of integer exponents into the continuous geometry of a \emph{probability simplex}, which is the foundation of our weighted arithmetic framework.
+
+\subsubsection{Theorem 1: Completeness of Shifted Primes Under Normalization}
+
+For any fixed displacement $q \in \mathbb{Z}$, the set of shifted primes $S_q = \{p_k + q : p_k \text{ prime}\}$ forms a multiplicative basis for $\mathbb{Q}^+$ in the following sense:
+
+\begin{theorem}
+Every positive rational $r \in \mathbb{Q}^+$ admits a \emph{unique normalized representation}:
+\begin{equation}
+r = \prod_{k=1}^{\infty} (p_k + q)^{b_k}, \quad b_k \in \mathbb{Z}, \; b_k = 0 \text{ for all but finitely many } k
+\end{equation}
+
+Under normalization with weights $\tilde{w}_k = \frac{b_k}{\sum_j |b_j|}$, the mapping $\mathbb{Q}^+ \to \Delta^{\infty}$ is \emph{injective} and defines a continuous embedding when restricted to any finite-dimensional face.
+\end{theorem}
+
+\emph{Proof sketch}: The transformation from the standard basis $\{p_k\}$ to the shifted basis $\{p_k + q\}$ is a non-singular linear map in the valuation space $\mathbb{Z}^{(\mathbb{P})}$ (sequences of integers with finite support indexed by primes). The injectivity follows from the uniqueness of prime factorization applied to the shifted basis, which is guaranteed by the fundamental theorem of arithmetic applied to shifted integers under certain conditions on $q$. Normalization preserves this injectivity while embedding into the simplex. \qed
+
+\subsubsection{Geometric Interpretation: Transformation to a Simplex}
+
+By enforcing the normalization constraint $\sum w_k = 1$, we transform the integer lattice $\mathbb{Z}^{\mathbb{P}}$ into a discrete subset of the infinite-dimensional simplex $\Delta^{\infty}$:
+
+\begin{equation}
+\Delta^{\infty} = \left\{ \mathbf{w} \in \mathbb{R}^{\mathbb{P}} : w_k \geq 0, \; \sum_{k} w_k = 1 \right\}
+\end{equation}
+
+Each integer $n$ corresponds to a unique point in $\Delta^{\infty}$, with the position determined by the distribution of its prime factors. This geometric perspective reveals that:
+
+\begin{enumerate}
+\item Integers are not independent points on a number line, but rather \emph{centers of mass} in an infinite-dimensional probability distribution space
+\item The "$w_k$ coordinates" represent the \emph{barycentric coordinates} of the integer in the simplex, making the theory of \emph{barycentric coordinates} and \emph{affine geometry} applicable
+\item The structure of integers is thereby embedded into the classical geometry of convex analysis
+\end{enumerate}
+
+\subsubsection{Comparison with Standard Factorization}
+
+In standard prime factorization, we write:
+\begin{equation}
+n = 2^{a_1} \cdot 3^{a_2} \cdot 5^{a_3} \cdots
+\end{equation}
+
+The exponents $a_k$ are unconstrained integers. In the normalized representation, we instead work with normalized exponents:
+\begin{equation}
+w_k = \frac{a_k}{\sum_j |a_j|}
+\end{equation}
+
+This normalization:
+\begin{itemize}
+\item \textbf{Converts a discrete infinite problem} (choosing unbounded integers $a_k$) \textbf{into a finite-dimensional discrete problem} (choosing points on a simplex face)
+\item \textbf{Encodes relative importance}: the weight $w_k$ shows what fraction of ``structural support'' prime $p_k$ provides
+\item \textbf{Enables probabilistic interpretation}: we can interpret $\mathbf{w}$ as a probability distribution over basis elements
+\end{itemize}
+
+\subsubsection{Extension to Generalized Systems}
+
+The normalization framework naturally extends to generalized epimoric systems with arbitrary displacement $q$:
+
+\begin{equation}
+n = \prod_{k=1}^{\infty} (p_k + q)^{b_k}
+\end{equation}
+
+The weights in this shifted system become:
+\begin{equation}
+w_k^{(q)} = \frac{b_k^{(q)}}{\sum_j |b_j^{(q)}|}
+\end{equation}
+
+The location of the point in $\Delta^{\infty}$ depends on both $n$ and $q$. By varying $q$, we obtain different simplex embeddings of the same integer, each revealing different structural properties. This variability is a key feature for understanding prime distribution through multiple lenses.
+
+\subsubsection{Normalization Constant Selection}
+
+The choice of normalization constant $N$ affects the scale but not the topology of the representation. Common choices include:
+
+\begin{itemize}
+\item $N = n$ itself (unit normalization): $\hat{n}(n) = 1$, recovering the original integer
+\item $N = 2 \cdot 3 \cdot 5 \cdots p_m$ (primorial): natural for comparing across fixed-prime-count systems
+\item $N = \sqrt{\sum_k |a_k|}$ (variance-weighted): useful for information-theoretic applications
+\item $N = \max(|a_k|)$ (infinity-norm normalization): emphasizes the dominant prime factors
+\end{itemize}
+
+Each choice encodes different aspects of the integer's structure. The multiplicative framework is parameter-agnostic, with the choice of $N$ being a design decision based on the analytical goal.

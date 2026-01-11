@@ -1,0 +1,122 @@
+\subsection{The Normalization Apparatus: Mathematical Structure and Functorial Properties}
+
+\subsubsection{Formal Definition of the Normalization Functor}
+
+The normalization procedure defines a \emph{contravariant functor} from the category of multiplicative bases to the category of finite-dimensional affine spaces. Given an integer $n$ with exponent vector $\mathbf{a} = (a_1, a_2, a_3, \ldots)$ in a multiplicative basis, the normalization map is:
+
+\begin{equation}
+\mathcal{N}_s : \mathbb{Z}^{(\mathbb{P})} \to \Delta^{\infty}, \quad \mathcal{N}_s(\mathbf{a}) = \frac{\mathbf{a}}{||\mathbf{a}||_s}
+\end{equation}
+
+where $||\mathbf{a}||_s = \left(\sum_k |a_k|^s\right)^{1/s}$ is the $\ell^s$-norm of the exponent vector, and $s \geq 1$ is a \emph{norm parameter}.
+
+\textbf{Key properties}:
+\begin{enumerate}
+\item \textbf{Positivity}: For $a_k > 0$ (exponent present), the normalized weight $w_k = a_k / \sum_j |a_j| > 0$
+\item \textbf{Locality}: Normalization depends only on the exponent vector, not the magnitude of $n$
+\item \textbf{Scale-invariance}: The normalized weights $\mathbf{w}$ are unchanged if we scale all exponents by a common factor (up to sign)
+\item \textbf{Affine structure}: The normalized vectors lie on an affine hyperplane, not a linear subspace
+\end{enumerate}
+
+\subsubsection{Multiplicative Barycentrics: Affine Coordinates}
+
+In the theory of affine geometry, \emph{barycentric coordinates} (or mass-point geometry) represent points in an affine space as weighted averages of basis vectors. We leverage this framework by interpreting the normalized exponents as barycentric coordinates:
+
+\begin{equation}
+\mathbf{P} = \sum_{k=1}^{m} w_k \mathbf{P}_k, \quad \sum_{k=1}^{m} w_k = 1
+\end{equation}
+
+where:
+\begin{itemize}
+\item Each $\mathbf{P}_k$ represents the ``position'' of the $k$-th basis element (prime or shifted prime)
+\item The weights $w_k$ are precisely the normalized exponents
+\item The point $\mathbf{P}$ is the \emph{barycenter} (center of mass) of the weighted basis elements
+\end{itemize}
+
+In the projective geometry interpretation, this means:
+
+\begin{equation}
+n \sim \sum_{k=1}^{\infty} w_k [p_k] \quad \text{(projective coordinates)}
+\end{equation}
+
+where $[p_k]$ denotes the projective class of the $k$-th prime. The integer $n$ becomes a point in \emph{projective space} $\mathbb{RP}^{\infty}$ rather than on the traditional number line.
+
+\subsubsection{The Simplex Constraint and Convex Geometry}
+
+The constraint $\sum w_k = 1$ places the weight vectors on the standard simplex in $\mathbb{R}^{\mathbb{P}}$:
+
+\begin{equation}
+\Delta^{m} = \left\{ \mathbf{w} \in \mathbb{R}^{m} : w_k \geq 0 \text{ for all } k, \; \sum_{k=1}^{m} w_k = 1 \right\}
+\end{equation}
+
+For a fixed number of primes $m$, the simplex $\Delta^{m}$ is an $(m-1)$-dimensional polytope with $m$ vertices:
+\begin{equation}
+\mathbf{e}_k = (\delta_{j,k})_{j=1}^{m}, \quad k = 1, \ldots, m
+\end{equation}
+
+The vertices correspond to integers having exactly one prime factor: $\mathbf{e}_k$ represents the integer $p_k$ itself.
+
+\textbf{Interior and Boundary Structure}:
+\begin{itemize}
+\item \textbf{Interior points} ($\Delta^{m}_{\circ}$): Integers with contributions from multiple primes (all $w_k > 0$)
+\item \textbf{Face points}: Integers with exactly $\ell$ distinct prime factors form an $(\ell-1)$-dimensional face
+\item \textbf{Vertices}: Prime numbers themselves occupy the vertices of the simplex
+\item \textbf{Edges}: Products of exactly two primes lie on edges
+\end{itemize}
+
+This decomposition reveals a rich combinatorial structure underlying prime distribution, with the simplex geometry encoding the \emph{multiplicative complexity} of each integer.
+
+\subsubsection{Extension to Infinite-Dimensional Setting}
+
+While the standard simplex $\Delta^m$ is finite-dimensional, the full framework requires working in $\Delta^{\infty}$, the infinite-dimensional simplex:
+
+\begin{equation}
+\Delta^{\infty} = \left\{ \mathbf{w} \in \mathbb{R}^{\mathbb{N}} : w_k \geq 0, \; \sum_{k=1}^{\infty} w_k = 1 \right\}
+\end{equation}
+
+The topology of $\Delta^{\infty}$ is non-Hausdorff in the product topology, but becomes a complete metric space when equipped with the weak topology:
+
+\begin{equation}
+d_W(\mathbf{w}, \mathbf{w}') = \sum_{k=1}^{\infty} 2^{-k} |w_k - w'_k|
+\end{equation}
+
+With this metric, the mapping $n \mapsto \mathbf{w}(n)$ is an embedding of the positive integers into a complete, separable, metric measure space. This embedding enables the use of \emph{Polish space theory} (complete separable metric spaces) for studying prime distribution.
+
+\subsubsection{Comparison with Traditional Number-Theoretic Structures}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Traditional} & \textbf{Normalized} & \textbf{Geometric Insight} \\
+\hline
+Prime factorization & Barycentric coords & Affine embedding \\
+\hline
+Exponent vector & Normalized weights & Probability distribution \\
+\hline
+Integer valuation & Simplex position & Projective geometry \\
+\hline
+Prime basis $\{p_k\}$ & Simplex vertices & Extreme points of convex set \\
+\hline
+Multiplicative operation & Convex combination & Linear algebra \\
+\hline
+\end{tabular}
+\caption{Correspondence between traditional and normalized viewpoints.}
+\end{table}
+
+\subsubsection{Functorial Interpretation}
+
+The normalization apparatus can be understood as a sequence of functors:
+
+\begin{equation}
+\mathbb{N} \xrightarrow{\text{Factor}} \mathbb{Z}^{(\mathbb{P})} \xrightarrow{\mathcal{N}} \Delta^{\infty} \xrightarrow{\text{Geom}} \text{PolyInfo}(\mathbb{P})
+\end{equation}
+
+where:
+\begin{itemize}
+\item \textbf{Factor}: Maps integers to their exponent vectors in the multiplicative basis
+\item $\mathcal{N}$: Normalization functor to the simplex
+\item \textbf{Geom}: Geometric realization as a measure-theoretic object on the prime field
+\end{itemize}
+
+Each level preserves structure from the previous level while revealing new properties. The composition creates a \emph{theory of arithmetic through geometry}, transforming discrete number-theoretic questions into continuous geometric problems.

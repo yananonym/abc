@@ -1,0 +1,153 @@
+\subsection{Obstruction Polytope Geometry: Structure and Properties}
+
+The constraint system (DC1-DC2) defines a convex polytope in the exponent space $\mathbb{R}_{\geq 0}^m$. This section develops the polyhedral geometry of the constraint polytope, characterizing its facets, vertices, edges, and normal fan.
+
+\subsubsection{Definition: The Obstruction Polytope}
+
+For a given exponent sum $S = \sum_k b_k$, define the \emph{constraint polytope} as:
+
+\begin{definition}[Obstruction Polytope]
+\begin{equation}
+\mathcal{P}_S := \left\{\mathbf{b} \in \mathbb{R}_{\geq 0}^m : b_k \geq D_k(\mathbf{b}_{<k}) \; \forall k \geq 2, \; \sum_k b_k = S\right\}
+\end{equation}
+
+The set of valid epimoric exponent vectors is $V_S := \mathcal{P}_S \cap \mathbb{N}_0^m$.
+\end{definition}
+
+The polytope is defined by:
+\begin{itemize}
+\item One linear equality: $\sum_k b_k = S$ (restricts to an affine subspace).
+\item $m-1$ linear inequalities: $b_k \geq D_k(\mathbf{b}_{<k})$ for $k = 2, \ldots, m$.
+\item $m$ non-negativity constraints: $b_k \geq 0$ for $k = 1, \ldots, m$.
+\end{itemize}
+
+\subsubsection{Upper Triangular Geometry}
+
+The upper triangularity of the cascade constraints induces a recursive polytope structure:
+
+\begin{proposition}[Recursive Decomposition]
+The polytope $\mathcal{P}_S$ projects onto its first $m-1$ coordinates as a polytope $\mathcal{P}_{S-b_m}^{(m-1)}$ for the first $m-1$ primes. Specifically, if $\mathbf{b} \in \mathcal{P}_S$, then $\mathbf{b}_{<m} \in \mathcal{P}_{S - b_m}^{(m-1)}$ where the latter is the obstruction polytope for primes $\{p_1, \ldots, p_{m-1}\}$ and exponent sum $S - b_m$.
+\end{proposition}
+
+This implies that $\mathcal{P}_S$ decomposes as a union of fibers:
+\begin{equation}
+\mathcal{P}_S = \bigcup_{b_m=0}^{S} \left\{\mathbf{b} : \mathbf{b}_{<m} \in \mathcal{P}_{S-b_m}^{(m-1)}, \; b_m \geq D_m(\mathbf{b}_{<m})\right\}
+\end{equation}
+
+\subsubsection{Vertices of the Obstruction Polytope}
+
+The vertices of $\mathcal{P}_S$ are attained at exponent vectors that are maximal in the partial order defined by the cascade constraints.
+
+\begin{theorem}[Vertex Characterization]
+A point $\mathbf{b} \in \mathcal{P}_S$ is a vertex if and only if:
+\begin{enumerate}
+\item It satisfies the cascade constraint with equality at all but at most one position.
+\item It is not in the interior of any face.
+\end{enumerate}
+
+The vertices of $\mathcal{P}_S$ include:
+\begin{itemize}
+\item \textbf{Type I:} Prime-power vectors: $\mathbf{b} = (S, 0, 0, \ldots, 0)$ corresponding to $2^S$.
+\item \textbf{Type II:} Cascade-boundary vectors where $b_k = D_k(\mathbf{b}_{<k})$ for $k = 1, \ldots, m-1$ and $b_m = S - \sum_{k<m} b_k$.
+\end{itemize}
+\end{theorem}
+
+\textbf{Example:} For $\mathcal{P}_2$ (primes $\{2, 3\}$ with $S = 2$):
+\begin{itemize}
+\item Vertex $(2, 0)$: corresponds to $4 = 2^2$.
+\item Vertex $(1, 1)$: corresponds to $\frac{2}{1} \cdot \frac{3}{2} = 3$. Cascade check: $b_2 = 1 \geq D_2(\mathbf{b}_{<2}) = 1 \cdot v_3(1) = 0$. ✓
+\item Vertex $(0, 2)$: corresponds to $\left(\frac{3}{2}\right)^2 = \frac{9}{4}$, which is not an integer. This vertex is not in $V_2$.
+\end{itemize}
+
+\subsubsection{Facets and Face Lattice}
+
+The facets of $\mathcal{P}_S$ are determined by the tight constraints.
+
+\begin{definition}[Facet]
+A facet of $\mathcal{P}_S$ is a maximal proper face, corresponding to one of the constraints being tight (satisfied with equality).
+
+The facets correspond to:
+\begin{enumerate}
+\item $b_1 = 0$ (a boundary of the non-negativity constraint).
+\item $b_k = D_k(\mathbf{b}_{<k})$ for $k = 2, \ldots, m$ (cascade constraints).
+\end{enumerate}
+\end{definition}
+
+Not all inequality constraints define facets; some are redundant. A constraint defines a facet if and only if there exists a point in the polytope where that constraint is tight and all others are slack.
+
+\subsubsection{The Normal Fan}
+
+The dual picture is captured by the \emph{normal fan}, which partitions the space of objective vectors into cones corresponding to faces of the polytope.
+
+\begin{definition}[Normal Fan]
+For each face $F$ of $\mathcal{P}_S$, define its normal cone:
+\begin{equation}
+N_F := \{\mathbf{c} \in \mathbb{R}^m : \mathbf{c} \cdot \mathbf{b} \leq \mathbf{c} \cdot \mathbf{b}' \; \forall \mathbf{b} \in F, \mathbf{b}' \in \mathcal{P}_S\}
+\end{equation}
+
+The normal fan is the decomposition of $\mathbb{R}^m$ into normal cones for all faces of $\mathcal{P}_S$.
+\end{definition}
+
+\textbf{Conjecture (Fractal Self-Similarity):} The normal fan of $\mathcal{P}_S$ exhibits self-similar fractal structure related to the recursion of prime factorizations. Specifically, the cone structure at level $m$ (for primes up to $p_m$) is a product of cones from level $m-1$ and cones determined solely by the valuation structure of $p_m - 1$.
+
+\subsubsection{Edge Graph and Connectivity}
+
+The 1-skeleton (edges) of $\mathcal{P}_S$ connects vertices via steps along constraints.
+
+\begin{proposition}[Edge Connectivity]
+Two vertices of $\mathcal{P}_S$ are connected by an edge if and only if they differ in exactly one coordinate, and the difference preserves all other cascade constraints.
+
+The graph of vertices and edges is a directed acyclic graph (DAG) when ordered by exponent sum, since increasing any $b_k$ increases the total sum.
+\end{proposition}
+
+The diameter of the vertex graph (maximum shortest path between vertices) is at most $\max_k b_k$, the largest exponent.
+
+\subsubsection{Volume and Ehrhart Polynomial}
+
+The volume of $\mathcal{P}_S$ is an important measure of the ``size'' of the feasible region.
+
+\begin{proposition}[Ehrhart Polynomial]
+The number of lattice points in the scaled polytope $t\mathcal{P}_S$ is given by the Ehrhart polynomial:
+\begin{equation}
+E_{\mathcal{P}_S}(t) = \#(t\mathcal{P}_S \cap \mathbb{Z}^m) = \sum_{i=0}^{m} a_i t^i
+\end{equation}
+
+The leading coefficient $a_m$ equals the normalized volume $\text{Vol}(\mathcal{P}_S) / m!$, and the sum $\sum_i a_i = E_{\mathcal{P}_S}(1) = |V_S|$ is the count of valid vectors with exponent sum $S$.
+\end{proposition}
+
+\textbf{Conjecture:} The Ehrhart polynomial has a recursive structure reflecting the factorization pattern of $\{p_k - 1\}$. Specifically, the coefficients encode the contributions from each cascade level.
+
+\subsubsection{Special Polytopes: $\mathcal{P}_1, \mathcal{P}_2$, and Small Cases}
+
+For small exponent sums, the polytope structure is explicit:
+
+\textbf{For $\mathcal{P}_1$ (single exponent):} The polytope is a simplex with vertices corresponding to prime powers $2^1, 3^1, 5^1, \ldots$, and all are valid integers. $|V_1| = \infty$ (all primes).
+
+\textbf{For $\mathcal{P}_2$:} The polytope has vertices for prime powers and products. Cascade constraints eliminate some products: $(1, 1)$ is valid (since $b_2 = 1 \geq D_2(1) = v_3(1) = 0$), but higher products may fail.
+
+\textbf{For $\mathcal{P}_3$:} Triangular structure emerges. The cascade deficit at $p_3$ depends on $(b_1, b_2)$ and their valuations at $p_3$. For instance, with primes $\{2, 3, 5\}$:
+\begin{itemize}
+\item $v_5(1) = 0, v_5(2) = 0$: so $D_3(b_1, b_2) = 0 \cdot b_1 + 0 \cdot b_2 = 0$.
+\item All vectors $(b_1, b_2, b_3)$ with $b_1 + b_2 + b_3 = 3$ are valid if they are integers.
+\end{itemize}
+
+But with primes $\{2, 3, 7\}$:
+\begin{itemize}
+\item $v_7(6) = 1$: so $D_3(b_1, b_2) = 0 \cdot b_1 + 1 \cdot b_2 = b_2$.
+\item Valid vectors require $b_3 \geq b_2$.
+\end{itemize}
+
+\subsubsection{Geometric Interpretation of Semi-Regularity}
+
+The semi-regularity of $\Omega_E(n)$ reflects the constrained geometry of $\mathcal{P}_S$:
+
+\begin{theorem}[Regularity from Polytope Structure]
+As $n$ ranges over integers with exponent sum $S$, the corresponding exponent vectors $\mathbf{b}(n)$ trace a path through the lattice $\mathbb{Z}^m \cap \mathcal{P}_S$. The restriction to this lattice, enforced by both the divisibility constraints (DC1) and cascade constraints (DC2), creates a highly structured subset that avoids the chaotic behavior of the full exponent space.
+
+The density of valid vectors in $\mathcal{P}_S$ is:
+\begin{equation}
+\rho_S := \frac{|V_S|}{\text{Vol}(\mathcal{P}_S)} = O(1)
+\end{equation}
+
+whereas in the unrestricted space, density would be $O(S^{-m})$, much smaller. This high density of valid vectors ensures smooth distribution of $\Omega_E(n)$.
+\end{theorem}

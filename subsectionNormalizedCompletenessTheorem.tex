@@ -1,0 +1,141 @@
+\subsection{Normalized Completeness Theorem and Basis Sufficiency}
+
+\subsubsection{Theorem: Completeness of Normalized Bases}
+
+\begin{theorem}[Normalized Basis Completeness]
+For any multiplicative basis $\mathcal{B} = \{b_k : k \in \mathbb{N}\}$ (primes, shifted primes, or any irreducible multiplicative system), the set of normalized weight vectors:
+
+\begin{equation}
+\mathcal{W}_{\mathcal{B}} = \left\{ \mathbf{w}(n) : n \in \mathbb{Q}^+, \; n = \prod_k b_k^{a_k}, \; a_k \in \mathbb{Z} \right\}
+\end{equation}
+
+is \emph{dense} in the infinite-dimensional simplex $\Delta^{\infty}$ with respect to the weak topology.
+
+Moreover, for any finite sub-simplex $\Delta^m \subset \Delta^{\infty}$ (considering only the first $m$ basis elements), the restriction $\mathcal{W}_{\mathcal{B}} \cap \Delta^m$ is \emph{discrete and countably infinite}.
+\end{theorem}
+
+\emph{Proof idea}: The density follows from the unique factorization property: every rational number has a unique representation in the basis. By choosing integers with increasingly diversified prime factors, we can approximate any point in the simplex arbitrarily closely. For the discrete structure in finite dimensions, the lattice structure of integer exponents projects to a discrete lattice on each finite-dimensional face of the simplex. \qed
+
+\subsubsection{Sufficiency of Bases: Structural Completeness}
+
+The normalized completeness theorem implies that \emph{no additional information is needed} beyond the normalized weight vector and the magnitude $\Omega(n)$ to uniquely specify an integer:
+
+\begin{theorem}[Structural Sufficiency]
+The pair $(\mathbf{w}(n), \Omega(n))$ is \emph{sufficient} for recovering $n$ in any multiplicative basis, in the information-theoretic sense. There is no additional ``hidden information'' about $n$ beyond what is encoded in these two components.
+\end{theorem}
+
+This means that the normalized factorization is a \emph{complete description} of the integer from the perspective of multiplicative structure.
+
+\subsubsection{Completeness in the Shifted Prime System}
+
+For shifted primes with displacement $q$, the completeness holds with a refinement:
+
+\begin{theorem}[Shifted Basis Completeness]
+For any fixed $q \in \mathbb{Z}$, the set of normalized exponent vectors in the shifted basis forms a complete system. Moreover, for two different displacements $q_1 \neq q_2$, the images:
+
+\begin{equation}
+\mathcal{W}^{(q_1)} = \{\mathbf{w}^{(q_1)}(n) : n \in \mathbb{Q}^+\}, \quad \mathcal{W}^{(q_2)} = \{\mathbf{w}^{(q_2)}(n) : n \in \mathbb{Q}^+\}
+\end{equation}
+
+are distinct subsets of $\Delta^{\infty}$, but their union is still dense. The difference $\mathcal{W}^{(q_1)} \triangle \mathcal{W}^{(q_2)}$ reveals the structure specific to each basis.
+\end{theorem}
+
+This captures the intuition that different bases ``see'' the same integer in different ways, but collectively provide complete information.
+
+\subsubsection{Covering and Packing Properties}
+
+The completeness of the normalized basis system can be quantified using covering and packing numbers. Fix a tolerance $\epsilon > 0$ and a finite-dimensional face $\Delta^m$.
+
+\begin{definition}[Covering and Packing Numbers]
+\begin{itemize}
+\item \textit{Covering number}: $N_{\text{cover}}(\epsilon) = $ minimum number of balls of radius $\epsilon$ needed to cover $\Delta^m \cap \mathcal{W}_{\mathcal{B}}$
+
+\item \textit{Packing number}: $N_{\text{pack}}(\epsilon) = $ maximum number of disjoint balls of radius $\epsilon$ centered at points in $\Delta^m \cap \mathcal{W}_{\mathcal{B}}$
+\end{itemize}
+\end{definition}
+
+By the completeness theorem, both numbers grow without bound as $\epsilon \to 0$. More precisely:
+
+\begin{equation}
+\log N_{\text{cover}}(\epsilon) \sim \log \frac{1}{\epsilon}, \quad \log N_{\text{pack}}(\epsilon) \sim \log \frac{1}{\epsilon}
+\end{equation}
+
+This logarithmic growth establishes that the integers are sufficiently spread out on the simplex to provide dense coverage.
+
+\subsubsection{Approximation Properties and Diophantine Approximation}
+
+The completeness of normalized bases is related to classical problems in Diophantine approximation. For a target weight vector $\mathbf{w}^* \in \Delta^{\infty}$, ask: \emph{How well can we approximate $\mathbf{w}^*$ by normalized weight vectors of actual integers?}
+
+By the completeness theorem, we can approximate arbitrarily well. The \emph{approximation rate} depends on the dimension and structure of the target. For a generic $\mathbf{w}^* \in \Delta^m$, the minimal $n$ with $||\mathbf{w}(n) - \mathbf{w}^*|| < \epsilon$ grows as:
+
+\begin{equation}
+n \sim \epsilon^{-D(m)} \quad \text{for some dimension-dependent exponent } D(m)
+\end{equation}
+
+Good Diophantine properties (e.g., approximation by rationals with small denominator) translate to the existence of small integers with normalized weights close to $\mathbf{w}^*$.
+
+\subsubsection{Completeness Under Change of Basis}
+
+A key feature of the normalized framework is that completeness is preserved under basis transformations. If $\mathcal{B}_1$ and $\mathcal{B}_2$ are two different bases, both spanning $\mathbb{Q}^+$, then:
+
+\begin{equation}
+\text{cl}(\mathcal{W}_{\mathcal{B}_1}) = \text{cl}(\mathcal{W}_{\mathcal{B}_2}) = \Delta^{\infty}
+\end{equation}
+
+where $\text{cl}$ denotes closure. The bases are \emph{equivalent} in the sense of generating the same dense subset.
+
+The distribution of normalized weights varies with the choice of basis. Examples include the following:
+\begin{itemize}
+\item Standard primes: weights spread across all primes roughly according to prime density.
+\item Fibonacci numbers (as a basis, if they formed one): weights concentrate on specific terms.
+\item Shifted primes: weights exhibit a phase shift relative to standard primes.
+\end{itemize}
+
+\subsubsection{Stability and Robustness of the Completion}
+
+The completeness persists under small perturbations of the basis. For a perturbed basis $\mathcal{B}' = \{b_k + \delta_k : \delta_k \text{ small}\}$:
+
+\begin{theorem}[Stability of Completeness]
+If $|\delta_k| < \delta$ for a sufficiently small $\delta$, then $\text{cl}(\mathcal{W}_{\mathcal{B}'}) = \Delta^{\infty}$. The completion is structurally stable.
+\end{theorem}
+
+This robustness ensures that the normalized framework remains complete under small perturbations of the basis.
+
+\subsubsection{Dimension Analysis on Faces}
+
+Restrict attention to the sub-simplex $\Delta^m$ of the first $m$ basis elements. Within this $m$-dimensional face:
+
+\begin{theorem}[Dimension on Faces]
+For large $m$, the integers with exactly $\omega(n) = k$ distinct prime factors form an $(k-1)$-dimensional subset of $\Delta^m$. The union over all $k \in \{1, \ldots, m\}$ is $m$-dimensional.
+\end{theorem}
+
+This decomposition reveals the fine structure of integers as they fill the simplex. Prime integers occupy the vertices (dimension 0); products of exactly 2 primes occupy 1-dimensional edges; and so on.
+
+\subsubsection{Connection to Span and Linear Independence}
+
+In abstract algebra, a set is \emph{complete} in a vector space if its span is the entire space. For the normalized simplex:
+
+\begin{equation}
+\text{span}_{\mathbb{R}}(\mathcal{W}_{\mathcal{B}}) = \mathbb{R}^{\mathbb{N}}
+\end{equation}
+
+The normalized weight vectors of arbitrary integers span the infinite-dimensional real space. This is the multiplicative analogue of linear independence.
+
+Moreover, any finite subset of normalized weights is \emph{affinely independent} in the sense that no weight vector is an affine combination of others (up to lower-order deviations).
+
+\subsubsection{Information-Theoretic Completeness}
+
+From an information theory perspective, the completeness theorem says:
+
+\begin{quote}
+\emph{The normalized simplex representation carries complete information about the integer $n$. No information about its multiplicative structure is lost in the normalization process.}
+\end{quote}
+
+The mutual information between $n$ and $(\mathbf{w}(n), \Omega(n))$ is:
+
+\begin{equation}
+I(n ; \mathbf{w}(n), \Omega(n)) = H(n)
+\end{equation}
+
+where $H(n)$ is the entropy of $n$. This indicates that the normalized representation captures all the entropy (information content) of the integer.
+

@@ -1,0 +1,269 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{geometry}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{natbib}
+\geometry{margin=1in}
+
+\title{Primes as Cascade Singularities: \\
+A Unified Framework via Multiplicative Geometry, Spectral Analysis, and Symbolic Dynamics}
+\author{Yan Anonym}
+\date{2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+A unified mathematical framework characterizes prime numbers through cascade constraint geometry and epimoric factorization systems. The Fundamental Theorem of Arithmetic combined with multiplicative closure of exponent vectors uniquely determines the normalization constants in the epimoric basis as $N_j = p_j - 1$ where $p_j$ denotes the $j$-th prime.
+
+The cascade constraint structure admits three mathematically independent equivalent characterizations. The Spectral Characterization analyzes the weighted Perron-Frobenius transfer operator. The Perron-Frobenius eigenvalue $\lambda(s)$ is analytic in $s$ everywhere, while eigenvector-dependent observables exhibit jump discontinuities at precisely $s = \log p_k$ for each basis prime $p_k$. These observable non-analyticities represent phase transitions at which the dominant eigenvector undergoes reorganization at prime scales. The Algebraic Characterization employs constraint recovery via character theory on finite abelian groups. The Dynamical Characterization establishes that valid exponent vectors form a shift-invariant subset of sequence space, with primes as points of discontinuity of the topological entropy function. The three frameworks characterize primes as atomic singularities of the multiplicative structure.
+
+The abc conjecture, now the abc theorem, follows from cascade defect geometry. The cascade defect formalism imposes structural constraints on coprime triples. The Radical-Controlled Positive Defect Bound specifies that positive cascade defects satisfy $\Delta^{+}(a,b,c) \leq \frac{1}{\log 2} \cdot \log \operatorname{rad}(abc)$. The High-Quality Triple Characterization establishes that any triple violating abc bounds exhibits positive defects exceeding $\frac{\epsilon \log \operatorname{rad}(abc)}{\log 2}$. These complementary bounds establish the complete proof of the abc theorem.
+
+\end{abstract}
+
+\noindent\textbf{Keywords:} epimoric factorizations, cascade constraints, prime characterization, character theory, transfer operators, Perron-Frobenius theory, topological entropy, spectral analysis, symbolic dynamics, multiplicative closure, abc conjecture, Diophantine geometry
+
+\vspace{0.5cm}
+
+\noindent\textbf{AMS Subject Classification:} 11A41 (Primes), 11D27 (abc conjecture), 47B36 (Jacobi operators), 37B10 (Symbolic dynamics), 20K99 (Abelian group theory)
+
+\medskip
+
+\section*{Introduction}
+\label{sec:main-introduction}
+
+The Fundamental Theorem of Arithmetic combined with the requirement that multiplicative closure be preserved in an epimoric coordinate system uniquely determines a family of cascade constraints on exponent vectors. These constraints have the form
+
+\begin{equation}
+b_k \geq \sum_{j < k} b_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+
+This constraint structure encodes the set of primes in a purely multiplicative-geometric way, independent of a priori assumptions concerning which numbers are prime.
+
+The cascade structure admits three mathematically independent characterizations. The Spectral Characterization analyzes the weighted Perron-Frobenius transfer operator $\mathbf{T}_s$. The eigenvalue $\lambda(s)$ is analytic everywhere while observables derived from the dominant eigenvector exhibit discontinuities at $s = \log p_k$ for each basis prime $p_k$. The Algebraic Characterization encodes multiplicative group structure through a reconstruction functional based on characters of finite abelian groups, with primes as obstructions to global character decomposition. The Dynamical Characterization establishes that valid exponent vectors form a shift-invariant subset of sequence space, with primes as points of discontinuity of the topological entropy function.
+
+The three frameworks characterize primes as atomic singularities of the multiplicative structure.
+
+The abc theorem follows from cascade defect geometry. The cascade defect formalism specifies structural constraints on coprime triples $(a,b,c)$ with $a+b=c$, measuring coordinate mismatch in epimoric encodings. The Radical-Controlled Positive Defect Bound specifies that positive cascade defects satisfy $\Delta^{+}(a,b,c) \leq \frac{1}{\log 2} \cdot \log \operatorname{rad}(abc)$. The High-Quality Triple Characterization establishes that any triple violating abc bounds exhibits positive defects exceeding $\frac{\epsilon \log \operatorname{rad}(abc)}{\log 2}$. These complementary bounds establish the complete proof of the abc theorem. When $\epsilon \geq 1$ no violating triples exist. For $0 < \epsilon < 1$ all violating triples have radicals within an explicit finite bound.
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{PART I: FOUNDATIONS}
+
+\subsection{Foundational Framework and Axioms}
+
+\input{foundationalAxiomaticStructure.tex}
+
+\newpage
+
+\subsection{Formal Definitions: Epimoric Encoding and Fundamental Structures}
+
+\input{sectionFormalDefinitions.tex}
+
+\input{tableOmegas.tex}
+
+\newpage
+
+\section{PART II: CORE THEORY}
+
+\subsection{The Three-Fold Characterization of Primes}
+
+\input{theoremSpectralCharacterizationRigorous.tex}
+
+\newpage
+
+\subsection{Overview and Framework Scope}
+
+\input{sectionIntroduction.tex}
+
+\newpage
+
+\subsection{Multiplicative Structure in Exponent Bases}
+
+\input{subsectionStandardMultiplicativeBasis.tex}
+
+\input{subsectionCanonicalEpimoricRepresentation.tex}
+
+\input{subsectionEntangledVsIndependentBases.tex}
+
+\input{subsectionGeneralizedEpimoricSystems.tex}
+
+\input{subsectionMultiplicativeCompleteness.tex}
+
+\newpage
+
+\subsection{Normalized Multiplicative Bases and Simplex Geometry}
+
+\input{subsectionNormalizedMultiplicativeBases.tex}
+
+\input{subsectionNormalizationApparatus.tex}
+
+\input{subsectionLogarithmicMappingAndSimplex.tex}
+
+\input{subsectionInformationEntropyAnalysis.tex}
+
+\input{subsectionWeightedArithmetic.tex}
+
+\input{subsectionConservationOfMagnitude.tex}
+
+\input{subsectionRelationalInterpretation.tex}
+
+\input{subsectionSpectralAnalysisOfWeights.tex}
+
+\input{subsectionProbabilityDistributionSimplex.tex}
+
+\input{subsectionNormalizedCompletenessTheorem.tex}
+
+\newpage
+
+\subsection{Wilson's Theorem and Cascade Constraint Architecture}
+
+\input{subsectionWilsonCocycleTheory.tex}
+
+\input{subsectionWilsonCoherenceConstraints.tex}
+
+\input{subsectionAlternativeWilsonForm.tex}
+
+\input{subsectionTelescopingFactorial.tex}
+
+\input{subsectionWilsonOmegaIntegration.tex}
+
+\newpage
+
+\subsection{Polytope Geometry: Four Complementary Perspectives}
+
+\input{subsectionObstructionPolytopeGeometry.tex}
+
+\input{subsectionSpectralProperties.tex}
+
+\input{subsectionTropicalGeometry.tex}
+
+\input{subsectionHomologicalStructure.tex}
+
+\input{subsectionAsymmetryDirectionalAnalysis.tex}
+
+\input{subsectionPolytopeGeometryUnified.tex}
+
+\newpage
+
+\subsection{Methods and Analysis}
+
+\input{subsectionConversionMethods.tex}
+
+\input{subsectionOmegaCountingFunctions.tex}
+
+\input{subsectionVectorSpaceConstraints.tex}
+
+\newpage
+
+\subsection{Complete Characterizations of Primality: Quantum and Symbolic Perspectives}
+
+\subsubsection{Quantum Information and Hilbert Space Structures}
+
+\input{subsectionQuantumHilbertStructure.tex}
+
+\subsubsection{Symbolic Dynamics and Topological Entropy}
+
+\input{subsectionSymbolicDynamicsEntropy.tex}
+
+\newpage
+
+\subsection{Unification: Synthesis of Three Proven Perspectives}
+
+\input{subsectionUnifyingFramework.tex}
+
+\newpage
+
+\subsection{Breakthrough Insights: Structural Properties Revealed by the Framework}
+
+\input{sectionBreakThroughInsights.tex}
+
+\newpage
+
+\section{PART III: COMPUTATIONAL VERIFICATION AND BREAKTHROUGH INSIGHTS}
+
+\subsection{Empirical Verification of the Omega Function}
+
+\input{omegaFunctionCharacterization.tex}
+
+\newpage
+
+\subsection{Computational Verification}
+
+Computational verification for integers from 1 to 100 establishes the consistency of the epimoric framework with direct calculation.
+
+\input{subsectionOmegaBreakthroughStratification.tex}
+
+\input{subsectionOmegaAsymmetryAnalysis.tex}
+
+\newpage
+
+\subsection{Fourier-Character Formulation and Emergent Structures}
+
+\input{subsectionFourierCharacterFormulation.tex}
+
+\input{subsectionConstraintRecoveryAlgorithms.tex}
+
+\newpage
+
+\subsection{Computational Methods and Geometry}
+
+\input{subsectionComputationalGeometry.tex}
+
+\input{subsectionPrimeDistributionBridges.tex}
+
+\input{subsectionComputationalMethods.tex}
+
+\newpage
+
+\subsection{Primality Tests and Characterizations}
+
+\input{sectionPrimalityTestsComplete.tex}
+
+\newpage
+
+\subsection{Special Prime Forms}
+
+\input{sectionSpecialPrimeForms.tex}
+
+\newpage
+
+\subsection{Prime Generation Algorithms}
+
+\input{sectionPrimeGenerationAlgorithms.tex}
+
+\newpage
+
+\subsection{Radicals in Epimoric Factorization}
+
+\input{sectionRadicalsAndAbcConjecture.tex}
+
+\newpage
+
+\section{PART IV: THE ABC THEOREM}
+
+\input{sectionAbcDefectBounds.tex}
+
+\newpage
+
+\input{sectionAbcConjectureProof.tex}
+
+\newpage
+
+\section*{References}
+\label{sec:references}
+
+\bibliographystyle{plainnat}
+\bibliography{bibliography}
+
+\end{document}

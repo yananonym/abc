@@ -1,0 +1,148 @@
+\section{Fundamental Theorems on Multiplicative Bases}
+
+The existence and uniqueness of representations across different multiplicative basis systems rests on several fundamental theorems from multiplicative basis theory. We now state and discuss these theorems rigorously.
+
+\subsection{The Fundamental Theorem of Epimeric Representation (FTER)}
+
+\begin{theorem}[FTER: Completeness of Ratio-Based Bases]
+For any fixed positive integer displacement $q \in \mathbb{N}$, the set of ratios
+\begin{equation}
+R_q = \left\{ \frac{p_k + q}{p_k} : p_k \text{ is the } k\text{-th prime} \right\}
+\end{equation}
+forms a multiplicative generating set for $\mathbb{Q}^+$.
+
+Consequently, every positive rational number $r \in \mathbb{Q}^+$ has a unique representation as a finite product:
+\begin{equation}
+r = \prod_{k=1}^{\infty} \left( \frac{p_k + q}{p_k} \right)^{e_k}
+\end{equation}
+where $e_k \in \mathbb{Z}$ and only finitely many exponents are nonzero.
+
+Furthermore, $r \in \mathbb{N}$ (is a natural number) if and only if the exponent sequence $\{e_k\}$ belongs to a specific subset of $\mathbb{Z}^{\mathbb{N}}$ determined by the integrality constraints.
+\end{theorem}
+
+\subsubsection{Proof Sketch for FTER}
+
+The proof relies on viewing multiplicative representations as linear combinations in the exponent space:
+
+\begin{enumerate}
+\item Define the valuation map $v_p(n)$ for each prime $p$, which counts the exponent of $p$ in the factorization of $n$.
+
+\item Each ratio $(p_k + q)/p_k$ has a unique prime factorization, producing a vector in exponent space. These vectors are:
+\begin{equation}
+\mathbf{v}_k^{(q)} = v_{p_1}(p_k + q), v_{p_2}(p_k + q), \ldots, v_{p_j}(p_k), \ldots
+\end{equation}
+where we record valuations in the numerator with positive sign and denominators with negative sign.
+
+\item The generating property follows from the fact that this matrix of valuations (rows indexed by primes, columns by ratio indices) is \textit{invertible} (when extended to infinite-dimensional real linear algebra).
+
+\item Invertibility is guaranteed because: (a) the prime sequence is infinite, (b) the set $\{p_k + q : k \in \mathbb{N}\}$ has unbounded growth, ensuring new prime factors continually appear, and (c) the Fundamental Theorem of Arithmetic ensures unique factorization of the numerators.
+
+\item Therefore, any target vector (the exponent vector of a rational number) can be expressed as a linear combination of the basis vectors, proving both existence and uniqueness.
+\end{enumerate}
+
+\subsection{Multiplicative Basis Completeness Theorem}
+
+\begin{theorem}[General Multiplicative Basis Completeness]
+Let $S = \{s_1, s_2, s_3, \ldots\}$ be a sequence of positive integers with the property that their prime factorizations collectively cover all primes infinitely often (i.e., for each prime $p$, infinitely many $s_i$ contain $p$ as a factor).
+
+Then the set of ratios
+\begin{equation}
+B_S = \left\{ \frac{s_k}{s_k - 1} : k \in \mathbb{N} \right\}
+\end{equation}
+forms a multiplicative basis for $\mathbb{Q}^+$.
+\end{theorem}
+
+This theorem, of which the canonical epimoric system is a special case ($s_k = p_k$), shows that any sequence of positive integers sufficiently ``spread out'' in prime content can generate a valid multiplicative basis.
+
+\subsection{The Shifted Prime Basis Theorem}
+
+\begin{theorem}[Shifted Prime Completeness]
+For any fixed integer displacement $q \in \mathbb{Z}$, the set of shifted primes
+\begin{equation}
+S_q = \{p_k + q : p_k \text{ prime}\}
+\end{equation}
+constitutes a multiplicative basis for $\mathbb{Q}^+$. Every natural number $n$ has a unique representation as:
+\begin{equation}
+n = \prod_{k=1}^{\infty} (p_k + q)^{b_k}
+\end{equation}
+where $b_k \in \mathbb{Z}$ with finite support.
+\end{theorem}
+
+\subsubsection{Key Observation}
+
+This theorem differs from FTER in that it expresses numbers directly as products of shifted primes without ratios. The shifted prime basis requires negative exponents for natural numbers, demonstrating the structural variety of multiplicative basis systems.
+
+\subsection{Basis Transformation Matrix and Rank Analysis}
+
+The relationship between different multiplicative bases can be systematized via the \textbf{basis transformation matrix}. Let $M$ be the matrix where:
+
+\begin{itemize}
+\item Rows are indexed by primes $p$
+\item Columns are indexed by basis elements (ratio indices or shifted primes)
+\item Entry $M_{p,k}$ is the exponent of prime $p$ in the factorization of the $k$-th basis element
+\end{itemize}
+
+The rank of this matrix determines the dimension of the basis. For all ratio-based and shifted-prime bases, this matrix has full rank (rank = $\infty$ in the infinite case, or rank = $\pi(N)$ for bases truncated at the $N$-th prime).
+
+\subsection{Arithmetic Operations on Multiplicative Bases}
+
+Let $n, m$ be natural numbers with exponent vectors $\mathbf{b}_n, \mathbf{c}_m$ in some multiplicative basis $B$.
+
+\subsubsection{Multiplication Rule}
+
+The exponent vector of the product $n \cdot m$ is obtained by vector addition:
+\begin{equation}
+\mathbf{b}_{n \cdot m} = \mathbf{b}_n + \mathbf{c}_m
+\end{equation}
+
+This holds for any multiplicative basis.
+
+\subsubsection{Division Rule}
+
+For $n/m$ (when $m | n$):
+\begin{equation}
+\mathbf{b}_{n/m} = \mathbf{b}_n - \mathbf{c}_m
+\end{equation}
+
+If $m \nmid n$, the result has negative exponents, representing a rational non-integer.
+
+\subsubsection{Greatest Common Divisor}
+
+In ratio-based bases (unlike prime factorization), computing the GCD is not straightforward because the basis elements are not linearly ordered. Instead, the GCD corresponds to the lexicographically minimal exponent vector in the basis representation.
+
+\subsection{Uniqueness and Canonical Forms}
+
+\begin{theorem}[Uniqueness of Representations]
+Within a fixed multiplicative basis $B$, the representation of any positive rational $r$ is unique. That is, if
+\begin{equation}
+r = \prod_{k=1}^{\infty} b_k^{e_k} = \prod_{k=1}^{\infty} b_k^{e'_k}
+\end{equation}
+then $e_k = e'_k$ for all $k$.
+\end{theorem}
+
+This uniqueness is guaranteed by the Fundamental Theorem of Arithmetic applied to the prime factorizations of the basis elements themselves.
+
+\subsection{Lattice Geometry of Bases}
+
+Each multiplicative basis induces a lattice structure on the exponent vectors. The set of all exponent vectors with non-negative integer entries forms a cone in $\mathbb{Z}^{\infty}$. For ratio-based systems, the integrality constraints further restrict this cone to a subcone (the constraint polytope).
+
+The geometry of these cones encodes:
+
+\begin{itemize}
+\item The ordering relationships between basis elements
+\item The factorization patterns of integers
+\item The distribution of prime gaps and clusters
+\item Hidden symmetries in the prime sequence
+\end{itemize}
+
+\subsection{Categorical Structure: Bases as Functors}
+
+From a categorical perspective, each multiplicative basis induces a functor from the multiplicative monoid of positive integers $(\mathbb{N}, \cdot)$ to the additive monoid of finite-support integer sequences $(\mathbb{Z}^{(\mathbb{N})}, +)$.
+
+Different bases correspond to different (but equivalent) functorial representations. The natural isomorphisms between these representations are given by the basis transformation matrices, forming a kind of ``multiplicative homological algebra.''
+
+\subsection{Conclusion}
+
+The existence of multiple valid multiplicative bases, each with distinct properties and structural insights, reflects a deep mathematical principle: the multiplicative structure of integers is rich enough to admit many different coordinatizations. Rather than viewing this as ambiguity, we recognize it as a resource: each basis reveals different aspects of prime distribution and integer structure.
+
+The canonical epimoric system is distinguished not by uniqueness (many bases exist) but by its tight connection to music theory, harmonic series, and the primes themselves.

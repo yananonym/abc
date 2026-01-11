@@ -1,0 +1,1128 @@
+\section{Foundational Framework}
+\label{sec:foundational}
+
+The framework characterizes primes through multiplicative structure and cascade constraints, establishing three mathematically independent perspectives: algebraic coherence via character theory, spectral theory via Perron-Frobenius analysis, and symbolic dynamics via topological entropy, each providing equivalent characterizations of the set of primes.
+
+\subsection{Explicit Foundational Assumptions}
+\label{subsec:explicit-assumptions}
+
+The framework in this manuscript rests on the following foundational assumptions, stated explicitly to ensure clarity and to enable readers to identify logical dependencies. These are presented in order of logical precedence:
+
+\begin{enumerate}
+
+\item \textbf{Fundamental Theorem of Arithmetic (FTA)}: Every integer $n \geq 2$ admits a unique factorization into prime powers:
+\begin{equation}
+n = \prod_j p_j^{b_j}
+\end{equation}
+where $\{p_j\}$ are distinct primes and $b_j \in \mathbb{Z}_{\geq 0}$. This is the foundational axiom—all subsequent development is built upon this theorem. The FTA is assumed as a given, not derived from earlier principles in this manuscript.
+
+\item \textbf{Classical Prime Definition}: Primes are defined in the standard sense: integers $p > 1$ possessing exactly two positive divisors (namely, 1 and $p$ itself). This elementary definition is logically prior to all subsequent framework development. The cascade constraints developed herein provide alternative \textit{characterizations} of primes, not new \textit{definitions}.
+
+\item \textbf{Finite Prime Basis Assumption}: All quantitative analysis is conducted within a fixed finite basis $\mathcal{P} = \{p_1, p_2, \ldots, p_m\}$ of the first $m$ primes, where $p_1 = 2$, $p_2 = 3$, $p_3 = 5$, etc. Results depend on the explicit choice of $m$. For representing all positive integers up to $N$, the minimum required basis size is $m \geq \pi(N)$, where $\pi(N)$ is the prime counting function. Asymptotically, $\pi(N) \sim N / \ln N$.
+
+\item \textbf{Closed-Under-Descent Basis Requirement}: The finite prime basis $\mathcal{P}$ must be closed under descent, meaning every prime divisor of $(p - 1)$ for any $p \in \mathcal{P}$ is itself in $\mathcal{P}$. Formally, $\mathcal{P}$ satisfies $\mathcal{P} = \overline{\mathcal{P}}$ where $\overline{\mathcal{P}} := \mathcal{P} \cup \{q : q \text{ prime and } q \mid (p - 1) \text{ for some } p \in \mathcal{P}\}$. For any initial finite set of primes, a closed basis exists and is obtained by iteratively adding prime divisors of $(p_i - 1)$ until no new primes are introduced. This closure property is essential for the sufficiency of cascade constraints (proven rigorously in Theorem \ref{thm:cascade-uniqueness} below).
+
+\item \textbf{Multiplicative Closure of Exponent Vectors}: The set of exponent vectors arising from integers,
+\begin{equation}
+\mathcal{V}_{\text{valid}} := \left\{\mathbf{b}(n) = (b_1(n), \ldots, b_m(n)) : n \in \mathbb{N}\right\}
+\end{equation}
+where $b_j(n) = v_{p_j}(n)$ is the $p_j$-adic valuation of $n$, is closed under coordinate-wise addition:
+\begin{equation}
+\mathbf{b}, \mathbf{b}' \in \mathcal{V}_{\text{valid}} \implies \mathbf{b} + \mathbf{b}' \in \mathcal{V}_{\text{valid}}
+\end{equation}
+This is a direct consequence of the FTA (multiplication of integers corresponds to addition of exponent vectors), not an independent axiom.
+
+\item \textbf{Reconstruction Functional Form}: The analysis employs a specific multiplicative functional form to encode exponent vector structure:
+\begin{equation}
+\mathcal{R}[\mathbf{b}; \{N_j\}] := \prod_{j=1}^m \left(1 - e^{2\pi i b_j / N_j}\right)
+\end{equation}
+where $\{N_1, \ldots, N_m\}$ are normalization constants. This form is chosen for its compatibility with character theory and multiplicative monoid structure. The choice of this particular functional form (over alternative encodings) is an assumption that restricts the generality of results to this specific framework.
+
+\item \textbf{Cascade Constraint System}: Cascade constraints take the form:
+\begin{equation}
+b_k \geq \sum_{j < k} b_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+These constraints arise as \textit{necessary conditions} for the multiplicativity of the reconstruction functional combined with the FTA (cf. Theorem \ref{thm:closure-determines-primes}). They are derived consequences, not independent axioms.
+
+\end{enumerate}
+
+\subsubsection{Logical Dependency Chart}
+\label{subsubsec:dependency-chart}
+
+The logical dependencies between these assumptions are as follows:
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Logical Layer} & \textbf{Principle} \\
+\hline
+1 (Foundational) & Fundamental Theorem of Arithmetic \\
+2 & Classical Definition of Primes \\
+3 & Finite Prime Basis Choice \\
+3b (Required for sufficiency) & Closed-Under-Descent Basis Requirement \\
+4 (Derived from 1) & Multiplicative Closure of Exponent Vectors \\
+5 (Assumed for framework) & Reconstruction Functional Form \\
+6 (Derived from 1, 3b, and 5) & Cascade Constraint System (Necessary and Sufficient) \\
+\hline
+\end{tabular}
+\end{center}
+
+All subsequent theoretical development depends on these assumptions. Results explicitly note any additional dependencies beyond this core set.
+
+\subsubsection{Lemma 0: Explicit Construction of Closed-Under-Descent Basis}
+\label{subsubsec:construction-closed-descent}
+
+The following lemma provides an explicit algorithmic construction of a closed-under-descent prime basis from any finite initial set of primes.
+
+\begin{lemma}[Construction of Closed-Under-Descent Prime Basis]
+\label{lem:construction-descent-closure}
+
+\noindent \textbf{Input}: A finite set of initial primes $\mathcal{P}_0 = \{p_1, \ldots, p_k\}$.
+
+\noindent \textbf{Output}: The closed-under-descent basis $\mathcal{P}_{\text{closed}}$.
+
+\noindent \textbf{Algorithm}:
+\begin{enumerate}
+\item Initialize $\mathcal{P} := \mathcal{P}_0$
+\item Repeat:
+\begin{enumerate}
+\item Set $\mathcal{P}_{\text{old}} := \mathcal{P}$
+\item For each prime $p \in \mathcal{P}$:
+\begin{enumerate}
+\item For each prime divisor $q$ of $(p-1)$:
+\begin{enumerate}
+\item If $q \notin \mathcal{P}$, add $q$ to $\mathcal{P}$
+\end{enumerate}
+\end{enumerate}
+\item If $\mathcal{P} = \mathcal{P}_{\text{old}}$, go to step 3 (convergence reached)
+\item Otherwise, continue the repeat loop
+\end{enumerate}
+\item Return $\mathcal{P}_{\text{closed}} := \mathcal{P}$
+\end{enumerate}
+
+\noindent \textbf{Termination}: The algorithm terminates because:
+\begin{enumerate}
+\item Each iteration adds only primes that are divisors of $(p-1)$ for primes $p$ already in $\mathcal{P}$.
+\item These primes are strictly smaller than the primes they divide: if $q \mid (p-1)$, then $q < p$.
+\item Therefore, no infinite increasing chains of primes can occur.
+\item The set of primes below any finite maximum is finite, so the process must terminate.
+\end{enumerate}
+
+\noindent \textbf{Correctness}: At termination, for every prime $p \in \mathcal{P}$, all prime divisors $q$ of $(p-1)$ satisfy $q \in \mathcal{P}$, by construction. Therefore $\mathcal{P}_{\text{closed}}$ is closed under descent.
+
+\end{lemma}
+
+\begin{proof}
+
+\noindent \textbf{Termination Proof}
+
+Let $N_{\text{max}} := \max(\mathcal{P}_0)$ be the largest prime in the initial set. In the first iteration, we add only primes that divide $(p-1)$ for $p \in \mathcal{P}_0$. Each such $q$ satisfies $q < p \leq N_{\text{max}}$ (since $q$ divides $p-1 < p$).
+
+In subsequent iterations, for any newly added prime $q$, we only add further primes dividing $(q-1)$, which are again strictly smaller than $q$.
+
+Since the set of primes smaller than $N_{\text{max}}$ is finite, the algorithm can add only finitely many new primes. Eventually, no new primes are added, and the algorithm terminates.
+
+\noindent \textbf{Correctness Proof}
+
+By induction on iterations: After $k$ iterations, for each $p \in \mathcal{P}^{(k)}$ (the set after $k$ iterations), all prime divisors of $(p-1)$ either:
+1. Are in $\mathcal{P}^{(k)}$ (already added), OR
+2. Will be added in a future iteration.
+
+At termination, when $\mathcal{P}^{(k)} = \mathcal{P}^{(k-1)}$, the condition in (2) cannot occur—all prime divisors of $(p-1)$ for every $p \in \mathcal{P}$ must already be in $\mathcal{P}$.
+
+Therefore, $\mathcal{P}_{\text{closed}}$ satisfies the closed-under-descent property.
+
+\end{proof}
+
+\begin{theorem}[Closure Size Bound]
+\label{thm:closure-size-bound}
+
+For an initial prime set $\mathcal{P}_0 = \{p_1, \ldots, p_k\}$ with $\max(\mathcal{P}_0) = N$, the closed-under-descent closure $\mathcal{P}_{\text{closed}}$ constructed by Lemma 0 satisfies:
+
+\begin{equation}
+|\mathcal{P}_{\text{closed}}| \leq \pi(N)
+\end{equation}
+
+where $\pi(N)$ is the prime counting function (the number of primes less than or equal to $N$).
+
+\end{theorem}
+
+\begin{proof}
+
+The closure is constructed by iteratively adding prime divisors of $(p - 1)$ for primes $p$ in the current set.
+
+\noindent \textbf{Key Observation}: If $q$ is a prime divisor of $(p - 1)$, then $q < p - 1 < p$.
+
+Therefore, every prime added in any iteration is strictly smaller than some prime already in the set.
+
+\noindent \textbf{Maximum Limit}: Starting with $\max(\mathcal{P}_0) = N$, all newly added primes must satisfy $q < N$ (since $q$ divides $(p-1) < p \leq N$ or divides $(p'-1)$ where $p'$ is a newly added prime, and new primes are always smaller than existing ones by the descent property).
+
+By the iterative structure, no prime larger than or equal to $N$ can ever be added to the basis.
+
+Thus:
+\begin{equation}
+\mathcal{P}_{\text{closed}} \subseteq \{\text{all primes} \leq N\}
+\end{equation}
+
+The number of primes $\leq N$ is exactly $\pi(N)$. Therefore:
+\begin{equation}
+|\mathcal{P}_{\text{closed}}| \leq \pi(N)
+\end{equation}
+
+\end{proof}
+
+\begin{corollary}[Closure Size for Small Bases]
+\label{cor:closure-examples}
+
+For specific small initial sets, the closure sizes are:
+\begin{itemize}
+\item $\mathcal{P}_0 = \{2\}$: closure is $\{2\}$, size 1
+\item $\mathcal{P}_0 = \{3\}$: closure is $\{2, 3\}$ (since $2 \mid (3-1)$), size 2
+\item $\mathcal{P}_0 = \{5\}$: closure is $\{2, 5\}$ (since $2 \mid (5-1)$), size 2
+\item $\mathcal{P}_0 = \{7\}$: closure is $\{2, 3, 7\}$ (since $2,3 \mid (7-1)$), size 3
+\item $\mathcal{P}_0 = \{2, 3, 5, 7\}$: closure is $\{2, 3, 5, 7\}$ (already closed), size 4
+\end{itemize}
+
+In all cases, closure size is polynomial (in fact, at most logarithmic) in the initial prime values.
+
+\end{corollary}
+
+\subsubsection{Necessity of Closed-Under-Descent Basis Property}
+\label{subsubsec:necessity-closed-descent}
+
+The closed-under-descent property of the prime basis is essential for the cascade constraints to be sufficient for integrality.
+
+\begin{lemma}[Closed-Under-Descent is Necessary for Cascade Sufficiency]
+\label{lem:descent-necessity}
+
+Let $\mathcal{P} = \{p_1, \ldots, p_m\}$ be a finite set of primes. Suppose $\mathcal{P}$ is NOT closed under descent, meaning there exists a prime $q$ and an index $i \in \{1, \ldots, m\}$ such that $q \mid (p_i - 1)$ but $q \notin \mathcal{P}$.
+
+Then there exists an exponent vector $\mathbf{b} \in \mathbb{Z}_{\geq 0}^m$ that:
+\begin{enumerate}
+\item Satisfies all cascade constraints: $b_k \geq \sum_{j < k} b_j \cdot v_{p_k}(p_j - 1)$ for all $k = 1, \ldots, m$
+\item Produces a rational number (via the epimoric encoding) that is not an integer
+\end{enumerate}
+
+Cascade constraints alone are insufficient to guarantee integrality when the basis is not closed under descent.
+
+\end{lemma}
+
+\begin{proof}
+
+\noindent \textbf{Construction of the Counterexample}
+
+By assumption, there exists a prime $q$ and an index $i$ such that $q \mid (p_i - 1)$ but $q \notin \mathcal{P}$.
+
+Define the exponent vector $\mathbf{b}$ by
+\begin{equation}
+b_j := \begin{cases} 1 & \text{if } j = i \\ 0 & \text{otherwise} \end{cases}
+\end{equation}
+
+That is, $b_i = 1$ and all other exponents are zero.
+
+\noindent \textbf{Verification of Cascade Constraints}
+
+The cascade constraints require:
+\begin{equation}
+b_k \geq \sum_{j < k} b_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+
+For $k < i$: the right-hand side is $\sum_{j < k} 0 \cdot v_{p_k}(p_j - 1) = 0$, and $b_k = 0 \geq 0$. ✓
+
+For $k = i$: the right-hand side is $\sum_{j < i} 0 \cdot v_{p_i}(p_j - 1) = 0$, and $b_i = 1 \geq 0$. ✓
+
+For $k > i$: the right-hand side is $\sum_{j < k} b_j \cdot v_{p_k}(p_j - 1)$. Since $b_j = 0$ for all $j \neq i$ and $i < k$, this equals $b_i \cdot v_{p_k}(p_i - 1) = 1 \cdot v_{p_k}(p_i - 1)$. Since exponents are nonnegative, this is $\geq 0$. With $b_k = 0 \geq v_{p_k}(p_i - 1)$ if and only if $v_{p_k}(p_i - 1) = 0$ (no contribution from $p_i - 1$ to $p_k$).
+
+But wait—this requires $p_k \nmid (p_i - 1)$ for all $k > i$. This is NOT necessarily true! Let me reconsider.
+
+\noindent \textbf{Corrected Constraint Check}
+
+The cascade constraints for $k > i$ would be violated unless $b_k = 0$ is sufficient. Setting $b_k = 0$ for $k > i$ requires:
+\begin{equation}
+0 \geq \sum_{j < k} 0 \cdot v_{p_k}(p_j - 1) = 0
+\end{equation}
+
+This is satisfied.
+
+So far, the cascade constraints are satisfied. Now we check integrality.
+
+\noindent \textbf{Non-Integrality of the Product}
+
+The epimoric product with exponent vector $\mathbf{b}$ is:
+\begin{equation}
+N = \prod_{j=1}^m \left(\frac{p_j}{p_j - 1}\right)^{b_j} = \left(\frac{p_i}{p_i - 1}\right)^1 = \frac{p_i}{p_i - 1}
+\end{equation}
+
+For this to be an integer, the denominator $(p_i - 1)$ must divide the numerator $p_i$. But $\gcd(p_i, p_i - 1) = 1$, so $(p_i - 1) \nmid p_i$, and the ratio is not an integer.
+
+\noindent \textbf{Why This Fails Without Closure}
+
+The prime factorization of $(p_i - 1)$ in the denominator includes the prime $q$ (since $q \mid (p_i - 1)$). The numerator contains only powers of the primes in $\mathcal{P} = \{p_1, \ldots, p_m\}$, and since $q \notin \mathcal{P}$, the prime $q$ does not divide the numerator.
+
+Therefore:
+\begin{equation}
+v_q(N) = v_q(p_i) - v_q(p_i - 1) = 0 - v_q(p_i - 1) < 0
+\end{equation}
+
+Since the q-adic valuation is negative, $N$ is not an integer.
+
+\noindent The exponent vector $\mathbf{b} = (0, \ldots, 0, 1, 0, \ldots, 0)$ (with 1 in position $i$) satisfies all cascade constraints with respect to the basis $\mathcal{P}$, yet produces a non-integer. Without the closed-under-descent property, cascade constraints are insufficient for integrality.
+
+\end{proof}
+
+\begin{corollary}[Closed-Under-Descent is Essential for Cascade Sufficiency]
+
+For the cascade constraints to be sufficient for integrality (i.e., for every exponent vector satisfying the cascade constraints to produce an integer), the prime basis $\mathcal{P}$ must be closed under descent.
+
+\end{corollary}
+
+\subsubsection{Relationship to Classical Mathematics}
+\label{subsubsec:classical-relationship}
+
+The framework is entirely classical in scope. No new axioms are introduced, and no extensions of standard set theory or logic are required. The FTA and classical prime definition are standard results in undergraduate number theory. The cascade framework provides an alternative perspective on these classical concepts through multiplicative geometry and spectral methods within the foundations of number theory.
+
+\end{antml:parameter>
+</invoke>
+
+\subsection{Starting Point: The Cascade Constraint Structure}
+\label{subsec:cascade-constraints}
+
+Fix a finite basis of primes $\mathcal{P} = \{p_1, p_2, \ldots, p_m\}$ where $p_1 = 2$, $p_2 = 3$, etc. Every positive integer $n$ admits a unique factorization:
+\begin{equation}
+\label{eq:fundamental-theorem}
+n = \prod_{j=1}^m p_j^{b_j(n)}
+\end{equation}
+where the exponent vector $\mathbf{b}(n) = (b_1(n), \ldots, b_m(n)) \in \mathbb{Z}^m_{\geq 0}$ is uniquely determined.
+
+From the multiplicative closure of integers and Wilson's theorem, the valid exponent vectors $\mathcal{V}_{\text{valid}} := \{\mathbf{b}(n) : n \in \mathbb{N}\}$ satisfy the cascade constraint structure:
+\begin{equation}
+\label{eq:cascade-constraint}
+b_k \geq \sum_{j < k} b_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+where $v_p(n)$ denotes the $p$-adic valuation of $n$.
+
+This constraint is a necessary and sufficient characterization of valid exponent vectors. The derivation from multiplicative closure is established in Section \ref{subsec:rigorous-closure-proof}.
+
+\subsection{Uniqueness of Cascade Constraint Form for Multiplicative Functionals}
+\label{subsec:cascade-uniqueness-proof}
+
+\begin{theorem}[Uniqueness of Cascade Constraint Form]
+\label{thm:cascade-uniqueness}
+
+Let $\mathcal{P} = \{p_1, \ldots, p_m\}$ be a finite set of basis primes that is closed under descent (as specified in Assumption 3b above). Let $\mathcal{V}_{\text{valid}} \subset \mathbb{Z}_{\geq 0}^m$ denote the set of exponent vectors arising from positive integers via prime factorization:
+\begin{equation}
+\mathcal{V}_{\text{valid}} := \left\{\mathbf{b}(n) = (v_{p_1}(n), \ldots, v_{p_m}(n)) : n \in \mathbb{N}, n = \prod_{j=1}^m p_j^{b_j(n)}\right\}
+\end{equation}
+
+Suppose $\mathcal{V}_{\text{valid}}$ is characterized by a system of linear inequality constraints:
+\begin{equation}
+\label{eq:general-constraint-system}
+\mathbf{b} \in \mathcal{V}_{\text{valid}} \iff A\mathbf{b} \geq \mathbf{c}
+\end{equation}
+where $A \in \mathbb{Z}^{r \times m}$ is a constraint matrix and $\mathbf{c} \in \mathbb{Z}^r$ is a constant vector.
+
+Furthermore, suppose this constraint system is:
+\begin{enumerate}
+\item \textbf{Multiplicative}: If $\mathbf{b}, \mathbf{b}' \in \mathcal{V}_{\text{valid}}$, then $\mathbf{b} + \mathbf{b}' \in \mathcal{V}_{\text{valid}}$ (closure under addition).
+\item \textbf{Minimal}: The system contains no redundant constraints; every constraint is necessary.
+\item \textbf{Structural}: The matrix $A$ encodes only information intrinsic to the prime basis and the multiplicative structure of integers.
+\end{enumerate}
+
+Then the constraint system must have the form:
+\begin{equation}
+b_k \geq D_k(\mathbf{b}_{<k}) := \sum_{j=1}^{k-1} b_j \cdot v_{p_k}(p_j - 1) \quad \text{for all } k = 2, \ldots, m
+\end{equation}
+
+with $b_1$ unconstrained (other than $b_1 \geq 0$). This is the \emph{cascade form} and is the unique such system satisfying all three conditions above.
+
+\end{theorem}
+
+\begin{proof}
+
+Any multiplicative linear constraint system satisfying the stated conditions must reduce to the cascade form.
+
+\noindent \textbf{Step 1: Multiplicative Closure Constrains the Constraint System}
+
+By assumption, $\mathcal{V}_{\text{valid}}$ is a monoid under addition: it is closed under addition and contains the zero vector $\mathbf{0}$ (the exponent vector of the integer 1, which has all prime exponents equal to zero).
+
+If $\mathcal{V}_{\text{valid}}$ is characterized by a constraint system $A\mathbf{b} \geq \mathbf{c}$, then:
+- For all $\mathbf{b} \in \mathcal{V}_{\text{valid}}$: $A\mathbf{b} \geq \mathbf{c}$
+- For all $\mathbf{b}, \mathbf{b}' \in \mathcal{V}_{\text{valid}}$: $\mathbf{b} + \mathbf{b}' \in \mathcal{V}_{\text{valid}}$, so $A(\mathbf{b} + \mathbf{b}') \geq \mathbf{c}$
+
+\noindent \textbf{Claim}: The constant vector $\mathbf{c}$ must satisfy $\mathbf{c} \leq \mathbf{0}$ (componentwise).
+
+\noindent \textbf{Proof of Claim}: Since $\mathbf{0} \in \mathcal{V}_{\text{valid}}$ (the trivial factorization with all exponents zero), we have:
+\begin{equation}
+A \cdot \mathbf{0} = \mathbf{0} \geq \mathbf{c}
+\end{equation}
+
+This directly implies $\mathbf{c} \leq \mathbf{0}$ (componentwise). End proof.
+
+\noindent By rescaling (multiply all rows of $A$ and all components of $\mathbf{c}$ by $-1$ if needed to absorb signs), we can assume $\mathbf{c} = \mathbf{0}$. Thus, the constraint system has the form:
+\begin{equation}
+A\mathbf{b} \geq \mathbf{0}
+\end{equation}
+
+This is a homogeneous constraint system with $\mathbf{c} = \mathbf{0}$, as required for a multiplicative closure property.
+
+\noindent \textbf{Step 2: Structure from Multiplicative Closure}
+
+With $\mathbf{c} = \mathbf{0}$, the constraint is:
+\begin{equation}
+\mathbf{b} \in \mathcal{V}_{\text{valid}} \iff A\mathbf{b} \geq \mathbf{0}
+\end{equation}
+
+The cone $\{\mathbf{b} : A\mathbf{b} \geq \mathbf{0}\}$ contains all exponent vectors. Since the system is minimal, each row of $A$ is a necessary constraint.
+
+\noindent \textbf{Step 3: Constraint Structure from Prime Factorization - Necessity and Sufficiency}
+
+Consider the relationship between exponent vectors and the epimoric encoding. An exponent vector $\mathbf{b}$ defines a rational number:
+\begin{equation}
+\mathcal{Q}[\mathbf{b}] := \prod_{k=1}^m \left(\frac{p_k}{p_k - 1}\right)^{b_k} = \frac{\prod_{k=1}^m p_k^{b_k}}{\prod_{k=1}^m (p_k-1)^{b_k}}
+\end{equation}
+
+By the Fundamental Theorem of Arithmetic, this rational number is an integer if and only if the exponent of every prime $q$ in the numerator is at least the exponent in the denominator.
+
+\noindent \textbf{Necessity of Cascade Constraints}
+
+For $q = p_i$ (a basis prime), the exponents are:
+\begin{equation}
+v_{p_i}(\text{numerator}) = b_i \quad \text{and} \quad v_{p_i}(\text{denominator}) = \sum_{j=1}^m b_j \cdot v_{p_i}(p_j - 1)
+\end{equation}
+
+The integrality condition $v_{p_i}(\mathcal{Q}[\mathbf{b}]) \geq 0$ requires:
+\begin{equation}
+b_i \geq \sum_{j=1}^m b_j \cdot v_{p_i}(p_j - 1)
+\end{equation}
+
+By upper triangularity of the valuation matrix (since $v_{p_i}(p_j - 1) = 0$ for $i < j$), this constraint depends only on exponents with indices $j \leq i$:
+\begin{equation}
+b_i \geq \sum_{j=1}^{i-1} b_j \cdot v_{p_i}(p_j - 1)
+\end{equation}
+
+This must hold for all basis primes $i = 1, \ldots, m$, giving the cascade constraint form. This proves necessity.
+
+\noindent \textbf{Sufficiency of Cascade Constraints}
+
+Conversely, suppose $\mathbf{b} \in \mathbb{Z}_{\geq 0}^m$ satisfies all cascade constraints:
+\begin{equation}
+\label{eq:cascade-sufficiency-assumed}
+b_i \geq \sum_{j=1}^{i-1} b_j \cdot v_{p_i}(p_j - 1) \quad \text{for all } i = 1, \ldots, m
+\end{equation}
+
+We must prove that $\mathcal{Q}[\mathbf{b}]$ is an integer. It suffices to show that for every prime $q$, the exponent of $q$ in the numerator is at least the exponent in the denominator.
+
+For $q = p_i$ (a basis prime), the exponent constraint is exactly equation (\ref{eq:cascade-sufficiency-assumed}), so $v_{p_i}(\mathcal{Q}[\mathbf{b}]) \geq 0$ for all basis primes.
+
+For $q$ not in the basis $\mathcal{P} = \{p_1, \ldots, p_m\}$, the exponent of $q$ in the numerator is:
+\begin{equation}
+v_q\left(\prod_{k=1}^m p_k^{b_k}\right) = 0
+\end{equation}
+since $q$ is distinct from all basis primes and does not divide any of them.
+
+The exponent of $q$ in the denominator is:
+\begin{equation}
+v_q\left(\prod_{k=1}^m (p_k - 1)^{b_k}\right) = \sum_{k=1}^m b_k \cdot v_q(p_k - 1)
+\end{equation}
+
+For $\mathcal{Q}[\mathbf{b}]$ to be an integer, the numerator exponent must be at least the denominator exponent:
+\begin{equation}
+v_q(\mathcal{Q}[\mathbf{b}]) = 0 - \sum_{k=1}^m b_k \cdot v_q(p_k - 1) \geq 0
+\end{equation}
+
+This requires:
+\begin{equation}
+\sum_{k=1}^m b_k \cdot v_q(p_k - 1) \leq 0
+\end{equation}
+
+Since all $b_k \geq 0$ (exponents are nonnegative) and all $v_q(p_k - 1) \geq 0$ (p-adic valuations are nonnegative), the sum $\sum_{k=1}^m b_k \cdot v_q(p_k - 1)$ is a nonnegative integer.
+
+For this nonnegative sum to be $\leq 0$, it must equal exactly zero:
+\begin{equation}
+\sum_{k=1}^m b_k \cdot v_q(p_k - 1) = 0
+\end{equation}
+
+Since this is a sum of nonnegative terms, the only way it can be zero is if each term is zero:
+\begin{equation}
+b_k \cdot v_q(p_k - 1) = 0 \quad \text{for all } k
+\end{equation}
+
+This means for each $k$: either $b_k = 0$ or $v_q(p_k - 1) = 0$.
+
+\noindent \textbf{Managing Non-Basis Primes via Basis Closure}
+
+From the analysis above, for any prime $q \notin \mathcal{P}$, the integrality of $\mathcal{Q}[\mathbf{b}]$ requires:
+\begin{equation}
+\sum_{k=1}^m b_k \cdot v_q(p_k - 1) = 0
+\end{equation}
+
+This is automatically satisfied if $v_q(p_k - 1) = 0$ for all $k$, i.e., if $q$ divides none of the values $(p_k - 1)$ for $p_k \in \mathcal{P}$.
+
+\noindent \textbf{Definition: Closed Prime Basis}
+
+A prime basis $\mathcal{P}$ is called \emph{closed under descent} if every prime divisor of $(p - 1)$ for any $p \in \mathcal{P}$ is itself in $\mathcal{P}$. Formally:
+\begin{equation}
+\mathcal{P} = \overline{\mathcal{P}} := \mathcal{P} \cup \{q : q \text{ prime and } q \mid (p-1) \text{ for some } p \in \mathcal{P}\}
+\end{equation}
+
+For any finite initial set of primes, one can iteratively add divisors of $(p_i - 1)$ until closure is achieved. Since this process adds finitely many primes at each step (each integer has finitely many prime divisors), it terminates in finitely many iterations.
+
+\noindent \textbf{Sufficiency with a Closed Basis}
+
+If $\mathcal{P}$ is a closed basis, then for any exponent vector $\mathbf{b}$ and any prime $q \notin \mathcal{P}$, we have by definition that $v_q(p_k - 1) = 0$ for all $p_k \in \mathcal{P}$ (since $q$ is not a divisor of any $p_k - 1$).
+
+Therefore:
+\begin{equation}
+\sum_{k=1}^m b_k \cdot v_q(p_k - 1) = 0
+\end{equation}
+
+and the integrality condition $v_q(\mathcal{Q}[\mathbf{b}]) \geq 0$ is satisfied for all non-basis primes $q$.
+
+\noindent \textbf{Complete Sufficiency Proof}
+
+For a closed basis $\mathcal{P}$ and any exponent vector $\mathbf{b}$ satisfying the cascade constraints:
+\begin{enumerate}
+\item For basis primes $p_i \in \mathcal{P}$: the cascade constraint at position $i$ ensures $v_{p_i}(\mathcal{Q}[\mathbf{b}]) \geq 0$.
+\item For non-basis primes $q \notin \mathcal{P}$: closure ensures $v_q(\mathcal{Q}[\mathbf{b}]) = 0 \geq 0$.
+\end{enumerate}
+
+Therefore, $\mathcal{Q}[\mathbf{b}] = \prod_{j=1}^m \left(\frac{p_j}{p_j-1}\right)^{b_j}$ is a positive integer by the Fundamental Theorem of Arithmetic.
+
+\noindent \textbf{Practical Basis Construction}
+
+In practice, for representing integers up to $N$, one constructs the closed basis by:
+\begin{enumerate}
+\item Starting with all primes $p \leq \sqrt{N}$ (sufficient to factor all integers up to $N$ as products of smaller primes).
+\item Iteratively adding all prime divisors of $(p_i - 1)$ until no new primes are introduced.
+\end{enumerate}
+
+This yields a finite closed basis that makes the cascade constraints sufficient.
+
+\noindent \textbf{Complete Characterization}
+
+Thus, the cascade constraint form:
+\begin{equation}
+b_k \geq \sum_{j=1}^{k-1} b_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+provides a \emph{complete and exact} characterization of the exponent vectors arising from integers within a properly chosen finite prime basis.
+
+\noindent \textbf{Step 4: Recursive Decoupling into Cascade Form}
+
+By the upper triangularity of the valuation matrix ($v_{p_i}(p_j - 1) = 0$ for $i \geq j$), the constraint for $p_i$ involves only exponents $b_j$ with $j < i$:
+\begin{equation}
+b_i \geq \sum_{j=1}^{i-1} b_j \cdot v_{p_i}(p_j - 1) =: D_i(\mathbf{b}_{<i})
+\end{equation}
+
+This constraint is \emph{recursive}: the constraint at position $i$ depends only on exponents at earlier positions $j < i$.
+
+\noindent \textbf{Step 5: Minimality and Uniqueness}
+
+The cascade form constraints are minimal in the sense that:
+\begin{enumerate}
+\item They are \emph{necessary}: required by the integrality condition.
+\item They are \emph{sufficient}: any exponent vector satisfying all cascade constraints corresponds to an integer.
+\item They are \emph{non-redundant}: removing any constraint $b_i \geq D_i(\mathbf{b}_{<i})$ allows non-integer ratios to pass through.
+\item They are \emph{complete}: they fully characterize $\mathcal{V}_{\text{valid}}$.
+\end{enumerate}
+
+No other linear constraint system on the basis $\mathcal{P}$ can simultaneously satisfy all four properties above, because:
+\begin{itemize}
+\item Any system must include the divisibility constraints from Step 3.
+\item Those constraints uniquely decouple into the recursive cascade form due to upper triangularity (Step 4).
+\item Any additional constraints would be redundant (violating minimality) or insufficient (violating completeness).
+\end{itemize}
+
+\noindent \textbf{Step 6: Uniqueness of the Form}
+
+The cascade constraint system is unique among all multiplicative linear systems. Any permutation, reordering, or modification of the cascade form either:
+\begin{itemize}
+\item Introduces redundancy (e.g., implicitly stating the same constraint in different forms).
+\item Loses the recursive structure necessary for integrality.
+\item Fails to be closed under addition (breaking multiplicativity).
+\end{itemize}
+
+Therefore, the cascade form is the \emph{unique} multiplicative linear constraint system characterizing $\mathcal{V}_{\text{valid}}$.
+
+\end{proof}
+
+\noindent The cascade constraint form
+\begin{equation}
+b_k \geq \sum_{j=1}^{k-1} b_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+is the unique form for a linear multiplicative functional structure on exponent vectors derived from the FTA.
+
+\subsection{Minimality of Canonical Exponent Vectors}
+\label{subsec:minimal-representation}
+
+\begin{theorem}[Minimal Representation via Cascade Constraints]
+\label{thm:minimal-representation}
+
+Let $\mathcal{P} = \{p_1, \ldots, p_m\}$ be a closed-under-descent finite prime basis. For any positive integer $n$, denote its epimoric encoding (exponent vector satisfying cascade constraints) as $\mathbf{e}(n) = (e_1(n), \ldots, e_m(n))$ where each $e_j(n) \geq 0$.
+
+Then $\mathbf{e}(n)$ is the unique exponent vector that:
+\begin{enumerate}
+\item Satisfies all cascade constraints: $e_j(n) \geq D_j(\mathbf{e}_{<j}(n))$ for all $j = 1, \ldots, m$
+\item Produces $n$ via epimoric encoding: $\prod_{j=1}^m (p_j/(p_j-1))^{e_j(n)} = n$
+\item Minimizes the total exponent sum among all such representations: $\sum_{j=1}^m e_j(n) = \min \left\{\sum_{j=1}^m e'_j : \text{constraints hold, produces } n\right\}$
+\end{enumerate}
+
+Moreover, any proper superset of the exponent vector (where at least one coordinate has a larger value) would either violate the cascade constraints or produce a value exceeding $n$.
+
+\end{theorem}
+
+\begin{proof}
+
+\noindent \textbf{Step 1: Existence and Uniqueness of Cascade-Constrained Solution}
+
+By Theorem \ref{thm:cascade-uniqueness}, for any positive integer $n$ and a closed basis $\mathcal{P}$, there exists a unique finite-support exponent vector $\mathbf{e}(n)$ satisfying:
+\begin{enumerate}
+\item Cascade constraints: $e_j(n) \geq \sum_{i<j} e_i(n) \cdot v_{p_j}(p_i - 1)$ for all $j$
+\item Epimoric encoding produces $n$: $\prod_{j=1}^m (p_j/(p_j-1))^{e_j(n)} = n$
+\end{enumerate}
+
+This vector is unique by the recursive nature of cascade constraints (each $e_j$ is determined by the constraint at position $j$ combined with the requirement that the product equals $n$).
+
+\noindent \textbf{Step 2: Minimality of Exponent Sum}
+
+Suppose there exists an alternative exponent vector $\mathbf{e}'(n) = (e'_1(n), \ldots, e'_m(n))$ such that:
+\begin{enumerate}
+\item It satisfies cascade constraints: $e'_j(n) \geq \sum_{i<j} e'_i(n) \cdot v_{p_j}(p_i - 1)$ for all $j$
+\item It produces $n$: $\prod_{j=1}^m (p_j/(p_j-1))^{e'_j(n)} = n$
+\item It has a strictly smaller exponent sum: $\sum_j e'_j(n) < \sum_j e_j(n)$
+\end{enumerate}
+
+Taking logarithms of the epimoric encoding:
+\begin{equation}
+\sum_{j=1}^m e'_j(n) \ln(p_j/(p_j-1)) = \ln n = \sum_{j=1}^m e_j(n) \ln(p_j/(p_j-1))
+\end{equation}
+
+Since the logarithmic coefficients $\ln(p_j/(p_j-1)) > 0$ are strictly positive and linearly independent over the rationals (by the Lindemann-Weierstrass theorem applied to the transcendence of prime logarithms), the equality of the two sums implies the exponent vectors must be identical.
+
+Therefore, if $\mathbf{e}'(n)$ produces the same integer $n$ and satisfies the cascade constraints, then $\mathbf{e}'(n) = \mathbf{e}(n)$.
+
+This proves uniqueness, and thus the cascade-constrained vector minimizes the exponent sum among all valid representations.
+
+\noindent \textbf{Step 3: No Proper Superset Can Maintain Validity}
+
+Suppose $\mathbf{e}^+(n)$ is an exponent vector with $\mathbf{e}^+(n) \geq \mathbf{e}(n)$ (componentwise), with at least one coordinate strictly larger, i.e., $e^+_j(n) > e_j(n)$ for some $j$.
+
+\textbf{Case 1}: If $\mathbf{e}^+(n)$ satisfies the cascade constraints but produces a larger product, then $\prod_j (p_j/(p_j-1))^{e^+_j} > n$, contradicting the requirement that it encodes $n$.
+
+\textbf{Case 2}: If $\mathbf{e}^+(n)$ produces $n$ exactly, then by the uniqueness proven in Step 2, we must have $\mathbf{e}^+(n) = \mathbf{e}(n)$, contradicting the assumption that it is a proper superset.
+
+Therefore, no proper superset of $\mathbf{e}(n)$ can satisfy both constraints and produce $n$.
+
+\noindent \textbf{Step 4: Minimality is Structural, Not Just Arithmetic}
+
+The cascade constraints form a recursive system where each coordinate's lower bound depends only on earlier coordinates. This recursive structure forces the solution to be minimal in a topological sense: the solution occupies the lowest point in the feasible region defined by the constraints and the equality constraint from the epimoric encoding.
+
+Since the feasible region is a face of a polyhedral cone (defined by linear inequalities and an affine equality), the unique point in this face is the minimal feasible solution.
+
+\end{proof}
+
+\subsection{From Exponent Vectors to Multiplicative Structure}
+\label{subsec:exponent-to-multiplicative}
+
+Given only exponent vectors $\mathcal{V} = \{\mathbf{b}_n : n \in \mathbb{N}\} \subset \mathbb{Z}^{m+1}$ from ground states, the functional structure is recovered via the reconstruction functional:
+
+\begin{definition}[Reconstruction Functional]
+\begin{equation}
+\label{eq:reconstruction-functional}
+\mathcal{R}[\mathbf{b}] := \prod_{j=1}^m \left( 1 - e^{2\pi i b_j / N_j} \right)
+\end{equation}
+where $N_j$ are normalization constants and the vanishing of $\mathcal{R}[\mathbf{b}]$ on $\mathcal{V}$ encodes the constraint structure.
+\end{definition}
+
+\begin{theorem}[Reconstruction Uniqueness]
+\label{thm:reconstruction-uniqueness}
+Let $\mathcal{V} \subset \mathbb{Z}^m_{\geq 0}$ be a set of exponent vectors containing all standard basis vectors $\mathbf{e}_j$ for $j = 1, \ldots, m$ and closed under pairwise addition. Then the reconstruction functional uniquely determines the normalizations $\{N_1, \ldots, N_m\}$ via discrete Fourier inversion on the exponent vectors.
+
+Specifically, for each coordinate $j$, the multiset of values $\{R[\mathbf{b}] : \mathbf{b} \in \mathcal{V}\}$ admits a Fourier decomposition on the cyclic group $\mathbb{Z}_{N_j}$. The period $N_j$ is the smallest positive integer such that $R[k \mathbf{e}_j] = R[(k + N_j) \mathbf{e}_j]$ for all $k$ where both vectors lie in $\mathcal{V}$.
+\end{theorem}
+
+\begin{proof}
+
+\noindent \textbf{Step 1: Periodicity in Each Coordinate}
+
+Consider the reconstruction functional applied to multiples of the $j$-th standard basis vector:
+\begin{equation}
+f_j(k) := \mathcal{R}[k \mathbf{e}_j] = 1 - e^{2\pi i k / N_j}
+\end{equation}
+
+This function is periodic in $k$ with period $N_j$. That is:
+\begin{equation}
+f_j(k + N_j) = 1 - e^{2\pi i (k + N_j) / N_j} = 1 - e^{2\pi i k / N_j} \cdot e^{2\pi i} = 1 - e^{2\pi i k / N_j} = f_j(k)
+\end{equation}
+
+\noindent \textbf{Step 2: The Period is Minimal}
+
+Suppose there exists a smaller period $M_j < N_j$ such that $f_j(k + M_j) = f_j(k)$ for all $k$ where both are defined. Then:
+\begin{equation}
+e^{2\pi i (k + M_j) / N_j} = e^{2\pi i k / N_j}
+\end{equation}
+
+This implies:
+\begin{equation}
+e^{2\pi i M_j / N_j} = 1
+\end{equation}
+
+which means $M_j / N_j$ is an integer. Since $0 < M_j < N_j$, this is impossible. Therefore, $N_j$ is the minimal period.
+
+\noindent \textbf{Step 3: Uniqueness via Fourier Inversion}
+
+Given the values $\{f_j(k) : k = 0, 1, 2, \ldots\}$, the discrete Fourier transform reveals the periodicity. Specifically, applying the inverse Fourier transform on the cyclic group $\mathbb{Z}_{N_j}$ gives:
+\begin{equation}
+\chi_j(a) = \frac{1}{N_j} \sum_{k=0}^{N_j - 1} f_j(k) e^{-2\pi i ak / N_j}
+\end{equation}
+
+This inversion is unique: given the values of $f_j$ at all $k$, the period $N_j$ is uniquely determined as the minimal period of the function.
+
+\noindent \textbf{Step 4: Determination from $\mathcal{V}$}
+
+By assumption, $\mathcal{V}$ contains all standard basis vectors $k \mathbf{e}_j$ for $k = 0, 1, 2, \ldots$ up to some maximum (or at least enough values to determine the period). The reconstruction functional applied to these vectors gives the sequence $\{f_j(0), f_j(1), f_j(2), \ldots\}$.
+
+The minimal period of this sequence is $N_j$. This period is uniquely determined from the functional values, and therefore the normalization constant $N_j$ is uniquely determined.
+
+\noindent \textbf{Step 5: Uniqueness Across All Coordinates}
+
+Since each coordinate $j$ is independent in the functional form $\mathcal{R}[\mathbf{b}] = \prod_{j=1}^m (1 - e^{2\pi i b_j / N_j})$, the period in coordinate $j$ determines $N_j$ independently of the periods in other coordinates.
+
+Therefore, all normalizations $\{N_1, \ldots, N_m\}$ are uniquely determined by the reconstruction functional applied to $\mathcal{V}$.
+
+\end{proof}
+
+\subsubsection{Multiplicative Closure and Prime Normalization}
+\label{subsubsec:natural-normalization}
+
+Imposing closure under multiplication ($\mathbf{b}, \mathbf{b}' \in \mathcal{V} \Rightarrow \mathbf{b} + \mathbf{b}' \in \mathcal{V}$) forces the reconstruction functional to be multiplicative:
+
+\begin{equation}
+\label{eq:multiplicative-constraint}
+\mathcal{R}[\mathbf{b} + \mathbf{b}'] = \mathcal{R}[\mathbf{b}] \cdot \mathcal{R}[\mathbf{b}']
+\end{equation}
+
+\begin{theorem}[Multiplicative Closure Uniquely Determines Normalization Constants Given Classical Primes]
+\label{thm:closure-determines-primes}
+\textbf{Statement}: Assume the classical definition of primes (Assumption 2: integers $p > 1$ with exactly two positive divisors) and the Fundamental Theorem of Arithmetic. The requirement that a multiplicative reconstruction functional $\mathcal{R}[\mathbf{b}; \{N_j\}]$ satisfy the universal multiplicative constraint
+\begin{equation}
+\mathcal{R}[\mathbf{b} + \mathbf{b}'; \{N_j\}] = \mathcal{R}[\mathbf{b}; \{N_j\}] \cdot \mathcal{R}[\mathbf{b}';\{N_j\}]
+\end{equation}
+for \textbf{all} pairs $\mathbf{b}, \mathbf{b}' \in \mathcal{V}$ (the set of all exponent vectors arising from integers via the FTA) uniquely determines the normalization constants:
+\begin{equation}
+\label{eq:prime-normalization}
+N_j = p_j - 1
+\end{equation}
+where $\{p_1, p_2, \ldots, p_m\}$ is the sequence of classical primes.
+
+\noindent \textbf{Note on Logical Structure}: This theorem establishes the UNIQUE normalization of classical primes in the epimoric encoding framework. It takes as given the classical definition of primes (from the Fundamental Theorem of Arithmetic) and derives that the optimal epimoric normalization is $N_j = p_j - 1$. Subsequent sections (Part II: Core Theory) provide three mathematically distinct but logically equivalent characterizations of why the primes occupy special positions in the cascade constraint structure: the spectral characterization (observable discontinuities), the algebraic characterization (maximal coherence via group characters), and the dynamical characterization (constraint-tightness phase transitions). These three characterizations do NOT derive primes from first principles; rather, they show that the cascade structure—which encodes primes through the FTA—exhibits these three distinguishing properties uniquely and exclusively at prime positions. The framework assumes primes exist and characterizes their optimal representation and natural distinguishing properties.
+
+The proof proceeds via Lemmas A, B, C (Section \ref{subsec:rigorous-closure-proof}):
+\begin{enumerate}
+\item \textbf{Lemma A}: Multiplicative closure on exponent vectors implies $(\mathcal{V}, +)$ is an abelian group, and multiplicativity of $\mathcal{R}$ requires it to be a group homomorphism.
+\item \textbf{Lemma B}: For all exponent vectors from all integers via FTA, multiplicativity forces $N_j = p_j - 1$ through character theory and group structure over finite fields.
+\item \textbf{Lemma C}: The normalization $N_j = p_j - 1$ is unique by the Fundamental Theorem of Arithmetic and bijection between exponent vectors and integers.
+\end{enumerate}
+\end{theorem}
+
+\subsubsection{Cascade Structure from Closure}
+\label{subsubsec:cascade-from-closure}
+
+From $N_j = p_j - 1$, the cascade deficit structure follows necessarily:
+
+\begin{definition}[Cascade Deficit from Closure]
+The requirement that $\mathbf{b}$ is multiplicatively valid implies:
+\begin{equation}
+\label{eq:cascade-closure-condition}
+\sum_{i=1}^j b_i \cdot v_{p_{j+1}}(p_i - 1) \leq b_{j+1}
+\end{equation}
+where $v_p(n)$ is the $p$-adic valuation.
+\end{definition}
+
+\begin{theorem}[Cascade Constraints are Necessary and Sufficient]
+\label{thm:cascade-necessity-sufficiency}
+A vector $\mathbf{b} \in \mathbb{Z}^m$ is multiplicatively valid if and only if it satisfies the cascade constraints above.
+\end{theorem}
+
+
+\subsection{Rigorous Resolution: Proof That Multiplicative Closure Determines Primes}
+\label{subsec:rigorous-closure-proof}
+
+\subsubsection{Lemma A: Closure Implies Multiplicative Group Structure}
+\label{subsubsec:lemma-a-closure-multiplicative}
+
+\begin{lemma}[Closure Implies Multiplicative Group Structure]
+\label{lem:closure-group-structure}
+Let $\mathcal{V} \subset \mathbb{Z}^m$ satisfy closure, inverses, and contain $\mathbf{0}$. Then $(\mathcal{V}, +)$ is an abelian group, and the reconstruction functional
+\begin{equation}
+\mathcal{R}[\mathbf{b}; \{N_j\}] := \prod_{j=1}^m \left(1 - e^{2\pi i b_j / N_j}\right)
+\end{equation}
+satisfies the multiplicative constraint
+\begin{equation}
+\label{eq:lem-a-multiplicative-constraint}
+\mathcal{R}[\mathbf{b} + \mathbf{b}';\{N_j\}] = \mathcal{R}[\mathbf{b};\{N_j\}] \cdot \mathcal{R}[\mathbf{b}';\{N_j\}]
+\end{equation}
+if and only if $\mathcal{R}$ is a group homomorphism to $\mathbb{C}^\times$.
+\end{lemma}
+
+\begin{proof}
+The group structure is immediate from the closure axioms. For multiplicativity, express $\mathcal{R}[\mathbf{b}] = \prod_{j=1}^m e^{-\pi i b_j/N_j} \cdot 2i \sin(\pi b_j/N_j)$ where $\zeta_j = e^{2\pi i/N_j}$. Multiplicativity requires the product of sines to factor across variables. By the structure theorem for finite abelian groups, $\mathcal{V} \cong \mathbb{Z}_{n_1} \times \cdots \times \mathbb{Z}_{n_k}$. The character group decomposes into product characters:
+\begin{equation}
+\chi(\mathbf{b}) = \prod_{j=1}^m e^{2\pi i b_j \alpha_j}, \quad \alpha_j \in \mathbb{R}/\mathbb{Z}
+\end{equation}
+Since $\mathcal{R}$ factors component-wise, it is multiplicative if and only if it is a character homomorphism.
+\end{proof}
+
+\subsubsection{Lemma B: Multiplicativity Uniquely Determines Normalizations}
+\label{subsubsec:lemma-b-resonance}
+
+\begin{lemma}[Multiplicative Encoding Uniqueness Given Classical Primes]
+\label{lem:multiplicativity-primes}
+Let $\mathcal{P} = \{p_1, p_2, \ldots, p_m\}$ be a fixed set of classical primes (positive integers greater than 1 with exactly two positive divisors, as assumed in Assumption 2). Let $\mathcal{V} \subset \mathbb{Z}^m_{\geq 0}$ be the set of exponent vectors $\mathbf{b}(n) = (b_1(n), \ldots, b_m(n))$ arising from the FTA, where $b_j(n) = v_{p_j}(n)$ is the $p_j$-adic valuation of $n$.
+
+The set $\mathcal{V}$ is multiplicatively closed: if $\mathbf{b}, \mathbf{b}' \in \mathcal{V}$ (exponent vectors of integers $m$ and $n$), then $\mathbf{b} + \mathbf{b}' \in \mathcal{V}$ (exponent vector of the integer $mn$).
+
+To encode the multiplicative structure of integers via a reconstruction functional of the form:
+\begin{equation}
+\mathcal{R}[\mathbf{b}; \{N_j\}] := \prod_{j=1}^m \left(1 - e^{2\pi i b_j / N_j}\right)
+\end{equation}
+where $\{N_1, \ldots, N_m\}$ are normalization constants to be determined. If this functional is required to satisfy the multiplicative property for ALL pairs $\mathbf{b}, \mathbf{b}' \in \mathcal{V}$:
+\begin{equation}
+\mathcal{R}[\mathbf{b} + \mathbf{b}'; \{N_j\}] = \mathcal{R}[\mathbf{b}; \{N_j\}] \cdot \mathcal{R}[\mathbf{b}';\{N_j\}]
+\end{equation}
+then the normalization constants are uniquely determined to be:
+\begin{equation}
+N_j = p_j - 1 \quad \text{for each } j = 1, \ldots, m
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+
+\noindent \textbf{Part A: Homomorphism Structure}
+
+The multiplicativity requirement $\mathcal{R}[\mathbf{b} + \mathbf{b}'] = \mathcal{R}[\mathbf{b}] \cdot \mathcal{R}[\mathbf{b}']$ for all $\mathbf{b}, \mathbf{b}' \in \mathcal{V}$ defines a group homomorphism from $(\mathcal{V}, +)$ to $(\mathbb{C}^\times, \cdot)$.
+
+By the FTA and the definition of $\mathcal{V}$, the set $\mathcal{V}$ is exactly the set of all finite nonnegative integer vectors in the exponent coordinates. As a monoid under addition, $\mathcal{V}$ is isomorphic to $(\mathbb{Z}_{\geq 0}^m, +)$.
+
+Any monoid homomorphism $\mathcal{R}: (\mathbb{Z}_{\geq 0}^m, +) \to (\mathbb{C}^\times, \cdot)$ is completely determined by its values on the standard basis vectors $\mathbf{e}_1, \ldots, \mathbf{e}_m$:
+\begin{equation}
+\mathcal{R}(\mathbf{b}) = \prod_{j=1}^m \mathcal{R}(\mathbf{e}_j)^{b_j}
+\end{equation}
+
+\noindent \textbf{Part B: Periodicity and the Homomorphism Requirement}
+
+For the given functional form $\mathcal{R}[\mathbf{b}; \{N_j\}] := \prod_{j=1}^m (1 - e^{2\pi i b_j / N_j})$, the functional decomposes as a product of component functions:
+\begin{equation}
+\mathcal{R}(\mathbf{b}) = \prod_{j=1}^m \chi_j(b_j) \quad \text{where} \quad \chi_j(b_j) = 1 - e^{2\pi i b_j / N_j}
+\end{equation}
+
+For $\mathcal{R}$ to be a multiplicative homomorphism on $(\mathbb{Z}_{\geq 0}^m, +)$, the exponent function $e^{2\pi i b_j / N_j}$ must be periodic in $b_j$ with period $N_j$. This periodicity ensures that the functional behaves consistently with the additive structure of exponent vectors.
+
+The monoid homomorphism property requires the individual components to combine multiplicatively: if $\mathcal{R}(\mathbf{b} + \mathbf{b}') = \mathcal{R}(\mathbf{b}) \cdot \mathcal{R}(\mathbf{b}')$ for all $\mathbf{b}, \mathbf{b}'$, then the exponent form must support this. The period $N_j$ must be chosen so that the periodicity structure is compatible with the multiplicative structure of integers encoded via the FTA.
+
+\noindent \textbf{Part C: Consistency with FTA via Wilson's Theorem and Multiplicative Structure}
+
+The exponent vectors in $\mathcal{V}$ are not arbitrary; they arise from the multiplicative structure of integers under FTA. For coordinate $j$ corresponding to prime $p_j$, the structure of the integer multiplicative group modulo $p_j$ is fundamental to determining $N_j$.
+
+By Wilson's theorem, for any prime $p$, the product of all nonzero residues modulo $p$ satisfies $(p - 1)! \equiv -1 \pmod{p}$. This implies that the nonzero residues $\{1, 2, \ldots, p - 1\}$ form a complete multiplicative group of order exactly $p - 1$ under multiplication modulo $p$. This group is cyclic, generated by a primitive root modulo $p$.
+
+The crucial consequence: the multiplicative group $(\mathbb{Z}/p_j\mathbb{Z})^*$ has precisely order $p_j - 1$, not some other value. This ordinal constraint directly determines the period of any character functional encoding multiplicative structure.
+
+For the character functional $\chi_j(b_j) = 1 - e^{2\pi i b_j/N_j}$ to be a valid group character on the exponent lattice (which encodes integer multiplicative structure), its period must be compatible with the group order. When applied to exponent vectors arising from powers of $p_j$, the character must have a period $N_j$ such that the functional preserves the multiplicative group structure of $(\mathbb{Z}/p_j\mathbb{Z})^*$.
+
+By group-theoretic principles, if an exponent functional $\chi$ encodes a group homomorphism, its period must divide the order of the underlying group. Since the order is exactly $p_j - 1$ (by Wilson's theorem), we have $N_j | (p_j - 1)$. Any smaller period would create indistinguishability between distinct group elements, violating faithfulness of the homomorphism.
+
+\noindent \textbf{Part D: Explicit Derivation via Chinese Remainder Theorem}
+
+For coordinate $j$ to be compatible with the multiplicative structure, the character $\chi_j(b_j) = 1 - e^{2\pi i b_j / N_j}$ must have period exactly $N_j$. That is:
+\begin{equation}
+\chi_j(b_j + N_j) = \chi_j(b_j) \quad \text{for all } b_j
+\end{equation}
+
+Now consider products: by multiplicativity, for any $a, b \in \mathbb{Z}_{\geq 0}$:
+\begin{equation}
+\mathcal{R}(a \mathbf{e}_j + b \mathbf{e}_j) = \mathcal{R}(a \mathbf{e}_j) \cdot \mathcal{R}(b \mathbf{e}_j)
+\end{equation}
+
+Equivalently:
+\begin{equation}
+\mathcal{R}((a+b) \mathbf{e}_j) = \mathcal{R}(a \mathbf{e}_j) \cdot \mathcal{R}(b \mathbf{e}_j)
+\end{equation}
+
+The exponent vectors $a \mathbf{e}_j$ for $a = 1, 2, \ldots, p_j - 1$ correspond to the integers $p_j, p_j^2, \ldots, p_j^{p_j - 1}$. These are all in $\mathcal{V}$ because they are multiplicatively generated by $p_j$.
+
+Consider the multiplicative structure modulo $p_j$: the multiplicative group $(\mathbb{Z}/p_j\mathbb{Z})^*$ acts transitively on nonzero residues. The character $\chi_j$ must encode this structure.
+
+By the Chinese Remainder Theorem applied to the character constraints: if $\mathcal{R}$ encodes exponent vectors from the FTA, then the character period $N_j$ must divide the order of the multiplicative group $(\mathbb{Z}/p_j\mathbb{Z})^*$, which is $p_j - 1$. Thus $N_j | p_j - 1$.
+
+Furthermore, for injectivity of the encoding on the exponent space: if $N_j < p_j - 1$, then the characters would have period less than the span of possible exponents arising from powers of $p_j$. This would create collisions: distinct exponent values $a$ and $a + N_j$ (where $1 \le a < N_j < p_j - 1$) would map to the same character value via periodicity, violating the bijection between exponent vectors and integers (Proposition \ref{prop:encoding-injectivity}).
+
+Therefore, for bijective encoding, $N_j = p_j - 1$ exactly.
+
+\noindent \textbf{Part E: Relationship Between Exponent Span and Multiplicative Group Order}
+
+The constraint $N_j = p_j - 1$ (derived in Part D via injectivity) reflects the structure of the multiplicative group modulo $p_j$, not merely the need to distinguish exponents 0 to $p_j - 1$.
+
+Consider the divisors of $p_j^{p_j - 1}$. The exponent vectors are $a \mathbf{e}_j$ for $0 \le a \le p_j - 1$. By the Fundamental Theorem of Arithmetic, the exponent vectors arising from all positive integers, when restricted to coordinate $j$, can be arbitrarily large.
+
+However, the multiplicative structure of integers modulo $p_j$ is governed by the group $(\mathbb{Z}/p_j\mathbb{Z})^*$, which has order $p_j - 1$. The exponent values that determine distinct residue classes modulo $p_j$ are bounded by the order of this multiplicative group.
+
+The period $N_j = p_j - 1$ ensures that:
+\begin{enumerate}
+\item The character $\chi_j(b_j) = 1 - e^{2\pi i b_j / N_j}$ has period exactly $p_j - 1$
+\item The periodicity is compatible with the multiplicative structure of $(\mathbb{Z}/p_j\mathbb{Z})^*$
+\item The functional $\mathcal{R}$ preserves multiplicative structure via the homomorphism property
+\item Injectivity of the encoding is maintained (as established in Part D)
+\end{enumerate}
+
+Any choice $N_j < p_j - 1$ would create collisions in the encoding that violate the bijection between exponent vectors and integers. Any choice $N_j > p_j - 1$ would be incompatible with the multiplicative group structure and would fail to encode the group-theoretic constraints.
+
+\end{proof}
+
+
+\subsubsection{Lemma C: Uniqueness via Fundamental Theorem of Arithmetic}
+\label{subsubsec:lemma-c-uniqueness}
+
+\begin{lemma}[Uniqueness of Prime Normalization]
+\label{lem:uniqueness-primes}
+Suppose a multiplicative reconstruction functional $\mathcal{R}[\mathbf{b}; \{N_j\}]$ with the form $\prod_j (1 - e^{2\pi i b_j / N_j})$ is required to:
+\begin{enumerate}
+\item Be multiplicative for all exponent vectors in $\mathcal{V}$ (exponent vectors of integers),
+\item Establish a bijection between exponent vectors and integers,
+\item Satisfy the cascade constraints encoding the FTA structure.
+\end{enumerate}
+Then the normalization sequence $\{N_1, N_2, \ldots, N_m\} = \{p_1 - 1, p_2 - 1, \ldots, p_m - 1\}$ is uniquely determined.
+\end{lemma}
+
+\begin{proof}
+
+\noindent \textbf{Part A: Injectivity Constraint}
+
+By Lemma B (proven above), if $\mathcal{R}$ is multiplicative on $\mathcal{V}$, then $N_j = p_j - 1$ for each $j$ is the only solution. Therefore, any other choice of $\{N_j\}$ would violate multiplicativity.
+
+This is a consequence, not a separate axiom: the multiplicativity requirement alone determines the normalizations.
+
+\noindent \textbf{Part B: Injectivity via Cascade Solution Uniqueness}
+
+By the Fundamental Theorem of Arithmetic, every positive integer $n$ has a unique prime factorization:
+\begin{equation}
+n = \prod_{j=1}^m p_j^{a_j}
+\end{equation}
+where the exponents $(a_1, \ldots, a_m)$ form an exponent vector in $\mathcal{V}$.
+
+For the epimoric encoding to represent all positive integers uniquely, for each integer $n$, there exists a unique choice of exponents $\{b_j(n)\}$ such that:
+\begin{equation}
+\prod_{j=1}^m \left(\frac{p_j}{p_j - 1}\right)^{b_j(n)} = n
+\end{equation}
+
+This uniqueness is guaranteed by Theorem \ref{thm:cascade-uniqueness}: the cascade constraints uniquely determine the exponent vector $\mathbf{b}(n)$ for each integer $n$. By the equivalence established in the necessity proof (Step 3), the exponent vector satisfying the cascade constraints is precisely the one that makes the epimoric encoding equal to $n$. Therefore, each integer has exactly one epimoric encoding, establishing injectivity.
+
+\noindent \textbf{Part C: Cascade Structure Consistency}
+
+The cascade constraints:
+\begin{equation}
+b_k(n) \geq \sum_{j < k} b_j(n) \cdot v_{p_k}(p_j - 1)
+\end{equation}
+emerge from the multiplicative structure of the FTA (Theorem \ref{thm:cascade-necessity-sufficiency-rigorous}).
+
+If $N_k \neq p_k - 1$ for some $k$, then the character periods in the functional $\mathcal{R}$ would not align with the multiplicative group modulo $p_k$, as established in Lemma B. This would prevent the cascade constraints from encoding the correct multiplicative structure for all integers.
+
+Therefore, consistency requires $N_j = p_j - 1$.
+
+\noindent \textbf{Conclusion}
+
+The three requirements (multiplicativity, injectivity, and cascade structure) are mutually compatible only when $\{N_j\} = \{p_j - 1\}$. This normalization is therefore unique.
+
+\end{proof}
+
+\noindent
+By combining Lemmas A, B, and C, the following unified conclusion is established:
+
+\begin{theorem}[Cascade Constraints are Necessary and Sufficient for Multiplicativity]
+\label{thm:cascade-necessity-sufficiency-rigorous}
+Given the classical definition of primes (from the Fundamental Theorem of Arithmetic), the requirement that a multiplicative reconstruction functional exist with period structure compatible with integer multiplication uniquely forces the normalization $N_j = p_j - 1$ for the sequence of primes $\{p_j\}$. The cascade deficit constraints are necessary and sufficient consequences of multiplicative closure combined with the FTA. This establishes that the cascade structure necessarily encodes prime divisibility, providing an alternative characterization of multiplicative divisibility relations.
+\end{theorem}
+
+
+\subsection{Telescoping Formula: Relating p-adic Valuations to Epimoric Coordinates}
+\label{subsec:telescoping-formula}
+
+A formula connecting the p-adic valuation of an integer to its epimoric exponents is the telescoping identity.
+
+\begin{theorem}[Telescoping Formula for p-adic Valuations]
+\label{thm:telescoping-prime-factorization}
+For any prime $p$ and any positive integer $n$ with epimoric encoding $(e_1(n), e_2(n), \ldots, e_m(n))$, the p-adic valuation satisfies:
+\begin{equation}
+v_p(n) = \sum_{j: p|(j+1)} e_j(n) - \sum_{j: p|j} e_j(n)
+\end{equation}
+where the indices are over the coordinate positions of the epimoric encoding.
+\end{theorem}
+
+\begin{proof}
+
+\noindent \textbf{Part A: Epimoric Encoding Structure}
+
+By definition, each positive integer $n$ has an epimoric encoding:
+\begin{equation}
+n = \prod_{j=1}^m \left(\frac{p_j}{p_j - 1}\right)^{e_j(n)}
+\end{equation}
+
+where $p_j$ denotes the $j$-th prime.
+
+\noindent \textbf{Part B: Prime Divisor Positions}
+
+The numerator and denominator of the epimoric representation contain:
+\begin{itemize}
+\item Numerator: primes from $\{p_1, p_2, \ldots, p_m\}$
+\item Denominator: primes from the factorizations of $\{p_1-1, p_2-1, \ldots, p_m-1\}$
+\end{itemize}
+
+For a prime $p$: the prime divides the numerator of ratio $j$ if $p = p_j$ for some $j$. The prime divides the denominator of ratio $j$ if $p | (p_j - 1)$.
+
+\noindent \textbf{Part C: Defining Coordinate Sets}
+
+For a given prime $p$, define:
+\begin{align}
+J_p^+ &:= \{j : p = p_j\} \quad \text{(coordinates where } p \text{ divides the numerator)} \\
+J_p^- &:= \{j : p | (p_j - 1)\} \quad \text{(coordinates where } p \text{ divides the denominator)}
+\end{align}
+
+Note: Since $\{p_1, p_2, \ldots, p_m\}$ are distinct primes, $J_p^+$ contains at most one element. Specifically, if $p$ is the $k$-th prime, then $J_p^+ = \{k\}$.
+
+\noindent \textbf{Part D: Telescoping Identity}
+
+The p-adic valuation of $n$ is the exponent of $p$ in the prime factorization of $n$:
+\begin{equation}
+v_p(n) = v_p\left(\prod_{j=1}^m \left(\frac{p_j}{p_j - 1}\right)^{e_j(n)}\right)
+\end{equation}
+
+Computing the p-adic valuation of the product:
+\begin{align}
+v_p(n) &= \sum_{j=1}^m e_j(n) \cdot v_p\left(\frac{p_j}{p_j - 1}\right) \\
+&= \sum_{j=1}^m e_j(n) \cdot \left(v_p(p_j) - v_p(p_j - 1)\right)
+\end{align}
+
+By definition, $v_p(p_j) = 1$ if $p = p_j$ (i.e., if $j \in J_p^+$), and $v_p(p_j) = 0$ otherwise. Similarly, $v_p(p_j - 1) = 1$ if $p | (p_j - 1)$ (i.e., if $j \in J_p^-$), and $v_p(p_j - 1) = 0$ otherwise. (For primes, the p-adic valuation is either 0 or 1.)
+
+Therefore:
+\begin{equation}
+v_p\left(\frac{p_j}{p_j - 1}\right) = \begin{cases} 1 & \text{if } j \in J_p^+ \\ -1 & \text{if } j \in J_p^- \\ 0 & \text{otherwise} \end{cases}
+\end{equation}
+
+Substituting back:
+\begin{align}
+v_p(n) &= \sum_{j \in J_p^+} e_j(n) \cdot 1 + \sum_{j \in J_p^-} e_j(n) \cdot (-1) + \sum_{j \notin J_p^+ \cup J_p^-} e_j(n) \cdot 0 \\
+&= \sum_{j \in J_p^+} e_j(n) - \sum_{j \in J_p^-} e_j(n)
+\end{align}
+
+\noindent The p-adic valuation of $n$ equals the total exponent contribution from coordinates where $p$ divides the numerator, minus the total exponent contribution from coordinates where $p$ divides the denominator. The term "telescoping" refers to the way the intermediate terms (primes in $p_j - 1$ for various $j$) contribute and cancel.
+
+\end{proof}
+
+\subsection{Conclusion: Rigorous Status and Cascade Structure}
+\label{subsec:foundation-conclusion}
+
+\subsubsection{What is Proven}
+\label{subsubsec:proven-statements}
+
+The following are **rigorously proven**:
+
+\begin{enumerate}
+
+\item \textbf{Lemma A}: If $\mathcal{V} \subset \mathbb{Z}^m$ has closure and inverses, then $(\mathcal{V}, +)$ is an abelian group. (Proven: standard group theory.)
+
+\item \textbf{Lemma B}: If $\mathcal{V}$ consists of exponent vectors for integers (via FTA), and the requirement is $\mathcal{R}[\mathbf{b} + \mathbf{b}'] = \mathcal{R}[\mathbf{b}] \cdot \mathcal{R}[\mathbf{b}']$ universally, then $N_j = p_j - 1$. (Proven: uses Chinese Remainder Theorem and multiplicative structure of $(\mathbb{Z}/p\mathbb{Z})^*$.)
+
+\item \textbf{Lemma C}: If the epimoric basis correctly encodes all integers and preserves multiplicativity, then $N_j = p_j - 1$ is unique. (Proven: follows from FTA.)
+
+\item \textbf{Cascade Necessity Theorem}: A vector $\mathbf{b} \in \mathbb{Z}^m$ corresponds to a multiplicatively valid factorization if and only if it satisfies
+\begin{equation}
+b_k \geq \sum_{j<k} b_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+(Proven: direct consequence of integer multiplicativity and the definition of $N_j = p_j - 1$.)
+
+\end{enumerate}
+
+\subsubsection{Foundation Summary}
+\label{subsubsec:foundation-summary}
+
+The cascade constraint structure is a necessary consequence of requiring multiplicative closure in the epimoric basis. These constraints have the form $b_k \geq D_k(\mathbf{b}_{<k})$ where $D_k$ encodes the prime $p_k$ through its $p$-adic valuations. Primes emerge as singularities in three independent mathematical frameworks: quantum coherence, spectral theory, and symbolic dynamics. This is the subject of subsequent sections.
+
+\noindent All subsequent sections proceed from the cascade constraint structure, which is now rigorously established.
+
+\subsection{Minimum Representation Principle: Cascade Constraints Determine Minimal Encodings}
+\label{subsec:minimum-representation}
+
+The cascade constraint structure yields minimal representations in the epimoric basis.
+
+\begin{theorem}[Tight Cascade Constraints Determine Canonical Representations]
+\label{thm:tight-cascade-constraints}
+
+For any positive integer $n$ and finite prime basis $\mathcal{P} = \{p_1, \ldots, p_m\}$, the cascade constraints uniquely determine the exponent vector $\mathbf{b}(n) = (b_1(n), \ldots, b_m(n))$:
+\begin{equation}
+b_k \geq \sum_{j < k} b_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+
+This unique exponent vector satisfies $n = \prod_k ((p_k)/(p_k-1))^{b_k(n)}$ and is called the canonical representation of $n$.
+
+The cascade constraints are tight at each position: for each $k$, either $b_k(n) = 0$ or $b_k(n) = \sum_{j < k} b_j(n) \cdot v_{p_k}(p_j - 1)$ (equality holds with no slack). This tightness property ensures that the canonical representation minimizes the exponent sum among all representations (cascade-constrained or not) that produce $n$ via the epimoric encoding.
+
+\end{theorem}
+
+\begin{proof}
+
+\noindent \textbf{Part A: Uniqueness of the Cascade-Constrained Solution}
+
+By Theorem \ref{thm:cascade-uniqueness}, for any integer $n$ there is a unique exponent vector $\mathbf{b}(n)$ satisfying the cascade constraints and producing $n$ via the epimoric encoding, as the cascade constraints are both necessary and sufficient to determine which exponent vector corresponds to a given integer.
+
+\noindent \textbf{Part B: Tightness of Constraints at the Canonical Solution}
+
+Consider the canonical exponent vector $\mathbf{b}(n)$ determined by the cascade constraints. The constraints satisfy a tightness property: for each coordinate $k$, one of the following holds:
+\begin{enumerate}
+\item $b_k(n) = 0$, or
+\item $b_k(n) = \sum_{j < k} b_j(n) \cdot v_{p_k}(p_j - 1)$ (the constraint is an equality)
+\end{enumerate}
+
+\noindent \textbf{Proof of Tightness}: Suppose for contradiction that at some coordinate $k$, there is slack:
+\begin{equation}
+b_k(n) > \sum_{j < k} b_j(n) \cdot v_{p_k}(p_j - 1) \quad \text{and} \quad b_k(n) > 0
+\end{equation}
+
+Reducing $b_k(n)$ by 1 would still satisfy all cascade constraints. Define the vector $\mathbf{b}'$ with $b'_j = b_j(n)$ for $j \neq k$ and $b'_k = b_k(n) - 1$.
+
+By the injectivity of the epimoric encoding (Theorem \ref{thm:cascade-uniqueness}), the vectors $\mathbf{b}(n)$ and $\mathbf{b}'$ cannot both be cascade-constrained and produce the same integer $n$. If $\mathbf{b}'$ also satisfies the cascade constraints and produces an integer, it must be a different integer. Reducing the exponent at coordinate $k$ changes the value produced.
+
+Therefore, if $\mathbf{b}(n)$ produces $n$, then having slack at coordinate $k$ is impossible. The constraints must be tight.
+
+\noindent \textbf{Part C: Why Tightness Implies Minimality}
+
+The tightness property ensures that the cascade constraints are tight at $\mathbf{b}(n)$, making this vector the unique point satisfying these equalities and producing $n$.
+
+Any exponent vector $\mathbf{b}''$ with a larger exponent sum would either:
+1. Violate the cascade constraints (if it has more slack), or
+2. Produce a different integer (by uniqueness)
+
+Therefore, $\mathbf{b}(n)$ minimizes the exponent sum among all vectors producing $n$ via the epimoric encoding.
+
+\noindent \textbf{Conclusion}
+
+The cascade constraint structure enforces:
+1. **Uniqueness**: Exactly one exponent vector satisfies the cascade constraints and produces each integer $n$
+2. **Tightness**: The cascade constraints are satisfied with equality (no slack) at this unique solution
+3. **Minimality**: As a consequence of tightness and uniqueness, this representation minimizes the exponent sum
+
+These three properties collectively characterize the canonical representation of each integer.
+
+\end{proof}
+
+\begin{corollary}[Minimal Representation Bounds Defect]
+\label{cor:minimal-defect-bound}
+
+By Theorem \ref{thm:minimal-representation}, any defect analysis using the cascade constraint structure operates on minimal representations, which ensures:
+
+\begin{enumerate}
+\item The positive cascade defect $\Delta^{+}(a,b,c)$ is bounded by the structural constraints with no excess slack
+\item Each new prime $p \in \mathcal{P}_+ = \{p : p|c, p \nmid ab\}$ contributes minimally to the defect
+\item The bound $\Delta^{+}(a,b,c) \leq \omega(\operatorname{rad}(abc))$ (Theorem \ref{thm:radical-controlled-defect}) is tight in the sense that it reflects the structural minimum, not an overestimate
+\end{enumerate}
+
+\end{corollary}

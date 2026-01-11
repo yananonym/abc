@@ -1,0 +1,137 @@
+\subsection{Logarithmic Mapping, Simplex Embedding, and the Additive Duality}
+
+\subsubsection{Logarithmic Coordinate Transformation}
+
+The multiplicative structure of integers is transformed into an additive structure via the logarithmic map. Taking logarithms of the normalized representation:
+
+\begin{equation}
+\log n = \sum_{k=1}^{\infty} a_k \log p_k = \sum_{k=1}^{\infty} w_k \left(\sum_j |a_j|\right) \log p_k
+\end{equation}
+
+More precisely, define the \emph{logarithmic form} $L(n)$:
+
+\begin{equation}
+L(n) = \log n = \sum_{k=1}^{\infty} a_k \log p_k
+\end{equation}
+
+and the \emph{normalized logarithmic form}:
+
+\begin{equation}
+\ell(n) = \frac{\log n}{\sum_j |a_j|} = \sum_{k=1}^{\infty} w_k \log p_k
+\end{equation}
+
+where $w_k = a_k / \sum_j |a_j|$ are the normalized weights.
+
+The normalized logarithmic form $\ell(n)$ is a \emph{weighted average} of the logarithms of the basis elements:
+
+\begin{equation}
+\ell(n) = \mathbb{E}[\log p_k] = \sum_{k=1}^{\infty} w_k \log p_k
+\end{equation}
+
+In this interpretation, the weights $w_k$ form a probability distribution over the prime field, and $\ell(n)$ is the \emph{expected logarithm} of the basis elements.
+
+\subsubsection{Additive Simplex Embedding}
+
+By taking logarithms, we transform the multiplicative simplex $\Delta^{\infty}$ into an \emph{additive affine hyperplane}. Define the \emph{logarithmic simplex}:
+
+\begin{equation}
+\Lambda^{\infty} = \left\{ \mathbf{y} \in \mathbb{R}^{\mathbb{P}} : y_k = w_k \log p_k, \; w_k \geq 0, \; \sum_k w_k = 1 \right\}
+\end{equation}
+
+The logarithmic coordinates $y_k = w_k \log p_k$ satisfy:
+
+\begin{equation}
+\sum_{k=1}^{\infty} y_k = \sum_{k=1}^{\infty} w_k \log p_k = \ell(n)
+\end{equation}
+
+On this space, \emph{multiplication becomes addition} and \emph{factorization becomes linear combination}:
+
+\begin{equation}
+\log(n \cdot m) = \log n + \log m, \quad (\mathbf{w}_n + \mathbf{w}_m) / 2 \text{ corresponds to a ``geometric mean''} \sqrt{nm}
+\end{equation}
+
+This duality is fundamental: the multiplicative structure of integers is encoded in an additive, linear-algebraic structure via logarithms.
+
+\subsubsection{The Prime Logarithmic Coordinates}
+
+The vertices of the simplex $\Delta^{\infty}$ (corresponding to primes) map to the basis vectors in logarithmic space:
+
+\begin{equation}
+p_k \mapsto (\mathbf{0}, \ldots, \mathbf{0}, \log p_k, \mathbf{0}, \ldots) = \log p_k \cdot \mathbf{e}_k
+\end{equation}
+
+The logarithmic distances between prime logarithms encode the \emph{gap structure} of the prime sequence:
+
+\begin{equation}
+d_{\log}(p_k, p_{k+1}) = |\log p_{k+1} - \log p_k| = \log\left(\frac{p_{k+1}}{p_k}\right)
+\end{equation}
+
+For large primes, the average gap scales as $\log p_k$ (by the prime number theorem), making the logarithmic metric more uniform than the usual metric on the prime numbers themselves.
+
+\subsubsection{Convexity in Logarithmic Coordinates}
+
+A key advantage of the logarithmic embedding is that \emph{convexity is preserved} in a refined sense. The logarithm is a concave function on $\mathbb{R}^+$:
+
+\begin{equation}
+\log(\lambda x + (1-\lambda) y) \geq \lambda \log x + (1-\lambda) \log y, \quad \lambda \in [0,1]
+\end{equation}
+
+This means that on the logarithmic scale, the simplex structure becomes more naturally suited to variational analysis and optimization problems.
+
+\subsubsection{Information-Theoretic Interpretation}
+
+The logarithmic form connects directly to information theory. Recall the \emph{Shannon entropy} of a probability distribution:
+
+\begin{equation}
+H(\mathbf{w}) = -\sum_{k=1}^{\infty} w_k \log w_k
+\end{equation}
+
+For an integer $n$ with normalized exponents $\mathbf{w}(n)$, the information content (negative log-likelihood) is:
+
+\begin{equation}
+I(n) = -\log P(\mathbf{w}) = -\log \prod_{k=1}^{\infty} w_k^{w_k} = \sum_{k=1}^{\infty} w_k \log \frac{1}{w_k} = H(\mathbf{w})
+\end{equation}
+
+The \emph{entropy} of an integer's factorization measures how \emph{evenly distributed} its prime factors are:
+\begin{itemize}
+\item High entropy: Prime factors are balanced (e.g., $210 = 2 \cdot 3 \cdot 5 \cdot 7$ has entropy $\log 4 \approx 1.39$ bits for 4 equally-weighted primes)
+\item Low entropy: Prime factors are concentrated (e.g., $2^{10} = 1024$ has entropy $0$, since all weight goes to a single prime)
+\end{itemize}
+
+\subsubsection{Dimension and Rank Analysis}
+
+The logarithmic embedding reveals the \emph{effective dimension} of an integer's factorization. For an integer with $\omega(n)$ distinct prime factors, the normalized exponent vector lives in a lower-dimensional face of the simplex:
+
+\begin{equation}
+\dim(\text{Face}_{\omega(n)}) = \omega(n) - 1
+\end{equation}
+
+The growth of $\omega(n)$ is therefore encoded in the \emph{dimension of the face occupied by $n$} in the simplex. By analyzing the distribution of integers on different dimensional faces, we can study the \emph{structural complexity} of prime factorization.
+
+\subsubsection{Bridges to Functional Analysis}
+
+In functional analysis, the logarithmic embedding defines a natural norm and metric:
+
+\begin{equation}
+||\mathbf{w}||_{\infty} = \max_k w_k, \quad ||\mathbf{w}||_1 = \sum_k |w_k| = 1
+\end{equation}
+
+The space of normalized exponent vectors forms a \emph{Banach space} when equipped with the $\ell^{\infty}$ norm, with the simplex constraint becoming a compact convex subset. This perspective enables the use of \emph{Banach space theory}, \emph{variational methods}, and \emph{fixed-point theorems} for studying integer factorization.
+
+\subsubsection{Explicit Formula: Integration with Zeta Functions}
+
+In analytic number theory, the explicit formulas relate sums over primes to zeros of the Riemann zeta function. The normalized logarithmic perspective provides a new angle on these formulas.
+
+For a smooth test function $\phi : \mathbb{R}^+ \to \mathbb{R}$, the sum:
+
+\begin{equation}
+\sum_{n} \phi(n) = \int_0^{\infty} \phi(t) dN(t) + \text{corrections}
+\end{equation}
+
+becomes, in normalized logarithmic coordinates:
+
+\begin{equation}
+\sum_{\mathbf{w} \in \Delta^{\infty}} \phi(\ell(n(\mathbf{w}))) d\mu_{\text{Haar}}(\mathbf{w})
+\end{equation}
+
+where $\mu_{\text{Haar}}$ is the Haar measure on the simplex, weighted by the distribution of normalized exponent vectors. This connects prime distribution directly to the geometry of the simplex and enables measure-theoretic approaches.

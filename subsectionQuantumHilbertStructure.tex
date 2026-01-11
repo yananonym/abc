@@ -1,0 +1,176 @@
+\subsection{Algebraic-Coherence Characterization of Primes}
+\label{subsec:quantum-coherence}
+
+This section develops the algebraic formulation of coherence via character theory following \cite{Serre1977, Dummit2004}. The terminology from group theory and harmonic analysis describes phase structures in the cascade constraint system through multiplicative functionals on the exponent vector monoid. The formal mathematical structure is purely algebraic and combinatorial.
+
+\subsubsection{Character Group Framework}
+
+\begin{definition}[Character Group of Exponent Vectors]
+For basis primes $\mathcal{P} = \{p_1, \ldots, p_m\}$, define the character group:
+\begin{equation}
+\hat{\mathbb{Z}}^m_{\text{exponents}} := \prod_{j=1}^m \mathbb{T}_{p_j-1}
+\end{equation}
+where $\mathbb{T}_n = \{e^{2\pi i \theta} : \theta \in [0, 1/n)\}$ is the cyclic group of order $n$.
+
+Each character $\chi \in \hat{\mathbb{Z}}^m$ is determined by a sequence $(\chi_1, \ldots, \chi_m)$ with $\chi_j \in \mathbb{T}_{p_j-1}$.
+\end{definition}
+
+\begin{definition}[Exponent Vector Pairing]
+For an exponent vector $\mathbf{b} = (b_1, \ldots, b_m)$ and character $\chi = (\chi_1, \ldots, \chi_m)$, define:
+\begin{equation}
+\langle \chi, \mathbf{b} \rangle := \prod_{j=1}^m \chi_j^{b_j}
+\end{equation}
+
+This pairing is bilinear in the group-theoretic sense: $\langle \chi, \mathbf{b} + \mathbf{b}' \rangle = \langle \chi, \mathbf{b} \rangle \cdot \langle \chi, \mathbf{b}' \rangle$.
+\end{definition}
+
+\subsubsection{Coherence Operators}
+
+\begin{definition}[Coherence Operator]
+For each basis prime $p_j$, define the linear operator on the space of functions $f: \mathcal{V}_{\text{valid}} \to \mathbb{C}$ by:
+\begin{equation}
+(\hat{C}_j f)(\mathbf{b}) := \zeta_j^{b_j} \cdot f(\mathbf{b})
+\end{equation}
+where $\zeta_j = e^{2\pi i / (p_j - 1)}$ is a primitive $(p_j - 1)$-th root of unity.
+
+The $j$-th coherence operator multiplies by the phase factor corresponding to the $j$-th coordinate.
+\end{definition}
+
+\begin{observation}[Algebraic Interpretation]
+The coherence operator $\hat{C}_j$ represents a character evaluation: it extracts the $j$-th coordinate's contribution to the overall phase structure. This is a multiplicative operator that tracks phase alignment, not a projection.
+\end{observation}
+
+\subsubsection{Maximally Coherent Vectors}
+
+\begin{definition}[Coherent Exponent Vector]
+An exponent vector $\mathbf{b} \in \mathcal{V}_{\text{valid}}$ is called \emph{coherent with respect to character} $\chi$ if the coherence operators satisfy eigenvalue conditions with well-defined character values $\chi_j$.
+\end{definition}
+
+\begin{definition}[Maximal Coherence]
+An exponent vector $\mathbf{b}$ exhibits \emph{maximal coherence} if the character eigenvalue sequence is fully determined by the vector (no ambiguity in choice of $\chi$).
+
+This occurs when the vector is indecomposable under the coherence structure.
+\end{definition}
+
+\subsubsection{Prime Vectors are Maximally Coherent}
+
+\begin{proposition}[Prime Vectors Exhibit Maximal Coherence]
+\label{prop:prime-coherent}
+The exponent vector $\mathbf{e}_{p_k} = (0, \ldots, 0, 1, 0, \ldots, 0)$ (unity at position $k$ corresponding to prime $p_k$) is maximally coherent.
+
+Specifically, the coherence operators act on $\mathbf{e}_{p_k}$ as:
+\begin{equation}
+\hat{C}_j \mathbf{e}_{p_k} = \begin{cases}
+\zeta_k \mathbf{e}_{p_k} & \text{if } j = k \\
+\mathbf{e}_{p_k} & \text{if } j \neq k
+\end{cases}
+\end{equation}
+
+Thus, the eigenvalue sequence is $(\chi_1, \ldots, \chi_m) = (1, \ldots, 1, \zeta_k, 1, \ldots, 1)$ with the nontrivial character in position $k$ only.
+\end{proposition}
+
+\begin{proof}
+Immediate from the definition of $\hat{C}_j$ and the structure of $\mathbf{e}_{p_k}$.
+\end{proof}
+
+\begin{proposition}[Composite Vectors Lack Single Coherence]
+\label{prop:composite-incoherent}
+An exponent vector $\mathbf{b} = \mathbf{b}' + \mathbf{b}''$ corresponding to a composite number (product of two smaller integers) does NOT have maximal coherence.
+
+Instead, the vector decomposes into a product of two independent coherence structures, corresponding to the two factors.
+\end{proposition}
+
+\begin{proof}
+If $\mathbf{b} = \mathbf{b}' + \mathbf{b}''$ with both nonzero, then no single eigenvalue sequence $\chi$ can simultaneously characterize both components. The coherence condition separates into two independent subsystems.
+\end{proof}
+
+\subsubsection{Coherence and Transfer Operator Eigenvectors}
+
+\begin{theorem}[Coherence Equivalence to Transfer Operator Eigenvalue]
+\label{thm:coherence-eigenvalue}
+Let $\mathcal{V}_{\text{valid}} \subset \mathbb{Z}^m_{\geq 0}$ denote the set of valid exponent vectors, and define the character group $\hat{\mathbb{Z}}^m_{\text{exponents}} = \prod_{j=1}^m \mathbb{T}_{p_j-1}$ as in Lemma \ref{lem:character-group-structure}.
+
+An exponent vector $\mathbf{b} \in \mathcal{V}_{\text{valid}}$ is maximally coherent with character structure $\chi = (\chi_1, \ldots, \chi_m) \in \hat{\mathbb{Z}}^m_{\text{exponents}}$ if and only if the character pairing $\langle \chi, \mathbf{b} \rangle = \prod_{j=1}^m \chi_j^{b_j}$ is invariant under all valid exponent vector transitions in the sense that the phase structure determines a multiplicative functional on $\mathcal{V}_{\text{valid}}$.
+\end{theorem}
+
+\begin{proof}
+
+\noindent \textbf{Definition of Multiplicative Functional}: A functional $\Psi: \mathcal{V}_{\text{valid}} \to \mathbb{C}^\times$ is multiplicative if and only if for all $\mathbf{b}, \mathbf{b}' \in \mathcal{V}_{\text{valid}}$:
+\begin{equation}
+\Psi(\mathbf{b} + \mathbf{b}') = \Psi(\mathbf{b}) \cdot \Psi(\mathbf{b}')
+\end{equation}
+
+For a character $\chi = (\chi_1, \ldots, \chi_m)$ with $\chi_j \in \mathbb{T}_{p_j-1}$ (a cyclic group of order $p_j - 1$), the pairing $\langle \chi, \mathbf{b} \rangle = \prod_{j=1}^m \chi_j^{b_j}$ satisfies:
+\begin{equation}
+\langle \chi, \mathbf{b} + \mathbf{b}' \rangle = \prod_{j=1}^m \chi_j^{b_j + b_j'} = \prod_{j=1}^m \chi_j^{b_j} \cdot \chi_j^{b_j'} = \langle \chi, \mathbf{b} \rangle \cdot \langle \chi, \mathbf{b}' \rangle
+\end{equation}
+
+Thus the character pairing defines a multiplicative functional: $\Psi_\chi(\mathbf{b}) := \langle \chi, \mathbf{b} \rangle$.
+
+\noindent \textbf{Maximal Coherence Definition Clarified}: An exponent vector $\mathbf{b}$ exhibits maximal coherence if there exists a unique character $\chi^*$ such that the functional $\Psi_{\chi^*}(\mathbf{b})$ is multiplicative and fully determines the phase structure of $\mathbf{b}$ under all cascade-valid operations. In other words, no proper decomposition of $\mathbf{b}$ into independent components admits a different character structure.
+
+For the standard basis vector $\mathbf{e}_{p_k}$ corresponding to a prime $p_k$, the unique character structure is $\chi^*_k = (\chi_1^*, \ldots, \chi_m^*)$ where $\chi_k^* = \zeta_k$ (a primitive $(p_k-1)$-th root of unity) and $\chi_j^* = 1$ for $j \neq k$.
+
+\noindent \textbf{Direction 1: Maximal Coherence $\Rightarrow$ Multiplicative Functional}
+
+Suppose $\mathbf{b}$ is maximally coherent with unique character structure $\chi^* = (\chi_1^*, \ldots, \chi_m^*)$. By definition, the functional $\Psi_{\chi^*}(\mathbf{b}') = \prod_{j=1}^m (\chi_j^*)^{b_j'}$ is multiplicative for all $\mathbf{b}' \in \mathcal{V}_{\text{valid}}$.
+
+In particular, apply this to basis vectors and their sums:
+- For $\mathbf{b} = \mathbf{e}_j$ (prime exponent vector), the character structure forces $(\chi_j^*)^1 = \chi_j^*$ to be well-defined modulo $p_j - 1$.
+- For $\mathbf{b} = k \mathbf{e}_j$ (prime power), multiplicativity gives $(\chi_j^*)^k$, which is unique up to the periodicity of $\chi_j^*$.
+- For $\mathbf{b} = \mathbf{e}_{p_i} + \mathbf{e}_{p_j}$ (product of two primes), multiplicativity gives $\chi_i^* \cdot \chi_j^*$, and uniqueness requires that these factors are independent.
+
+The uniqueness of the character structure ensures that the multiplicative functional induced by $\chi^*$ is the only one consistent with the cascade constraint structure.
+
+\noindent \textbf{Direction 2: Multiplicative Functional $\Rightarrow$ Maximal Coherence}
+
+Conversely, suppose there exists a multiplicative functional $\Psi: \mathcal{V}_{\text{valid}} \to \mathbb{C}^\times$. This functional must have the form $\Psi(\mathbf{b}) = \prod_{j=1}^m \lambda_j^{b_j}$ for some values $\lambda_j \in \mathbb{C}^\times$ (by the fundamental structure theorem for finitely-generated commutative monoids).
+
+For the functional to respect the cascade constraints (which involve exponent relationships like $b_k \geq D_k(\mathbf{b}_{<k})$), the values $\lambda_j$ must satisfy periodicity conditions. Specifically, since $\mathbf{e}_j$ represents a prime, the value $\lambda_j$ must be a root of unity. The order of this root of unity is determined by the order of the multiplicative group modulo $p_j$, which is $\phi(p_j) = p_j - 1$.
+
+Thus, $\lambda_j$ is a $(p_j-1)$-th root of unity, i.e., $\lambda_j \in \mathbb{T}_{p_j-1}$, and defining $\chi_j := \lambda_j$ gives a character $\chi = (\chi_1, \ldots, \chi_m) \in \hat{\mathbb{Z}}^m_{\text{exponents}}$.
+
+The functional $\Psi_\chi(\mathbf{b}) = \prod_{j=1}^m \chi_j^{b_j}$ is now determined by this character, and the correspondence is bijective: there is a one-to-one pairing between multiplicative functionals on $\mathcal{V}_{\text{valid}}$ and characters in $\hat{\mathbb{Z}}^m_{\text{exponents}}$.
+
+For maximal coherence, the exponent vector $\mathbf{b}$ must uniquely determine its character structure. This holds when $\mathbf{b}$ does not decompose into two independent components each with their own character structure. Equivalently, $\mathbf{b}$ exhibits maximal coherence if the functional $\Psi_\chi$ determined by its phase structure is unique.
+
+\noindent \textbf{Conclusion}: Maximal coherence (unique multiplicative functional) is equivalent to the existence of a unique character structure $\chi^*$ such that the functional $\Psi_{\chi^*}(\mathbf{b}') = \prod_{j=1}^m (\chi_j^*)^{b_j'}$ is multiplicative on $\mathcal{V}_{\text{valid}}$ and fully characterizes the phase behavior of $\mathbf{b}$ and all its multiples.
+
+\end{proof}
+
+\subsubsection{Three Algebraic Characterizations of Primality}
+
+\begin{theorem}[Three Algebraic Characterizations]
+\label{thm:three-algebraic}
+For a basis prime $p_k$, the following are equivalent:
+
+\begin{enumerate}
+
+\item \textbf{Algebraic Coherence (A1)}: The exponent vector $\mathbf{e}_{p_k}$ is maximally coherent (eigenvalue fully determined).
+
+\item \textbf{Spectral Primacy (A2)}: The vector $\mathbf{e}_{p_k}$ is an eigenvector of the transfer operator with a simple (non-degenerate) eigenvalue.
+
+\item \textbf{Cascade Minimality (A3)}: The cascade deficits satisfy $\Delta_j(\mathbf{e}_{p_k}) = 0$ for all $j \neq k$, and $\Delta_k(\mathbf{e}_{p_k}) = 1$ (minimal nonzero defect).
+
+\end{enumerate}
+
+For a composite number $c \neq p_k$, none of these properties hold.
+\end{theorem}
+
+\begin{proof}
+
+\noindent \textbf{(A1) $\Rightarrow$ (A2)}: Maximal coherence implies a well-defined character structure, which by Theorem \ref{thm:coherence-eigenvalue} corresponds to an eigenvector of the transfer operator.
+
+\noindent \textbf{(A2) $\Rightarrow$ (A3)}: An eigenvector of the transfer operator satisfies $\mathbf{T} \mathbf{b} = \lambda \mathbf{b}$. For the cascade-minimal vector $\mathbf{e}_{p_k}$, this requires the cascade deficits to enforce primality.
+
+\noindent \textbf{(A3) $\Rightarrow$ (A1)}: The minimal defect structure uniquely determines character eigenvalues, establishing maximal coherence.
+
+For composite $c = p_i \cdot p_j$, the exponent vector $\mathbf{e}_c$ decomposes as $\mathbf{e}_{p_i} + \mathbf{e}_{p_j}$, and coherence factors into two independent structures, breaking maximality.
+
+\end{proof}
+
+\subsubsection{Algebraic Structure of Exponent Vector Coherence}
+
+The exponent vectors $\mathcal{V}_{\text{valid}}$ form a commutative monoid under addition. The character group $\hat{\mathbb{Z}}^m_{\text{exponents}}$ of this monoid parameterizes the multiplicative functionals on $\mathcal{V}_{\text{valid}}$. Maximal coherence corresponds to the existence of a unique character functional that is fully multiplicative across the entire exponent vector space.
+
+This algebraic framework is complete in itself. It requires no reference to quantum mechanics. The terminology "coherence" and "character eigenvalues" are standard in harmonic analysis on groups and monoids.

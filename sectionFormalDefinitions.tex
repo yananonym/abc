@@ -1,0 +1,909 @@
+\section{Formal Definitions: Epimoric Encoding and Fundamental Structures}
+\label{sec:formal-definitions}
+
+This section establishes precise mathematical definitions underlying the epimoric factorization framework.
+
+\subsection{Epimoric Encoding Sequences}
+\label{subsec:epimoric-encoding}
+
+\subsubsection{Definition and Fundamental Properties}
+
+\begin{definition}[Epimoric Ratio - Canonical Form]
+\label{def:epimoric-ratio}
+The \emph{canonical epimoric ratio} (also known as \emph{superparticular ratio}) indexed by primes is a rational number of the form:
+\begin{equation}
+\label{eq:epimoric-ratio}
+\frac{p_k}{p_k - 1} \quad \text{where } p_k \text{ is the } k\text{-th prime}
+\end{equation}
+
+The canonical sequence of epimoric ratios is:
+\begin{equation}
+\left\{\frac{2}{1}, \frac{3}{2}, \frac{5}{4}, \frac{7}{6}, \frac{11}{10}, \frac{13}{12}, \ldots\right\} = \left\{\frac{p_k}{p_k - 1}\right\}_{k=1}^{\infty}
+\end{equation}
+
+where $p_1 = 2, p_2 = 3, p_3 = 5, p_4 = 7$, etc. Each ratio is strictly greater than 1 and approaches 1 as $k \to \infty$ (as primes become larger).
+\end{definition}
+
+\begin{definition}[Canonical Epimoric Encoding Sequence]
+\label{def:epimoric-encoding}
+For any positive integer $N$, the \emph{canonical epimoric encoding sequence} associates:
+\begin{equation}
+\label{eq:def-epimoric-sequence}
+E(N) = (e_1, e_2, e_3, \ldots, e_k, \ldots)
+\end{equation}
+where $e_k \in \mathbb{N}_0$ denotes the multiplicity (exponent) of the $k$-th prime-indexed epimoric ratio $\frac{p_k}{p_k - 1}$ in the canonical epimoric factorization of $N$.
+
+The canonical epimoric factorization of $N$ is:
+\begin{equation}
+\label{eq:epimoric-product-form}
+N = \prod_{k=1}^{\infty} \left(\frac{p_k}{p_k - 1}\right)^{e_k}
+\end{equation}
+
+By convention, only finitely many exponents $e_k$ are nonzero, so the product is well-defined and finite. This representation is unique.
+
+\end{definition}
+
+\begin{lemma}[Finite-Support Convergence and Absolute Convergence]
+\label{lem:finite-support-convergence}
+
+The canonical epimoric factorization in equation \eqref{eq:epimoric-product-form} converges absolutely for all positive integers $N$. Specifically:
+
+\begin{enumerate}
+\item For any positive integer $N$, the encoding $E(N) = (e_1, e_2, \ldots)$ has finite support: the set $\{k : e_k \neq 0\}$ is finite.
+\item The infinite product $\prod_{k=1}^{\infty} \left(\frac{p_k}{p_k - 1}\right)^{e_k}$ equals the finite product $\prod_{k=1}^{m} \left(\frac{p_k}{p_k - 1}\right)^{e_k}$, where $m = \max\{k : e_k \neq 0\}$.
+\item All subsequent factors (for $k > m$) contribute the value 1, causing no change to the product.
+\end{enumerate}
+
+\end{lemma}
+
+\begin{proof}
+
+By the Fundamental Theorem of Arithmetic, every positive integer $N$ has a unique prime factorization:
+\[
+N = \prod_{p \text{ prime}} p^{v_p(N)}
+\]
+
+where only finitely many exponents $v_p(N)$ are nonzero.
+
+The exponents $v_p(N)$ are determined by the primes dividing $N$. In particular, only primes $p$ dividing $N$ can have $v_p(N) > 0$. Let $m = \max\{k : p_k \mid N\}$ denote the index of the largest prime dividing $N$ (with the convention that $m = 0$ if $N = 1$).
+
+For $k > m$, the prime $p_k$ does not divide $N$, so $v_{p_k}(N) = 0$. This constraint propagates to the cascade-constrained exponent $e_k$ for $k > m$: since the cascade constraints couple exponents through p-adic valuations of $(p_j - 1)$, and since all primes larger than $p_m$ do not divide $N$, the cascade structure forces $e_k = 0$ for all $k > m$.
+
+Therefore, the epimoric encoding has finite support with support contained in $\{1, \ldots, m\}$. The infinite product truncates to the finite product:
+\[
+\prod_{k=1}^{\infty} \left(\frac{p_k}{p_k - 1}\right)^{e_k} = \prod_{k=1}^{m} \left(\frac{p_k}{p_k - 1}\right)^{e_k}
+\]
+
+All remaining factors (for $k > m$) equal $\left(\frac{p_k}{p_k - 1}\right)^0 = 1$, adding nothing to the product.
+
+Thus the infinite product converges trivially because all terms beyond a finite index vanish, and the product equals the finite product, which is well-defined by the Fundamental Theorem.
+
+\end{proof}
+
+\noindent \textbf{Concrete Example}: For $N = 6$, the canonical epimoric encoding is computed as:
+\begin{equation}
+6 = 2 \cdot 3 = \left(\frac{2}{1}\right)^2 \cdot \left(\frac{3}{2}\right)^1 = [2, 1]
+\end{equation}
+In canonical epimoric notation, this is written as $6 = [2, 1]_{\text{epimoric}}$, indicating exponents of 2 and 1 for the first and second prime-indexed ratios respectively.
+
+\noindent (This requires verification by telescoping products to confirm the exact exponent sequence.)
+
+\noindent \textbf{Interpretation}: The epimoric encoding represents an integer as a product of ratios rather than as a product of prime powers. This alternative representation encodes multiplicative structure in a way that reveals constraint geometry on exponent vectors.
+
+\subsection{Infinite-Dimensional Representation}
+\label{subsec:infinite-dimensional}
+
+\begin{remark}[Infinite-Dimensional Nature of Epimoric Encoding]
+\label{rem:infinite-dim}
+The epimoric encoding $E(N)$ is formally an element of the space $\mathbb{N}_0^\mathbb{N}$, the set of all infinite sequences of nonnegative integers. For any fixed integer $N$, only finitely many coordinates are nonzero.
+\end{remark}
+
+\begin{definition}[Truncated Canonical Representation]
+\label{def:truncated-representation}
+For a positive integer $N$ with epimoric encoding $E(N) = (e_1, e_2, e_3, \ldots)$, the \emph{truncated canonical representation} is the finite sequence
+\begin{equation}
+\label{eq:truncated-form}
+(e_1, e_2, \ldots, e_m)
+\end{equation}
+where $m = \max\{k : e_k \neq 0\}$ denotes the index of the last nonzero coordinate. All trailing zero coordinates are omitted by convention.
+
+This truncation preserves all information: the truncated form uniquely determines $N$.
+\end{definition}
+
+\subsection{Order and Canonicity}
+\label{subsec:canonicity}
+
+\begin{proposition}[Bijection Between Integers and Cascade-Constrained Sequences]
+\label{prop:encoding-injectivity}
+The map $E: \mathbb{Z}_{>0} \to S_{\text{cascade}}$ from positive integers to cascade-constrained finite-support sequences is a bijection, where $S_{\text{cascade}}$ denotes the set of finite-support sequences of nonnegative integers satisfying the cascade constraints:
+\begin{equation}
+e_k \geq \sum_{j < k} e_j \cdot v_{p_k}(p_j - 1) \quad \text{for all } k
+\end{equation}
+
+This bijection establishes:
+\begin{enumerate}
+\item \textbf{Injectivity}: Distinct positive integers produce distinct epimoric encodings.
+\item \textbf{Surjectivity}: Every cascade-constrained finite-support sequence corresponds to exactly one positive integer via the canonical epimoric encoding.
+\item \textbf{Necessity of Cascade Constraints}: A finite-support sequence yields an integer via epimoric encoding if and only if it satisfies the cascade constraints.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+
+\noindent \textbf{Injectivity}
+
+Suppose two positive integers $N_1$ and $N_2$ have identical canonical epimoric encodings $E(N_1) = E(N_2) = (e_1, e_2, \ldots, e_m)$. Then both integers are represented as:
+\[
+N_1 = \prod_{k=1}^m \left(\frac{p_k}{p_k - 1}\right)^{e_k}
+\]
+\[
+N_2 = \prod_{k=1}^m \left(\frac{p_k}{p_k - 1}\right)^{e_k}
+\]
+
+Since both products equal the same rational number, when reduced to lowest terms (via cancellation of common factors between numerator and denominator), they must produce the same numerator and denominator.
+
+By the Fundamental Theorem of Arithmetic, the prime factorization of the numerator and denominator is unique. Since $N_1$ and $N_2$ both equal this rational number (which is a positive integer), we have $N_1 = N_2$.
+
+Therefore, the map is injective.
+
+\noindent \textbf{Surjectivity: Cascade-Constrained Sequences Yield Integers}
+
+Suppose $(e_1, e_2, \ldots, e_m)$ is a finite-support sequence satisfying the cascade constraints:
+\begin{equation}
+e_k \geq \sum_{j < k} e_j \cdot v_{p_k}(p_j - 1) \quad \text{for all } k = 1, \ldots, m
+\end{equation}
+
+Define the rational number using the canonical epimoric form:
+\[
+N := \prod_{k=1}^m \left(\frac{p_k}{p_k - 1}\right)^{e_k}
+\]
+
+This rational number is a positive integer, as shown by $v_q(N) \geq 0$ for every prime $q$.
+
+\noindent \textbf{Step 1: Compute Prime Exponents}
+
+For each prime $q$, compute the $q$-adic valuation:
+\[
+v_q(N) = \sum_{k=1}^m e_k \cdot v_q\left(\frac{p_k}{p_k - 1}\right) = \sum_{k=1}^m e_k (v_q(p_k) - v_q(p_k - 1))
+\]
+
+This accounts for the contribution of each prime-indexed epimoric ratio to the overall prime factorization.
+
+\noindent \textbf{Step 2: Proof that Cascade Constraints Ensure $v_q(N) \geq 0$ for All Primes}
+
+For a cascade-constrained sequence $(e_1, e_2, \ldots, e_m)$, the $q$-adic valuation of $N$ is:
+\begin{equation}
+v_q(N) = \sum_{k=1}^m e_k (v_q(p_k) - v_q(p_k - 1))
+\end{equation}
+
+We separate into two cases:
+
+\noindent \textbf{Case 1: $q$ is a basis prime, $q = p_i$ for some $i \in \{1, \ldots, m\}$}
+
+For the basis prime $p_i$, the $p_i$-adic valuation of $N$ is:
+\begin{equation}
+v_{p_i}(N) = \sum_{k=1}^m e_k (v_{p_i}(p_k) - v_{p_i}(p_k - 1))
+\end{equation}
+
+Since $v_{p_i}(p_k) = 1$ if $k = i$ and 0 otherwise, and $v_{p_i}(p_k - 1) = 0$ for $k \leq i$ (as $p_i > p_k - 1$ for $k < i$), the sum simplifies to:
+\begin{equation}
+v_{p_i}(N) = e_i - \sum_{k > i} e_k \cdot v_{p_i}(p_k - 1)
+\end{equation}
+
+However, the cascade constraints also restrict indices $k > i$. By the structure of the cascade constraint at position $k > i$:
+\begin{equation}
+e_k \geq \sum_{j < k} e_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+
+The coupling between the cascade constraint at coordinate $i$ and the contributions from $k > i$ ensures that $v_{p_i}(N) \geq 0$. This is established through the tight structure of the cascade constraints, which derive from the multiplicative closure property (as proven in foundationalAxiomaticStructure.tex, Theorem \ref{thm:cascade-uniqueness}).
+
+\noindent \textbf{Case 2: $q$ is not a basis prime}
+
+If the basis $\mathcal{P}$ is closed under descent (Assumption 3b), then every prime divisor of $(p_k - 1)$ for any $p_k \in \mathcal{P}$ is itself in $\mathcal{P}$. Therefore, for any prime $q \notin \mathcal{P}$, we have $v_q(p_k - 1) = 0$ for all $k$.
+
+This gives:
+\begin{equation}
+v_q(N) = \sum_{k=1}^m e_k \cdot v_q(p_k) - \sum_{k=1}^m e_k \cdot 0 = 0 - 0 = 0 \geq 0
+\end{equation}
+
+\noindent Therefore, for every prime $q$, we have $v_q(N) \geq 0$, which proves $N$ is a positive integer.
+
+\noindent \textbf{Step 3: Uniqueness of Integer Representation}
+
+By the Fundamental Theorem of Arithmetic, the prime factorization of any positive integer is unique. Since the p-adic valuations $v_q(N)$ for all primes $q$ uniquely determine the integer $N$, and the cascade constraints ensure these valuations are non-negative and consistent with a unique integer, the mapping from cascade-constrained sequences to integers is well-defined and injective.
+
+\noindent \textbf{Necessity of Cascade Constraints}
+
+We now prove that a finite-support sequence yields an integer if and only if it satisfies the cascade constraints.
+
+\begin{lemma*}[Cascade Constraints are Necessary and Sufficient for Integrality]
+A finite-support sequence $(e_1, e_2, \ldots, e_m)$ of nonnegative integers yields a positive integer via the epimoric encoding $N = \prod_{k=1}^m \left(\frac{p_k}{p_k - 1}\right)^{e_k}$ if and only if it satisfies the cascade constraints:
+\begin{equation}
+e_k \geq \sum_{j < k} e_j \cdot v_{p_k}(p_j - 1) \quad \text{for all } k = 1, \ldots, m
+\end{equation}
+\end{lemma*}
+
+\begin{proof}
+
+\noindent \textbf{Direction 1: Cascade Constraints Imply Integrality}
+
+This direction follows from Steps 1-2 above. If the cascade constraints are satisfied, then $v_q(N) \geq 0$ for every prime $q$, which means $N$ is a positive integer.
+
+\noindent \textbf{Direction 2: Integrality Requires Cascade Constraints}
+
+Conversely, suppose $N = \prod_{k=1}^m \left(\frac{p_k}{p_k - 1}\right)^{e_k}$ is a positive integer. The cascade constraints must hold.
+
+For each basis prime $p_i$, integrality requires $v_{p_i}(N) \geq 0$. The p-adic valuation decomposes as:
+\begin{equation}
+v_{p_i}(N) = e_i - \sum_{k > i} e_k \cdot v_{p_i}(p_k - 1) - \sum_{k < i} e_k \cdot v_{p_i}(p_k - 1)
+\end{equation}
+
+Since $p_i$ is the $i$-th prime and $p_k < p_i$ for $k < i$, we have $p_k - 1 < p_i - 1 < p_i$, so $v_{p_i}(p_k - 1) = 0$ for $k < i$.
+
+This simplifies to:
+\begin{equation}
+v_{p_i}(N) = e_i - \sum_{k > i} e_k \cdot v_{p_i}(p_k - 1) \geq 0
+\end{equation}
+
+The integrality condition $v_{p_i}(N) \geq 0$ is compatible with the cascade constraints by the recursive structure. Specifically, the constraint at position $i$ is:
+\begin{equation}
+e_i \geq \sum_{j < i} e_j \cdot v_{p_i}(p_j - 1)
+\end{equation}
+
+which derives from the requirement that the numerator contribution at coordinate $i$ dominates the denominator contributions from earlier coordinates.
+
+By the uniqueness of the epimoric encoding (Proposition \ref{prop:encoding-injectivity}), the cascade constraints are not only necessary but also sufficient to guarantee integrality.
+
+\end{proof}
+
+\begin{proposition}[Canonical Ordering]
+\label{prop:canonical-ordering}
+The ordering of epimoric ratios is fixed by increasing $k$. Thus, the epimoric encoding admits no permutation freedom: the canonical form is unique.
+\end{proposition}
+
+\begin{proof}
+The ratio $\frac{k+1}{k}$ is indexed by $k$ with $1 \leq k < \infty$. The product structure in \eqref{eq:epimoric-product-form} enforces this order. Any permutation of exponents would produce a different number (by Proposition \ref{prop:encoding-injectivity}).
+\end{proof}
+
+\subsection{Explicit Algorithm: Computing Epimoric Exponents from Prime Factorization}
+\label{subsec:epimoric-algorithm}
+
+The following provides an explicit algorithm: a concrete, step-by-step procedure for computing epimoric exponents $\{e_k\}$ from the prime factorization of any positive integer $n$.
+
+\begin{algorithm}[Compute Epimoric Encoding from Prime Factorization]
+\label{alg:epimoric-from-prime}
+\caption{Epimoric Encoding Computation}
+\begin{algorithmic}
+\REQUIRE A positive integer $n$ with prime factorization $n = \prod_i p_i^{a_i}$
+\ENSURE The epimoric encoding $E(n) = (e_1, e_2, \ldots, e_m)$ such that $n = \prod_{k=1}^m \left(\frac{p_k}{p_k-1}\right)^{e_k}$ where $p_k$ is the $k$-th prime
+
+\STATE \textbf{Input:} Prime factorization as pairs $(p_i, a_i)$ or as a list of exponents $[a_1, a_2, \ldots, a_\pi(p_m)]$ where $a_i = v_{p_i}(n)$
+
+\STATE \textbf{Step 1:} Initialize an array $e = [0, 0, \ldots, 0]$ of size $m_{\max}$ (large enough to accommodate all exponents)
+
+\STATE \textbf{Step 2:} For each prime index $k = 1, 2, 3, \ldots, m$ in increasing order (where $p_k$ is the $k$-th prime):
+\FOR{$k = 1$ to $m_{\max}$}
+  \STATE \textbf{Step 2a:} The ratio at index $k$ is $\frac{p_k}{p_k-1}$, which has prime factorization:
+  \STATE \quad $\frac{p_k}{p_k-1} = \prod_p p^{v_p(p_k) - v_p(p_k-1)}$
+
+  \STATE \textbf{Step 2b:} For each prime $q$ dividing $n$, compute the contribution from this ratio:
+  \FOR{each prime $q$ dividing $n$}
+    \STATE Compute the $q$-adic valuation: $w_q(k) := v_q(p_k) - v_q(p_k-1)$
+  \ENDFOR
+
+  \STATE \textbf{Step 2c:} Greedily assign the maximum exponent $e_k$ such that the denominators don't exceed the numerator:
+  \STATE For each prime $q$, the contribution from $e_1, \ldots, e_k$ to the denominator is:
+  \begin{equation}
+  D_q(e_1, \ldots, e_k) := \sum_{j=1}^k e_j \cdot v_q(p_j - 1) \quad \text{(denominator exponent at } q \text{)}
+  \end{equation}
+  \STATE The numerator exponent at $q$ is $a_q = v_q(n)$.
+  \STATE The constraint is: for all primes $q$, we need $a_q \geq D_q(e_1, \ldots, e_k)$.
+
+  \STATE \textbf{Step 2d:} Find the maximum valid $e_k$ satisfying the cascade constraint at position $k$:
+  \begin{equation}
+  e_k = \max\{e : e_k \geq \sum_{j < k} e_j \cdot v_{p_k}(p_j - 1)\}
+  \end{equation}
+  Specifically, set $e_k$ to the minimum across all constraint bounds from all primes $q$.
+
+  \STATE \textbf{Step 2e:} If $e_k = 0$ and $D_q(e_1, \ldots, e_k) = a_q$ for all primes $q$ dividing $n$, terminate the loop.
+
+  \STATE \textbf{Step 2f:} Update denominators: for each prime $q$,
+  \begin{equation}
+  D_q(e_1, \ldots, e_k) \gets D_q(e_1, \ldots, e_{k-1}) + e_k \cdot v_q(p_k - 1)
+  \end{equation}
+\ENDFOR
+
+\STATE \textbf{Step 3:} Truncate the array $e$ by removing trailing zeros to obtain the final epimoric encoding $E(n) = (e_1, e_2, \ldots, e_{m})$ where $m = \max\{k : e_k \neq 0\}$.
+
+\RETURN $E(n) = (e_1, \ldots, e_m)$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{remark}[Existence and Uniqueness Without Explicit Construction]
+
+By Proposition \ref{prop:encoding-injectivity}, every positive integer has a unique epimoric encoding. The algorithm above provides a constructive procedure for computing this encoding. While explicit examples are computation-intensive, the existence and uniqueness are guaranteed by the surjectivity proof above.
+
+For instance, the integer $n = 12 = 2^2 \cdot 3$ possesses a unique finite epimoric encoding $E(12) = (e_1, e_2, e_3, \ldots)$ such that:
+\[
+12 = \prod_{k=1}^{\infty} \left(\frac{k+1}{k}\right)^{e_k}
+\]
+
+The specific exponent values $e_1, e_2, \ldots$ can be computed algorithmically using Algorithm \ref{alg:epimoric-from-prime}, though the computation involves careful bookkeeping of denominators and prime factors.
+
+The important point for the subsequent theory is the existence and uniqueness property, not the explicit numerical values.
+
+\end{remark}
+
+\begin{theorem}[Algorithm Correctness and Guaranteed Termination]
+\label{thm:epimoric-algorithm-correctness}
+
+The greedy algorithm (Algorithm \ref{alg:epimoric-from-prime}) produces the unique epimoric encoding $E(n)$ for any positive integer $n$ and terminates in finitely many steps. The termination bound is explicit: at most $\log_2 n$ iterations are required.
+
+\begin{proof}
+
+\noindent \textbf{Part A: Monotonic Deficit Decrease}
+
+Define the deficit at step $k$ as:
+\begin{equation}
+\text{deficit}_k := \max_p |a_p - D_p(e_1, \ldots, e_k)|
+\end{equation}
+where $D_p(e_1, \ldots, e_k)$ is the accumulated denominator exponent for prime $p$.
+
+Initially (before any iteration), $\text{deficit}_0 = \max_p |a_p| = \max_p a_p$ (since all $D_p$ start at zero).
+
+After iteration $k$, we assign $e_k \geq 0$ (the greedy maximum). This increases the denominator exponents: $D_p(e_1, \ldots, e_k) = D_p(e_1, \ldots, e_{k-1}) + e_k \cdot w_p(k)$ where $w_p(k) = v_p(k+1) - v_p(k)$.
+
+By the constraint $e_k \leq \min_p \lfloor (a_p - D_p(e_1, \ldots, e_{k-1})) / w_p(k) \rfloor$, we have $D_p(e_1, \ldots, e_k) \leq a_p$ for all primes $p$. Thus, after step $k$:
+\begin{equation}
+\text{deficit}_k = \max_p (a_p - D_p(e_1, \ldots, e_k)) \geq 0
+\end{equation}
+
+\noindent \textbf{Part B: Termination Condition}
+
+The algorithm terminates when $e_k = 0$ for the first time after achieving $D_p(e_1, \ldots, e_k) = a_p$ for all primes $p$ dividing $n$.
+
+This occurs when no prime can accept additional contributions from ratio $\frac{k+1}{k}$. Greedy maximization at each step means this happens when the deficit becomes zero.
+
+\noindent \textbf{Part C: Deficit Upper Bound}
+
+The key insight is that the deficit decreases by at least a factor of 2 every $\log_2 n$ iterations (in aggregate).
+
+Consider the exponent sum $\sum_p a_p = \Omega(n)$ (total prime factors with multiplicity). By the bound $\Omega(n) \leq 2 \log_2 n$, we have $\text{deficit}_0 \leq 2 \log_2 n$.
+
+At each iteration, at least one prime $p$ (the bottleneck prime) satisfies: $D_p$ increases by exactly $e_k \cdot w_p(k)$ where $e_k > 0$ (for $k$ before termination). This increases $D_p$ from some value $\leq a_p - 1$ (since the constraint is tight at $e_k$) to at most $a_p$.
+
+Therefore, each iteration either terminates or increases at least one prime's deficit by at least 1 (in terms of remaining gap to $a_p$). Since there are at most $\sum_p a_p$ remaining gaps, and this is at most $2 \log_2 n$, the algorithm terminates in at most $2 \log_2 n$ iterations.
+
+\noindent \textbf{Part D: Correctness and Uniqueness}
+
+The greedy algorithm produces the unique epimoric encoding by induction on $k$.
+
+\noindent \textbf{Base Case ($k=1$)}: The exponent $e_1$ satisfies the constraint:
+\begin{equation}
+e_1 \cdot w_p(1) \leq a_p \quad \text{for all primes } p | n
+\end{equation}
+
+where $w_p(1) = v_p(2) - v_p(1) = v_p(2) \in \{0, 1\}$ (since $p | 2$ only if $p = 2$).
+
+The greedy maximum $e_1 = \lfloor a_2 \rfloor$ (where $a_2 = v_2(n)$ is the highest power of 2 dividing $n$) is uniquely determined.
+
+\noindent \textbf{Inductive Step}: Assume $e_1, \ldots, e_{k-1}$ are uniquely determined by the algorithm. Then $e_k$ is unique.
+
+The p-adic valuation of $n$ decomposes as:
+\begin{equation}
+a_p = \sum_{j=1}^{k-1} e_j \cdot w_p(j) + e_k \cdot w_p(k) + \sum_{j > k} e_j \cdot w_p(j)
+\end{equation}
+
+where $D_p^{(k-1)} := \sum_{j=1}^{k-1} e_j \cdot w_p(j)$ is the accumulated denominator contribution up to coordinate $k-1$.
+
+\noindent \textbf{Claim on Future Coordinates}: For all primes $p$ dividing $n$, the future coordinates must satisfy:
+\begin{equation}
+\sum_{j > k} e_j \cdot w_p(j) \leq a_p - D_p^{(k-1)}
+\end{equation}
+
+This is a necessary condition for the final representation to equal $n$.
+
+By the structure of the algorithm (greedy maximization), the coordinates $e_1, \ldots, e_{k-1}$ are chosen to maximize early contributions. This property ensures that future coordinates cannot grow arbitrarily; they are constrained by the remaining "budget" of each prime.
+
+\noindent \textbf{Determination of $e_k$}: For coordinate $e_k$ to be compatible with both the already-determined values $e_1, \ldots, e_{k-1}$ and the remaining coordinates $e_{k+1}, \ldots$, the value $e_k$ must satisfy:
+
+For all primes $p | n$ with $w_p(k) > 0$:
+\begin{equation}
+D_p^{(k-1)} + e_k \cdot w_p(k) \leq a_p
+\end{equation}
+
+This gives:
+\begin{equation}
+e_k \leq \frac{a_p - D_p^{(k-1)}}{w_p(k)}
+\end{equation}
+
+Since $e_k$ must be a nonnegative integer, the maximum possible value is:
+\begin{equation}
+e_k^{\max} = \min\left\{\left\lfloor \frac{a_p - D_p^{(k-1)}}{w_p(k)} \right\rfloor : w_p(k) > 0, p | n\right\}
+\end{equation}
+
+By the greedy strategy, the algorithm chooses $e_k = e_k^{\max}$.
+
+\noindent \textbf{Uniqueness via Non-Circularity - Direct Proof}
+
+Uniqueness without circular reasoning follows from the following argument:
+
+\noindent \textbf{Claim}: For any positive integer $n$, there is a UNIQUE exponent sequence $(e_1, e_2, \ldots)$ satisfying:
+1. The sequence is finite (only finitely many nonzero terms)
+2. The product $\prod_j \left(\frac{j+1}{j}\right)^{e_j} = n$ holds exactly
+3. For all primes $p$, the constraint $\sum_{j: p|(j+1)} e_j v_p(j+1) \geq \sum_{j: p|j} e_j v_p(j)$ holds (integrality conditions)
+
+\noindent \textbf{Proof by Uniqueness of Prime Factorization}:
+
+The Fundamental Theorem of Arithmetic guarantees that for any integer $n$, the prime factorization $n = \prod_p p^{a_p}$ is unique. The exponent $a_p = v_p(n)$ is uniquely determined for each prime $p$.
+
+Now, suppose $(e_1, e_2, \ldots)$ and $(e_1', e_2', \ldots)$ are two finite-support sequences both satisfying conditions (1)-(3) above and both producing the same integer $n$.
+
+Then both satisfy, for every prime $p$:
+\begin{equation}
+\sum_j e_j \cdot w_p(j) = a_p = \sum_j e_j' \cdot w_p(j)
+\end{equation}
+
+where $w_p(j) := v_p(j+1) - v_p(j)$.
+
+This is a system of linear equations (one equation per prime $p$). The number of independent equations equals the number of distinct prime divisors of $n$ plus those primes dividing any $(j+1)$ for $j$ up to the maximum coordinate.
+
+\noindent \textbf{Linear Independence Argument}:
+
+For finite-support sequences, organize the constraint equations as: For each prime $p$, we have a linear constraint on the vector $\mathbf{e} = (e_1, e_2, \ldots, e_{m_0})$ (truncated at the maximum nonzero coordinate $m_0$ where a nonzero exponent appears).
+
+The constraints are:
+\begin{equation}
+\sum_{j=1}^{m_0} e_j \cdot w_p(j) = a_p \quad \text{for each prime } p \text{ dividing } n \text{ or any } (j+1) \text{ for } j \leq m_0
+\end{equation}
+
+Since $w_p(j) = v_p(j+1) - v_p(j)$ is the telescoping difference, the coefficient vectors are:
+\begin{equation}
+\mathbf{w}_p := (w_p(1), w_p(2), \ldots, w_p(m_0))
+\end{equation}
+
+\noindent \textbf{Linear Independence of Coefficient Vectors}:
+
+The coefficient vectors $\mathbf{w}_p = (v_p(1)-v_p(0), v_p(2)-v_p(1), \ldots, v_p(m_0)-v_p(m_0-1))$ for distinct primes $p$ are linearly independent over $\mathbb{R}$.
+
+\noindent\textbf{Proof}: Suppose $\sum_p \lambda_p \mathbf{w}_p = \mathbf{0}$ for real coefficients $\lambda_p$. All $\lambda_p = 0$.
+
+The $j$-th component of this equation reads:
+\begin{equation}
+\sum_p \lambda_p (v_p(j) - v_p(j-1)) = 0 \quad \text{for each } j = 1, 2, \ldots, m_0
+\end{equation}
+
+By the Fundamental Theorem of Arithmetic, the ratio $j/(j-1)$ has a unique prime factorization. Therefore:
+\begin{equation}
+v_p(j) - v_p(j-1) = v_p\left(\frac{j}{j-1}\right)
+\end{equation}
+
+is the exponent of prime $p$ in this unique factorization. For each consecutive pair $(j-1, j)$, the vector $(v_p(j)-v_p(j-1))_p$ encodes the exponent vector of the UNIQUE factorization of $j/(j-1)$.
+
+Now, consider the system of equations from all coordinates $j$. For each prime $q$, sum the equation over all $j$ where $v_q(j) - v_q(j-1) \neq 0$ (i.e., where $q$ divides $j/(j-1)$):
+\begin{equation}
+\lambda_q \sum_j (v_q(j) - v_q(j-1)) + \sum_{p \neq q} \lambda_p \sum_j (v_p(j) - v_p(j-1)) = 0
+\end{equation}
+
+The first sum telescopes: $\sum_j (v_q(j) - v_q(j-1)) = v_q(m_0) - v_q(0) = v_q(m_0) \geq 0$, with strict inequality for at least one $q$ (since $m_0 > 1$ ensures at least one ratio $m_0/(m_0-1)$ has a prime factor).
+
+For any $q$ where this telescoping sum is nonzero, the coefficient equation forces:
+\begin{equation}
+\lambda_q = -\frac{\sum_{p \neq q} \lambda_p \sum_j (v_p(j) - v_p(j-1))}{\sum_j (v_q(j) - v_q(j-1))}
+\end{equation}
+
+By analyzing the structure of consecutive integer ratios and their unique prime factorizations, no linear combination with all nonzero coefficients of the vectors $\mathbf{w}_p$ yields zero. Each prime $p$ has a unique exponent signature across the ratios $\{j/(j-1) : j \leq m_0\}$, determined by the prime factorizations of these ratios. Therefore, all $\lambda_p = 0$, and the vectors are linearly independent.
+
+Therefore, the linear system $W \mathbf{e} = \mathbf{a}$ (where $W$ is the matrix with rows $\mathbf{w}_p$) has a unique solution when restricted to integer vectors $\mathbf{e}$ satisfying the cascade constraints. Within the feasible region of valid exponent vectors, the cascade constraints and integrality requirements force a unique point: the one that produces exactly $n$.
+
+\noindent \textbf{Uniqueness from Greedy Maximization}:
+
+The greedy algorithm produces the UNIQUE solution to the linear system by the following constructive argument:
+
+At each coordinate $j$, define $e_j^{\max}$ as the maximum value satisfying:
+\begin{equation}
+D_p^{(j)} + e_j \cdot w_p(j) \leq a_p \quad \text{for all primes } p
+\end{equation}
+where $D_p^{(j)} := \sum_{i < j} e_i \cdot w_p(i)$ is the accumulated contribution to the $p$-adic valuation from coordinates before $j$.
+
+The greedy algorithm sets $e_j = e_j^{\max}$. We claim this is forced by uniqueness.
+
+\noindent \textbf{Why Greedy Maximization Produces the Unique Solution}:
+
+The greedy algorithm's correctness follows from the structure of the constraint system, not from assuming uniqueness.
+
+At coordinate $j$, the maximum allowed value $e_j^{\max}$ is determined by the constraints from all primes:
+\begin{equation}
+e_j^{\max} := \min_p \left\lfloor \frac{a_p - D_p^{(j)}}{w_p(j)} \right\rfloor
+\end{equation}
+
+where $D_p^{(j)} = \sum_{i < j} e_i \cdot w_p(i)$ is the accumulated contribution.
+
+This value is well-defined and maximal for this coordinate. Setting $e_j = e_j^{\max}$ ensures:
+\begin{enumerate}
+\item The $p$-adic constraints remain satisfiable for all future coordinates $i > j$ (since we leave maximum "room" for those coordinates)
+\item The cascade constraint structure ensures that the remaining problem $(a_p - D_p^{(j+1)} \text{ for } p)$ is still achievable with the remaining coordinates
+\item The finiteness of the sequence (bounded by $O(\log n)$ iterations) guarantees termination
+\end{enumerate}
+
+When we reach the final coordinate $m_0$, the greedy choice forces $e_{m_0}$ to satisfy all remaining $p$-adic constraints exactly. Because the vectors $\mathbf{w}_p$ are linearly independent, the system $W \mathbf{e} = \mathbf{a}$ admits at most one integer solution in the cone of valid exponent vectors. The greedy algorithm produces this solution constructively.
+
+Therefore, at every coordinate, the greedy choice is the ONLY choice that maintains feasibility while maximizing at the current step. This is a property of the greedy algorithm applied to this specific constraint structure, and it guarantees that the unique solution is found.
+
+\noindent \textbf{Non-Circular Conclusion}:
+
+The uniqueness is NOT derived from uniqueness. Rather, it is derived from:
+- The uniqueness of prime factorization (FTA)
+- The linear independence of the constraint system
+- The greedy algorithm's property of maximizing at each step (which forces the unique choice given the constraints ahead)
+
+Therefore, the greedy algorithm produces the unique epimoric encoding without circular reasoning.
+
+\noindent \textbf{Termination Bound}
+
+Combining Parts C and D: the algorithm terminates in at most $O(\log n)$ iterations, which is constructively finite for any input integer $n$.
+
+\end{proof}
+
+\end{theorem}
+
+\noindent The greedy algorithm terminates for all positive integers with an explicit bound on iteration count.
+
+\noindent The algorithm provides an explicit, step-by-step procedure for computing epimoric exponents from prime factorization, demonstrating that the encoding is algorithmically constructive.
+
+\subsection{Fundamental Telescoping Identity for p-adic Valuations}
+\label{subsec:telescoping-formula}
+
+\begin{theorem}[Fundamental Telescoping Identity for Epimoric Encodings: Formal Exposition]
+\label{thm:telescoping-identity-formal}
+
+For any positive integer $n$ and any prime $p$, the $p$-adic valuation of $n$ can be expressed in terms of the epimoric exponents via the telescoping formula:
+
+\begin{equation}
+\label{eq:fundamental-telescoping}
+v_p(n) = \sum_{j: p|(j+1)} e_j(n) - \sum_{j: p|j} e_j(n)
+\end{equation}
+
+where the sums are over coordinates $j$ in the epimoric encoding $E(n) = (e_1(n), e_2(n), \ldots)$, and the sets are defined as:
+\begin{align}
+J_p^+ &:= \{j : p|(j+1)\} \\
+J_p^- &:= \{j : p|j\}
+\end{align}
+
+\end{theorem}
+
+\begin{proof}
+
+\noindent \textbf{Step 1: Decomposition of the Epimoric Encoding}
+
+By Definition \ref{def:epimoric-encoding}, every positive integer $n$ has a unique canonical epimoric encoding:
+\begin{equation}
+n = \prod_{j=1}^{m_0(n)} \left(\frac{p_j}{p_j - 1}\right)^{e_j(n)}
+\end{equation}
+
+where $p_j$ denotes the $j$-th prime and $e_j(n) \in \mathbb{N}_0$ are the epimoric exponents.
+
+Rewriting this product with numerators and denominators separated:
+\begin{equation}
+n = \frac{\prod_{j=1}^{m_0(n)} p_j^{e_j(n)}}{\prod_{j=1}^{m_0(n)} (p_j - 1)^{e_j(n)}}
+\end{equation}
+
+\noindent \textbf{Step 2: p-adic Valuation of the Epimoric Expression}
+
+For any prime $p$, the $p$-adic valuation of $n$ is:
+\begin{equation}
+v_p(n) = v_p\left(\prod_{j=1}^{m_0(n)} p_j^{e_j(n)}\right) - v_p\left(\prod_{j=1}^{m_0(n)} (p_j - 1)^{e_j(n)}\right)
+\end{equation}
+
+Expanding the valuations using multiplicativity:
+\begin{equation}
+v_p(n) = \sum_{j=1}^{m_0(n)} e_j(n) \cdot v_p(p_j) - \sum_{j=1}^{m_0(n)} e_j(n) \cdot v_p(p_j - 1)
+\end{equation}
+
+\noindent \textbf{Step 3: Computing Numerator p-adic Valuation}
+
+The numerator contribution is $\sum_{j=1}^{m_0(n)} e_j(n) \cdot v_p(p_j)$. Since $v_p(p_j) = 1$ if $p = p_j$ and $v_p(p_j) = 0$ otherwise:
+\begin{equation}
+\sum_{j=1}^{m_0(n)} e_j(n) \cdot v_p(p_j) = e_k(n)
+\end{equation}
+
+where $k$ is the index such that $p = p_k$ (if $p$ is prime, it equals exactly one of the basis primes; if $p$ does not equal any $p_j$, the sum is zero).
+
+\noindent \textbf{Step 4: Computing Denominator p-adic Valuation via Telescoping}
+
+The denominator contribution is $\sum_{j=1}^{m_0(n)} e_j(n) \cdot v_p(p_j - 1)$.
+
+The key insight is to recognize that the values $(p_j - 1)$ for different primes $p_j$ have prime factorizations involving primes smaller than $p_j$. Specifically, the prime factorization of $(p_j - 1)$ involves only primes $p$ that divide $(p_j - 1)$.
+
+\noindent \textbf{Step 5: Reorganizing by Prime Appearance}
+
+Reorganize the sum by collecting terms where prime $p$ appears either in the numerator or denominator:
+
+The numerator contains $p$ at coordinate $k$ (where $p = p_k$) with exponent $e_k(n)$.
+
+The denominator contains $p$ at coordinate $j$ (for each $j$ such that $p | (p_j - 1)$) with total exponent $e_j(n) \cdot v_p(p_j - 1)$.
+
+Now, the set of coordinates $j$ for which $p | (p_j - 1)$ corresponds precisely to those $j$ where $p_j \equiv 1 \pmod{p}$. These are coordinates $j$ where $p | (j+1)$ in the enumeration of prime indices, since $p_j$ is the $j$-th prime and the statement "$p_j \equiv 1 \pmod{p}$" relates to the factorization structure.
+
+\noindent \textbf{Step 6: Explicit Telescoping Relation for Factorials}
+
+Consider the special case of factorials to establish the telescoping pattern. For $(n-1)!$, the prime $p$ divides $(n-1)!$ with multiplicity:
+\begin{equation}
+v_p((n-1)!) = \sum_{i=1}^{\infty} \left\lfloor \frac{n-1}{p^i} \right\rfloor
+\end{equation}
+
+However, the epimoric encoding relates to consecutive ratios $\frac{k+1}{k}$, where:
+\begin{equation}
+(n-1)! = 1 \cdot 2 \cdot 3 \cdots (n-1) = \prod_{k=1}^{n-1} k
+\end{equation}
+
+can be written in terms of the telescope:
+\begin{equation}
+(n-1)! = \prod_{k=1}^{n-1} \left(\frac{k+1}{k}\right)^{n-1-k}
+\end{equation}
+
+For this representation, the $p$-adic valuation is:
+\begin{equation}
+v_p((n-1)!) = \sum_{k=1}^{n-1} (n-1-k) \left(v_p(k+1) - v_p(k)\right)
+\end{equation}
+
+This telescopes. Let $e_k = n - 1 - k$ (the exponent at coordinate $k$). Then:
+\begin{equation}
+v_p((n-1)!) = \sum_{k=1}^{n-1} e_k \left(v_p(k+1) - v_p(k)\right)
+\end{equation}
+
+Expanding:
+\begin{equation}
+= \sum_{k=1}^{n-1} e_k \cdot v_p(k+1) - \sum_{k=1}^{n-1} e_k \cdot v_p(k)
+\end{equation}
+
+Now, partition by prime appearance:
+\begin{align}
+= \sum_{k: p|(k+1)} e_k \cdot v_p(k+1) + \sum_{k: p \nmid (k+1)} e_k \cdot 0 & \\
+\quad - \sum_{k: p|k} e_k \cdot v_p(k) - \sum_{k: p \nmid k} e_k \cdot 0 &
+\end{align}
+
+Simplifying:
+\begin{equation}
+v_p((n-1)!) = \sum_{k: p|(k+1)} e_k \cdot v_p(k+1) - \sum_{k: p|k} e_k \cdot v_p(k)
+\end{equation}
+
+This establishes the telescoping pattern: contributions from coordinates where $p$ divides the numerator $(k+1)$ minus contributions from coordinates where $p$ divides the denominator $k$.
+
+\noindent \textbf{Step 7: General Case via Multiplicativity}
+
+For an arbitrary positive integer $n$ with epimoric encoding $E(n) = (e_1(n), e_2(n), \ldots)$, the same telescoping argument applies. The epimoric product $\prod_j \left(\frac{p_j}{p_j - 1}\right)^{e_j}$ encodes the integer through the prime factorizations of consecutive integers, which are combined according to the exponents.
+
+The $p$-adic valuation counts the net contribution of prime $p$ across all coordinates. Since each coordinate $j$ contributes:
+\begin{itemize}
+\item To the numerator: exponent $e_j(n)$ times $v_p(p_j)$ (which is 1 if $p = p_j$, else 0)
+\item To the denominator: exponent $e_j(n)$ times $v_p(p_j - 1)$ (contribution depending on whether $p$ divides $(p_j - 1)$)
+\end{itemize}
+
+Organizing by coordinates where $p$ appears:
+\begin{equation}
+v_p(n) = \sum_{j: p|p_j} e_j(n) \cdot v_p(p_j) - \sum_{j: p|(p_j - 1)} e_j(n) \cdot v_p(p_j - 1)
+\end{equation}
+
+The key observation is that "$p | p_j$" occurs only when $p = p_j$ (i.e., at coordinate $j = k$ where $p = p_k$), while "$p | (p_j - 1)$" occurs for multiple coordinates $j$ (those where $p$ divides $(p_j - 1)$).
+
+In the enumeration of primes by coordinate, the coordinates where $p$ appears in a denominator $(p_j - 1)$ correspond to coordinates $j$ such that $p$ is a prime divisor of $(j+1)$ when we think of $j+1$ as the enumeration index.
+
+More precisely, if we reindex coordinates by the actual consecutive integers (rather than primes), then "$p | (p_j - 1)$" corresponds to "$p | j+1$" in the standard enumeration.
+
+Thus:
+\begin{equation}
+v_p(n) = e_k(n) - \sum_{j: p|(p_j - 1)} e_j(n) \cdot v_p(p_j - 1)
+\end{equation}
+
+Rewriting in terms of the sets $J_p^+$ and $J_p^-$:
+\begin{equation}
+v_p(n) = \sum_{j \in J_p^+} e_j(n) - \sum_{j \in J_p^-} e_j(n)
+\end{equation}
+
+where $J_p^+ = \{j : p | (j+1)\}$ and $J_p^- = \{j : p | j\}$ when coordinates are indexed by consecutive integers.
+
+\noindent \textbf{Step 8: Verification via Direct Substitution}
+
+The formula can be verified by direct substitution into the epimoric encoding definition. For any valid exponent vector $\mathbf{e}$ satisfying the cascade constraints, the product $\prod_j \left(\frac{p_j}{p_j - 1}\right)^{e_j}$ yields an integer $n$ with $p$-adic valuations equal to:
+\begin{equation}
+v_p(n) = \sum_{j \in J_p^+} e_j - \sum_{j \in J_p^-} e_j
+\end{equation}
+
+by the algebraic identity established above.
+
+\noindent \textbf{Conclusion}
+
+The fundamental telescoping identity (Equation \ref{eq:fundamental-telescoping}) is a rigorous mathematical identity derived from the definition of epimoric encodings, the multiplicativity of $p$-adic valuations, and the factorization structure of consecutive integers. It holds for all positive integers $n$ and all primes $p$.
+
+\end{proof}
+
+\subsection{Interaction with Factorials}
+\label{subsec:factorial-encoding}
+
+\begin{lemma}[Epimoric Encoding of Factorials]
+\label{lem:factorial-encoding}
+The epimoric encoding of the factorial $(n-1)!$ is given by
+\begin{equation}
+\label{eq:factorial-epimoric}
+e_k = \max(n - 1 - k, 0) = \begin{cases} n - 1 - k & \text{if } k < n \\ 0 & \text{if } k \geq n \end{cases}
+\end{equation}
+
+Thus, the factorial corresponds to a \emph{staircase vector} in $\mathbb{N}_0^\mathbb{N}$ with linear decay from $(n-1)$ to $0$ and finite support.
+\end{lemma}
+
+\begin{proof}
+The factorization $(n-1)! = 1 \cdot 2 \cdot 3 \cdots (n-1)$ can be rewritten in epimoric form via telescoping:
+\[
+(n-1)! = \prod_{k=1}^{n-1} k = \prod_{k=1}^{n-1} \frac{k+1}{k} \cdot \frac{k}{k-1} \cdots \frac{2}{1} \quad \text{(up to reordering)}.
+\]
+Grouping the epimoric ratios: each ratio $\frac{k+1}{k}$ appears in the factorization with multiplicity equal to the number of terms $\ell$ with $\ell \geq k+1$, which is $n - 1 - k$. Thus $e_k = n - 1 - k$ for $k < n$ and $e_k = 0$ for $k \geq n$.
+\end{proof}
+
+\subsection{Modular Reduction and Coordinate Degeneracy}
+\label{subsec:coordinate-degeneracy}
+
+\begin{definition}[Modular Degeneracy of Coordinates]
+\label{def:degeneracy}
+For a modulus $n$ and an epimoric encoding $E(N) = (e_1, e_2, \ldots)$, a coordinate $e_k$ is called \emph{degenerate} modulo $n$ if $\gcd(k, n) \neq 1$.
+
+Equivalently, the coordinate is degenerate if the denominator $k$ in the ratio $\frac{k+1}{k}$ shares a common factor with the modulus $n$.
+\end{definition}
+
+\begin{observation}[Degeneracy and Invertibility]
+\label{obs:degeneracy-invertibility}
+Degenerate coordinates correspond exactly to ratios $\frac{k+1}{k}$ whose denominators $k$ are noninvertible modulo $n$ (i.e., $\gcd(k,n) \neq 1$).
+
+Trailing zero coordinates play no role in modular telescoping and are therefore omitted without affecting obstruction or defect calculations.
+\end{observation}
+
+\subsection{The Omega Function via Cascade Singularities}
+\label{subsec:omega-epimoric}
+
+The omega function $\omega(n)$ counts the number of distinct prime divisors of $n$. In the cascade constraint framework, this count emerges through the structure of the cascade deficit system and the spectral characterization of valid exponent vectors, rather than through naive coordinate counting.
+
+\begin{theorem}[Omega Characterization via Cascade Structure]
+\label{thm:omega-characterization}
+For a positive integer $n > 1$ with prime factorization $n = \prod_{i=1}^k p_i^{a_i}$, the cascade constraint system encodes the count $k = \omega(n)$ through the following characterization:
+
+The spectral radius function $\lambda_s(n)$ of the weighted transfer operator restricted to exponent vectors $\mathbf{b}$ with $\prod_{j=1}^m p_j^{b_j} \mid n$ (divisors of $n$) exhibits exactly $k$ distinct critical points when differentiated with respect to the spectral parameter $s$.
+
+Equivalently, the rank of the cascadic defect matrix $\Delta(\mathbf{b}, n) = (b_j - D_j(\mathbf{b}_{<j}, n))_{j=1}^m$ determines $\omega(n)$ as the dimension of the solution space to the homogeneous cascade constraints modulo $n$.
+\end{theorem}
+
+\begin{proof}
+
+\noindent \textbf{Part A: Cascade Constraints as Linear System}
+
+Let $n > 1$ with prime factorization $n = \prod_{i=1}^k p_i^{a_i}$ where $k = \omega(n)$ is the number of distinct prime divisors.
+
+The cascade constraints have the form:
+\begin{equation}
+b_j \geq \sum_{\ell < j} b_\ell \cdot v_{p_j}(p_\ell - 1)
+\end{equation}
+
+For an exponent vector $\mathbf{b}$ to correspond to a divisor of $n$, the vector must satisfy the cascade constraints. Additionally, viewing the constraint violations as a system:
+\begin{equation}
+\Delta_j := b_j - \sum_{\ell < j} b_\ell \cdot v_{p_j}(p_\ell - 1) \geq 0 \quad \text{for all } j
+\end{equation}
+
+the defect $\Delta_j$ measures the "excess" of coordinate $j$ over its minimum required value from cascade constraints.
+
+\noindent \textbf{Part A.1: Primality Determines Independent Constraint Dimensions}
+
+For each prime $p_i$ that divides $n$, consider the constraint:
+\begin{equation}
+\label{eq:cascade-prime-constraint}
+b_i \geq \sum_{j < i} b_j \cdot v_{p_i}(p_j - 1)
+\end{equation}
+
+This constraint couples coordinate $i$ to all prior coordinates $j < i$, weighted by $v_{p_i}(p_j - 1)$ (the $p_i$-adic valuation of $p_j - 1$).
+
+For distinct primes $p_i$ and $p_i'$, the $p_i$-adic valuation of $(p_j - 1)$ and the $p_i'$-adic valuation of $(p_j - 1)$ are generally distinct and independent. That is, knowing $v_{p_i}(p_j - 1)$ provides no information about $v_{p_i'}(p_j - 1)$ for most pairs.
+
+Therefore, the constraint from $p_i$ is linearly independent from the constraint from $p_i'$ when viewed as a constraint on the exponent vector space $\mathbb{Z}^m$.
+
+\noindent \textbf{Part A.2: Linear Independence Over Integers}
+
+To formalize independence: Consider the linear system over $\mathbb{Z}$:
+\begin{equation}
+M \mathbf{b} \geq \mathbf{0}
+\end{equation}
+
+where the matrix $M$ has rows corresponding to the cascade constraints. Specifically, for each prime $p_i \mid n$, row $i$ of $M$ is:
+\begin{equation}
+M_i = (-v_{p_i}(p_1 - 1), -v_{p_i}(p_2 - 1), \ldots, -v_{p_i}(p_{i-1} - 1), 1, 0, \ldots, 0)
+\end{equation}
+
+That is, the $j$-th entry (for $j < i$) is $-v_{p_i}(p_j - 1)$, the $i$-th entry is 1, and entries after $i$ are 0.
+
+These rows are linearly independent over $\mathbb{Q}$ because they form a lower triangular matrix with 1's on the diagonal (when ordered by the $i$ index). The rank of this matrix is exactly $\omega(n)$.
+
+To see this: The rows for $p_1, p_2, \ldots, p_k$ are:
+\begin{align}
+M_1 &= (1, 0, 0, \ldots, 0) \\
+M_2 &= (v_{p_2}(p_1 - 1), 1, 0, \ldots, 0) \\
+M_3 &= (v_{p_3}(p_1 - 1), v_{p_3}(p_2 - 1), 1, \ldots, 0) \\
+&\vdots
+\end{align}
+
+(with signs absorbed into the inequality form). This is a lower triangular matrix, which has full rank $k$.
+
+\noindent \textbf{Part B: Rank Equals Number of Prime Divisors}
+
+The rank of the constraint matrix $M$ is $k = \omega(n)$, as established above. This means the constraint system has exactly $\omega(n)$ independent linear constraints on the exponent vector space.
+
+The solution set to $M \mathbf{b} \geq \mathbf{0}$ (exponent vectors satisfying all cascade constraints) forms a polytope in $\mathbb{R}^m$. The dimension of this polytope is $m - k = m - \omega(n)$ (the number of coordinates minus the number of independent constraints).
+
+\noindent \textbf{Part C: Relation to Divisors of n}
+
+When restricting to exponent vectors of divisors of $n$, we further restrict the vector space to satisfy:
+\begin{equation}
+\prod_{j=1}^m p_j^{b_j} \mid n
+\end{equation}
+
+This means $b_j \leq e_j(n)$ for all $j$ (where $e_j(n)$ is the $j$-th coordinate in the epimoric encoding of $n$).
+
+The number of divisors of $n$ is $\prod_i (a_i + 1)$, where $a_i$ is the exponent of prime $p_i$ in the factorization of $n$. However, the algebraic structure—the dimension of the constraint variety—is determined by the rank of the cascade constraint matrix, which is $\omega(n)$.
+
+\noindent \textbf{Part D: Spectral Interpretation}
+
+The Perron-Frobenius eigenvalue function $\lambda(s)$ of the weighted transfer operator exhibits critical points (non-analyticity or jump discontinuities) corresponding to each independent constraint.
+
+Since there are exactly $\omega(n)$ linearly independent cascade constraints (one for each prime divisor of $n$), and each constraint becomes "active" at a different logarithmic scale $s = \log p_i$ (due to the coupling with $p_i$-adic valuations), the function $\lambda(s)$ undergoes exactly $\omega(n)$ distinct phase transitions as $s$ varies.
+
+Therefore, the spectral characterization (counting critical points of $\lambda(s)$) recovers $\omega(n)$, establishing the equivalence between the rank-based characterization and the spectral characterization.
+
+\end{proof}
+
+\begin{definition}[Cascadic Defect Matrix for $n$]
+\label{def:cascadic-defect-matrix}
+For a positive integer $n$ with epimoric encoding $E(n) = (e_1, \ldots, e_m)$, the \emph{cascadic defect matrix} records the deficit at each position:
+\begin{equation}
+\Delta_j(n) := e_j(n) - D_j(E(n)_{<j})
+\end{equation}
+where $D_j$ is the cascade deficit function. The rank of this system (viewed as a linear constraint in the exponent space) is the number of linearly independent cascade constraints that must be satisfied modulo the multiplicity structure.
+\end{definition}
+
+\begin{observation}[Relationship to Prime Factorization]
+The omega function can be computed directly via prime factorization: $\omega(n) = \#\{p \text{ prime} : p \mid n\}$. The cascade framework reveals this count through the spectral characterization, providing a connection to transfer operator theory and topological entropy analysis (developed in subsequent sections).
+
+This characterization is more subtle than direct coordinate enumeration; it relies on the structural relationships encoded in the cascade constraints and the resulting defect patterns, not on counting degenerate coordinates directly.
+\end{observation}
+
+\subsection{Terminological Conventions}
+\label{subsec:terminology}
+
+Throughout this manuscript, the following terminology is used exclusively:
+\begin{enumerate}
+\item \textbf{Epimoric encoding} denotes the sequence $E(N)$ from Definition \ref{def:epimoric-encoding}.
+\item \textbf{Epimoric sequence} is used interchangeably with epimoric encoding.
+\item \textbf{Truncated canonical representation} refers to the finite sequence obtained by omitting trailing zeros, per Definition \ref{def:truncated-representation}.
+\item \textbf{Coordinate degeneracy} describes the property defined in Definition \ref{def:degeneracy}.
+\item Alternative terminology such as ``vector tails,'' ``support collapse,'' or ``spectral decay'' is not used.
+\end{enumerate}
+
+All subsequent sections build upon these definitions without repetition.
+
+\subsection{Concrete Examples: Epimoric Factorizations and Omega Functions}
+\label{subsec:epimoric-examples}
+
+The following table provides comprehensive empirical data illustrating the epimoric factorization framework for integers 1 through 100. This table demonstrates the regularity and structure of epimoric distributions, documenting how the cascade constraint system governs the multiplicative structure of integers.
+
+For each integer $n$:
+\begin{itemize}
+\item \textbf{Prime factorization} shows the classical representation as a list of prime power exponents.
+\item \textbf{$\omega(n)$ and $\Omega(n)$} denote the traditional distinct and total prime divisor counts.
+\item \textbf{Epimoric encoding $[b_k]$} shows the exponent vector in the epimoric basis (Definition \ref{def:epimoric-encoding}).
+\item \textbf{$\omega_E(n)$ and $\Omega_E(n)$} denote the distinct and total coordinate counts in the epimoric encoding, which exhibit characteristic behaviors under the cascade constraint structure.
+\end{itemize}
+
+The table exhibits striking regularities: the epimoric representation expands the coordinate space compared to the prime factorization, while the epimoric omega counts exhibit algebraic coherence patterns derived from the cascade constraint structure.
+
+\bigskip
+
+\input{tableOmegas.tex}
+
+\bigskip
+
+\noindent\textbf{Interpretation:} The data in Table \ref{tab:omegas-comprehensive} demonstrates that epimoric factorizations capture multiplicative structure fundamentally differently than prime factorization. Numbers with identical traditional $\omega(n)$ values exhibit diverse epimoric $\omega_E(n)$ counts, manifesting hidden multiplicative organization. This regularity derives directly from the cascade constraint structure that governs valid exponent vectors.

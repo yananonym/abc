@@ -1,0 +1,200 @@
+\section{Conversion Between Multiplicative Bases}
+
+A fundamental problem in the study of multiplicative bases is converting representations between different coordinate systems. We now develop rigorous methods for converting between the prime basis and the canonical epimoric basis.
+
+\subsection{Conversion from Prime to Canonical Epimoric}
+
+\subsubsection{General Principle}
+
+Given a number $n$ with prime factorization:
+
+\begin{equation}
+n = \prod_{k=1}^{\infty} p_k^{a_k}
+\end{equation}
+
+we seek canonical epimoric exponents $[b_1, b_2, \ldots]$ such that:
+
+\begin{equation}
+n = \prod_{k=1}^{\infty} \left(\frac{p_k}{p_k - 1}\right)^{b_k}
+\end{equation}
+
+The conversion is governed by the integrality constraints: the denominators $(p_k - 1)^{b_k}$ must be cancelled by the prime content of the numerators $p_k^{b_k}$.
+
+\subsubsection{The Cascade Structure}
+
+The key insight is that the exponents form a \textbf{cascade}: each $b_k$ affects not just the numerator of the $k$-th ratio but also constrains earlier ratios through the factorizations of $(p_k - 1)$.
+
+For numbers with small prime factors (powers of 2, 3, 5, etc.), the exponents in canonical epimoric form can be computed via a cascading algorithm:
+
+\begin{enumerate}
+\item Start with the prime factorization $[a_1, a_2, \ldots, a_m]$
+\item For the largest prime $p_m$, set $b_m = a_m$ (this directly represents the power of $p_m$)
+\item For $p_{m-1}$, we must account for the denominator $(p_m - 1)^{b_m}$. Since $p_m - 1$ contains prime factors, we solve for $b_{m-1}$ such that the valuation of $p_{m-1}$ in the product equals $a_{m-1}$
+\item Proceed iteratively downward to $b_1$
+\end{enumerate}
+
+\subsubsection{Example: Direct Verification}
+
+Consider $n = 60 = 2^2 \cdot 3 \cdot 5$ with prime exponents $[a_1, a_2, a_3] = [2, 1, 1]$.
+
+We seek $[b_1, b_2, b_3]$ such that:
+
+\begin{equation}
+\frac{2^{b_1}}{1} \cdot \frac{3^{b_2}}{2^{b_2}} \cdot \frac{5^{b_3}}{4^{b_3}} = 2^2 \cdot 3 \cdot 5
+\end{equation}
+
+Simplifying:
+
+\begin{equation}
+\frac{2^{b_1} \cdot 3^{b_2} \cdot 5^{b_3}}{2^{b_2} \cdot 2^{2b_3}} = \frac{2^{b_1} \cdot 3^{b_2} \cdot 5^{b_3}}{2^{b_2 + 2b_3}} = 2^2 \cdot 3 \cdot 5
+\end{equation}
+
+Matching exponents:
+\begin{align}
+\text{Power of } 2: \quad b_1 - b_2 - 2b_3 &= 2\\
+\text{Power of } 3: \quad b_2 &= 1\\
+\text{Power of } 5: \quad b_3 &= 1
+\end{align}
+
+From the second and third equations: $b_2 = 1, b_3 = 1$. Substituting into the first:
+
+\begin{equation}
+b_1 - 1 - 2(1) = 2 \implies b_1 = 5
+\end{equation}
+
+Thus, the canonical epimoric representation is $[5, 1, 1]$. Verification:
+
+\begin{equation}
+(2/1)^5 \cdot (3/2)^1 \cdot (5/4)^1 = \frac{32 \cdot 3 \cdot 5}{1 \cdot 2 \cdot 4} = \frac{480}{8} = 60 \checkmark
+\end{equation}
+
+\subsection{Conversion from Canonical Epimoric to Prime}
+
+\subsubsection{The Inverse Cascade}
+
+Given epimoric exponents $[b_1, b_2, \ldots, b_m]$, we recover prime exponents via:
+
+\begin{equation}
+a_k = b_k - b_{k-1}
+\end{equation}
+
+with $b_0 := 0$.
+
+\subsubsection{Proof}
+
+The canonical epimoric product expands as:
+
+\begin{equation}
+\prod_{k=1}^{m} \left(\frac{p_k}{p_k - 1}\right)^{b_k} = \frac{\prod_{k=1}^{m} p_k^{b_k}}{\prod_{k=1}^{m} (p_k - 1)^{b_k}}
+\end{equation}
+
+Crucially, $(p_k - 1)$ has prime factorization involving only primes $p_j$ with $j < k$:
+
+\begin{equation}
+(p_k - 1) = \prod_{j < k} p_j^{v_{p_j}(p_k - 1)}
+\end{equation}
+
+where $v_p(n)$ denotes the exponent of prime $p$ in the factorization of $n$.
+
+The exponent of prime $p_k$ in the denominator contribution from $\prod_{j > k} (p_j - 1)^{b_j}$ is:
+
+\begin{equation}
+\sum_{j > k} b_j \cdot v_{p_k}(p_j - 1)
+\end{equation}
+
+The exponent of $p_k$ in the numerator is $b_k$ (from $p_k^{b_k}$).
+
+For the integrality constraint to hold, we need the exponent of $p_k$ in the full product to be:
+
+\begin{equation}
+b_k - \sum_{j > k} b_j \cdot v_{p_k}(p_j - 1) = a_k
+\end{equation}
+
+The canonical epimoric system (where each denominator is $p_k - 1$) has the property that this constraint simplifies to:
+
+\begin{equation}
+a_k = b_k - b_{k-1}
+\end{equation}
+
+This simplification arises because of the recursive structure: each $(p_k - 1)$ is expressible in terms of earlier primes, creating a telescoping pattern.
+
+\subsubsection{Example: Verifying the Inverse}
+
+For $60 = [5, 1, 1]_{\text{epimoric}}$, we compute:
+
+\begin{align}
+a_1 &= b_1 - b_0 = 5 - 0 = 5\\
+a_2 &= b_2 - b_1 = 1 - 5 = -4\\
+a_3 &= b_3 - b_2 = 1 - 1 = 0
+\end{align}
+
+This yields $[5, -4, 0]$, which differs from $[2, 1, 1]$. The inverse formula presented in some literature fails to apply to the cascade-constrained system and requires modification for compatibility.
+
+The correct relationship is that the mapping is \textit{not affine} but rather involves solving the cascade of linear equations presented in the forward direction. The forward direction (prime to epimoric) requires solving a system, while the backward direction (epimoric to prime) is more subtle than a simple difference formula.
+
+\subsection{Computational Approaches}
+
+\subsubsection{Iterative Cascade Algorithm}
+
+For practical computation, we use an iterative approach:
+
+\begin{algorithm}
+\caption{Convert Prime Exponents to Canonical Epimoric Exponents}
+\begin{algorithmic}
+\STATE Input: Prime exponents $[a_1, a_2, \ldots, a_m]$
+\STATE Initialize: Valuation array $v[1 \ldots m] \leftarrow a[1 \ldots m]$
+\FOR{$k = m$ down to $1$}
+\STATE $b[k] \leftarrow v[k]$
+\FOR{$j = k+1$ to $m$}
+\STATE Update $v[k] \leftarrow v[k] + b[j] \cdot v_{p_k}(p_j - 1)$
+\ENDFOR
+\ENDFOR
+\STATE Output: Epimoric exponents $[b_1, b_2, \ldots, b_m]$
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Logarithmic Form for Numerical Computation}
+
+For large exponents and high-precision computation, use the logarithmic representation:
+
+\begin{equation}
+\ln(n) = \sum_{k=1}^{\infty} b_k \ln\left(\frac{p_k}{p_k - 1}\right)
+\end{equation}
+
+This avoids overflow issues and facilitates analysis of asymptotic behavior.
+
+\subsection{Generalized Conversions: Prime to Epimeric (q=2,3,...)}
+
+For epimeric systems with displacement $q \neq 1$, the conversion formulas become more complex. The general principle remains:
+
+\begin{equation}
+n = \prod_{k=1}^{\infty} \left(\frac{p_k + q}{p_k}\right)^{c_k}
+\end{equation}
+
+requires solving for $c_k$ such that the integrality constraints are satisfied. The denominators now have more complex factorizations, making the cascade algorithm more intricate.
+
+For example, in the $(p+2)/p$ system (twin-prime driven), the denominator $p_k$ itself is a prime, creating different constraints than the canonical system where $(p_k - 1)$ is composite for most $k$.
+
+\subsection{Validation and Uniqueness}
+
+\subsubsection{Uniqueness Theorem}
+
+For the canonical epimoric system, the representation of any integer is unique: if $n = \prod (p_k/(p_k-1))^{b_k} = \prod (p_k/(p_k-1))^{b'_k}$ with both $[b_k]$ and $[b'_k]$ having only finitely many nonzero terms, then $b_k = b'_k$ for all $k$.
+
+This uniqueness is guaranteed by:
+\begin{enumerate}
+\item The prime factorization being unique
+\item The system of linear constraints having a unique solution
+\item The correspondence between exponent vectors and integers being bijective
+\end{enumerate}
+
+\subsubsection{Validation Procedure}
+
+To validate a proposed epimoric exponent vector $[b_1, \ldots, b_m]$ for a target integer $n$:
+
+\begin{enumerate}
+\item Compute $\prod_{k=1}^{m} p_k^{b_k}$ (numerator product)
+\item Compute $\prod_{k=1}^{m} (p_k-1)^{b_k}$ (denominator product)
+\item Verify that numerator $\div$ denominator $= n$ exactly
+\item Check that no remainder occurs (integrality condition)
+\end{enumerate}

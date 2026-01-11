@@ -1,0 +1,263 @@
+\section{Computational Methods and Implementation}
+
+Efficient computation of multiplicative basis representations requires careful algorithm design and data structure selection. This section covers practical approaches.
+
+\subsection{Representation Storage: Sparse Vector Encoding}
+
+For integers with sparse epimoric representations (few nonzero exponents), we use sparse encoding:
+
+\begin{verbatim}
+struct SparseExponentVector {
+    vector<pair<int, int>> entries;  // (index, exponent) pairs
+};
+\end{verbatim}
+
+This avoids storing zeros for large prime indices.
+
+\subsection{Prime Factorization Preprocessing}
+
+The conversion algorithm requires rapid access to factorizations of $(p_k - 1)$. Precompute and cache:
+
+\begin{enumerate}
+\item All primes up to a bound (e.g., $p_N$ for $N = 10,000$)
+\item For each prime $p_k$, the factorization of $(p_k - 1)$ as exponent vector $[v_{p_1}(p_k-1), v_{p_2}(p_k-1), \ldots]$
+\item Index structures for rapid lookup of $(p_k - 1)$ by prime content
+\end{enumerate}
+
+\subsection{Cascade Conversion Algorithm: Prime to Epimoric}
+
+\subsubsection{Algorithm Description}
+
+Given prime exponents $[a_1, \ldots, a_m]$ (sparse), compute epimoric exponents $[b_1, \ldots, b_m]$:
+
+\begin{algorithm}
+\caption{Convert Prime Exponents to Epimoric (Canonical)}
+\begin{algorithmic}
+\STATE Input: $\text{primeExp} = [a_1, \ldots, a_m]$
+\STATE Initialize: $\text{denomDeficit}[1 \ldots m] \leftarrow 0$
+\FOR{$k = m$ down to $1$}
+\STATE $\text{needExp}[k] \leftarrow a_k + \text{denomDeficit}[k]$
+\STATE $b_k \leftarrow \text{needExp}[k]$
+\FOR{each prime $q < p_k$}
+\STATE Update: $\text{denomDeficit}[q] \leftarrow \text{denomDeficit}[q] + b_k \cdot v_q(p_k - 1)$
+\ENDFOR
+\ENDFOR
+\STATE Output: $[b_1, \ldots, b_m]$
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Time Complexity}
+
+For an integer $n$ with $\omega(n)$ distinct prime factors:
+\begin{itemize}
+\item Preprocessing (primes and factorizations): $O(\pi(P) \log \log \pi(P))$ (sieve)
+\item Single conversion: $O(\omega(n)^2)$ (cascade with sparse deficit tracking)
+\item Batch conversion (all integers up to $N$): $O(N \log \log N)$ (amortized)
+\end{itemize}
+
+\subsection{Logarithmic Representation for High-Precision Arithmetic}
+
+For large exponents, use floating-point logarithmic form:
+
+\begin{equation}
+\ln(n) = \sum_{k=1}^{m} b_k \ln\left(\frac{p_k}{p_k - 1}\right)
+\end{equation}
+
+This avoids overflow and enables analysis of asymptotic behavior.
+
+\subsubsection{Precomputation}
+
+Cache logarithmic values:
+
+\begin{equation}
+\ell_k = \ln\left(\frac{p_k}{p_k - 1}\right) = \ln(p_k) - \ln(p_k - 1)
+\end{equation}
+
+For efficient computation:
+
+\begin{verbatim}
+vector<double> logRatios(primeCount);
+for (int k = 0; k < primeCount; k++) {
+    logRatios[k] = log((double)primes[k]) - log((double)(primes[k]-1));
+}
+\end{verbatim}
+
+\subsection{Constraint Polytope Validation}
+
+To verify that an exponent vector produces an integer:
+
+\begin{algorithm}
+\caption{Validate Epimoric Exponent Vector}
+\begin{algorithmic}
+\STATE Input: $[b_1, \ldots, b_m]$
+\STATE Initialize: $\text{available}[p] \leftarrow 0$ for all primes $p$
+\FOR{$k = 1$ to $m$}
+\STATE Add to available: $\text{available}[p_k] \leftarrow \text{available}[p_k] + b_k$
+\ENDFOR
+\FOR{$k = 1$ to $m$}
+\STATE Subtract denominator contributions:
+\FOR{each prime $p$ in factorization of $(p_k - 1)$}
+\STATE $\text{available}[p] \leftarrow \text{available}[p] - b_k \cdot v_p(p_k - 1)$
+\ENDFOR
+\ENDFOR
+\IF{all $\text{available}[p] \geq 0$}
+\STATE Return TRUE
+\ELSE
+\STATE Return FALSE
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Enumeration of Valid Vectors}
+
+To enumerate all valid epimoric vectors with exponent sum $S$, use backtracking with constraint checking:
+
+\begin{algorithm}
+\caption{Enumerate Valid Epimoric Vectors}
+\begin{algorithmic}
+\STATE Input: Target sum $S$, number of basis elements $m$
+\STATE Initialize: result list, current vector $[0, \ldots, 0]$
+\PROCEDURE{Backtrack}{$\text{index}, \text{remainingSum}$}
+\IF{$\text{index} = m$}
+\IF{$\text{remainingSum} = 0$ AND Validate(current vector)}
+\STATE Add current vector to results
+\ENDIF
+\RETURN
+\ENDIF
+\FOR{$e = 0$ to $\text{remainingSum}$}
+\STATE $\text{current}[\text{index}] \leftarrow e$
+\STATE Backtrack($\text{index} + 1$, $\text{remainingSum} - e$)
+\ENDFOR
+\ENDPROCEDURE
+\STATE Call Backtrack$(0, S)$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Sparse Prime Factorization}
+
+For rapid factorization of $(p_k - 1)$, precompute and use trial division with small primes:
+
+\begin{verbatim}
+Vector<Pair<int, int>> factorize(int n) {
+    Vector<Pair<int, int>> factors;
+    for (int p : smallPrimes) {
+        if (p * p > n) break;
+        int exp = 0;
+        while (n % p == 0) {
+            n /= p;
+            exp++;
+        }
+        if (exp > 0) factors.push_back({p, exp});
+    }
+    if (n > 1) factors.push_back({n, 1});  // remainder is prime
+    return factors;
+}
+\end{verbatim}
+
+\subsection{Parallel and Distributed Computation}
+
+For batch processing (all integers up to $10^6$):
+
+\begin{enumerate}
+\item \textbf{Sieve preprocessing}: Compute all primes and $(p_k - 1)$ factorizations in parallel
+\item \textbf{Batch factorization}: Use segmented sieves for integers in range
+\item \textbf{Conversion}: Apply cascade algorithm in parallel to independent subranges
+\item \textbf{Aggregation}: Collect results, compute omega statistics
+\end{enumerate}
+
+\subsection{Data Structure Optimization}
+
+\subsubsection{Trie-Based Factorization Trees}
+
+Store factorization patterns as a trie (prefix tree) to exploit redundancy in $(p_k - 1)$ representations:
+
+\begin{verbatim}
+struct TrieNode {
+    map<int, TrieNode*> children;  // prime index -> next node
+    int exponent;                   // exponent at this node
+};
+\end{verbatim}
+
+This reduces memory for storing many similar factorizations.
+
+\subsubsection{Memoization}
+
+Cache computed representations to avoid redundant work:
+
+\begin{verbatim}
+unordered_map<int, SparseExponentVector> epimericCache;
+\end{verbatim}
+
+\subsection{Numerical Stability Considerations}
+
+When using logarithmic representation with floating-point arithmetic:
+
+\begin{enumerate}
+\item Maintain relative error bounds: $|\ln(n)_{\text{computed}} - \ln(n)_{\text{exact}}| / \ln(n) < \epsilon$
+\item Use high-precision libraries (e.g., MPFR) for validation
+\item Cross-check logarithmic results against rational arithmetic for small values
+\end{enumerate}
+
+\subsection{Verification and Testing Procedures}
+
+\subsubsection{Unit Tests}
+
+For each conversion function:
+
+\begin{verbatim}
+void testConversion(int n) {
+    auto primeExp = getPrimeFactorization(n);
+    auto epimericExp = convertToEpimoric(primeExp);
+    int reconstructed = evaluateEpimoric(epimericExp);
+    assert(reconstructed == n, "Reconstruction failed");
+}
+\end{verbatim}
+
+\subsubsection{Statistical Validation}
+
+Compute omega functions and verify against known sequences:
+
+\begin{verbatim}
+void validateOmegaStatistics(int maxN) {
+    for (int n = 1; n <= maxN; n++) {
+        int omega_prime = countDistinctPrimes(n);
+        int omega_E = countNonzeroExponents(n);
+        assert(omega_prime == omega_E,
+               "Distinct count mismatch at n=" + to_string(n));
+    }
+}
+\end{verbatim}
+
+\subsection{Benchmarking and Performance Analysis}
+
+Typical performance metrics (on modern hardware):
+
+\begin{itemize}
+\item Prime sieve (up to $10^7$): $\sim 1$ second
+\item Batch factorization (integers up to $10^6$): $\sim 2$ seconds
+\item Conversion to epimoric (all integers up to $10^6$): $\sim 5$ seconds
+\item Omega statistics (all integers up to $10^6$): $\sim 1$ second
+\end{itemize}
+
+\subsection{Implementation Libraries}
+
+Recommended tools:
+
+\begin{enumerate}
+\item \textbf{GMP}: Arbitrary-precision arithmetic
+\item \textbf{MPFR}: Multiple precision floating-point
+\item \textbf{Eigen}: Linear algebra (for polytope analysis)
+\item \textbf{Boost Multiprecision}: High-precision computation
+\end{enumerate}
+
+\subsection{Open Source Reference Implementation}
+
+A reference implementation in C++ is available, featuring:
+
+\begin{itemize}
+\item Modular design with separate factorization, conversion, and analysis modules
+\item Efficient sparse vector representation
+\item Parallel batch processing
+\item Comprehensive test suite
+\item Detailed documentation
+\end{itemize}

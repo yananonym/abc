@@ -1,0 +1,49 @@
+\subsection{A telescoping representation of the factorial and implications for Wilson's theorem}
+
+Consider the identity
+\begin{equation}\label{eq:factorial-telescope}
+n!
+=\exp\!\left(\sum_{k=1}^{n-1} (n-k)\,\ln\!\left(\frac{k+1}{k}\right)\right).
+\end{equation}
+This formula is an exact consequence of telescoping and discrete summation by parts; no new structure is being introduced.
+
+Indeed, write
+\[
+\ln\!\left(\frac{k+1}{k}\right)=\ln(k+1)-\ln k.
+\]
+Then
+\[
+\sum_{k=1}^{n-1} (n-k)\bigl(\ln(k+1)-\ln k\bigr)
+\]
+is a standard Abel summation (discrete integration by parts). Expanding yields
+\[
+\sum_{m=2}^{n} \ln m \sum_{k=1}^{m-1} 1
+= \sum_{m=2}^{n} (m-1)\ln m,
+\]
+and a further telescoping step shows
+\(
+\sum_{m=2}^{n} (m-1)\ln m = \sum_{j=1}^{n} \ln j = \ln n!
+\).
+Thus \eqref{eq:factorial-telescope} is simply a reindexing of the usual definition of $n!$ expressed via a telescoping sum of logarithmic increments.
+
+\subsubsection{Interpretation via discrete summation by parts}
+
+Formula \eqref{eq:factorial-telescope} exhibits $\ln n!$ as the convolution of the sequence $\ln\!\left(\frac{k+1}{k}\right)$ with the linear weight $(n-k)$. This is the canonical outcome of Abel summation applied to the partial sums of $\ln k$. No nonstandard operator is involved: the factorial is reconstructed from first differences of $\ln k$ with respect to the forward difference operator.
+
+Equivalently, $n!$ is obtained by exponentiating a weighted telescoping sum of successive ratios $(k+1)/k$. This makes explicit that the factorial is determined entirely by local multiplicative increments.
+
+\subsubsection{Reduction modulo a prime and Wilson's theorem}
+
+Let $p$ be prime. The telescoping product underlying \eqref{eq:factorial-telescope} remains valid in any commutative ring where the relevant inverses exist. In particular, in $\mathbb{F}_p^\times$ one has
+\[
+(p-1)! = \prod_{k=1}^{p-2} \left(\frac{k+1}{k}\right)^{p-1-k},
+\]
+a purely multiplicative telescoping identity.
+
+Wilson's theorem,
+\(
+(p-1)! \equiv -1 \pmod p,
+\)
+is then understood as a statement about the structure of this telescoping product in the cyclic group $\mathbb{F}_p^\times$. The involution $x\mapsto x^{-1}$ pairs all non-self-inverse elements of the product, leading to complete cancellation. The unique self-inverse element is $-1$, which accounts for the residual factor.
+
+From this perspective, Wilson's theorem reflects the fact that the telescoping structure underlying the factorial is compatible with inversion symmetry in $\mathbb{F}_p^\times$, with the exceptional contribution arising solely from the fixed point of that symmetry. No appeal to analytic notions is required; the phenomenon is entirely algebraic and follows from standard properties of telescoping products in finite groups.

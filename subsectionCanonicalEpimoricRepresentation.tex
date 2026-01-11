@@ -1,0 +1,86 @@
+\section{Canonical Epimoric Representation: The $p_k/(p_k - 1)$ Multiplicative Basis}
+
+The \textbf{canonical epimoric representation} is the ratio-based multiplicative basis defined by the set of all ratios:
+
+\begin{equation}
+\varepsilon_k = \frac{p_k}{p_k - 1}
+\end{equation}
+
+where $p_k$ is the $k$-th prime. This representation is called \textit{canonical} because it represents fundamental musical intervals in Just Intonation (the octave, fifth, and major third) and satisfies the closure properties required for multiplicative encoding.
+
+\subsection{Definition and Motivation}
+
+The canonical epimoric basis is the multiplicative basis most closely ``aligned'' with the sequence of primes themselves. Each ratio has:
+\begin{itemize}
+\item Numerator: the prime $p_k$
+\item Denominator: $p_k - 1$, which is always strictly less than $p_k$
+\end{itemize}
+
+Every natural number $n > 1$ admits a \textbf{unique canonical epimoric factorization}:
+
+\begin{equation}
+n = \prod_{k=1}^{\infty} \left(\frac{p_k}{p_k - 1}\right)^{b_k}
+\end{equation}
+
+where $b_k \in \mathbb{N}_0$ and only finitely many exponents are nonzero.
+
+The exponent vector in canonical epimoric form:
+
+\begin{equation}
+\mathbf{v}_n^{\text{can-epim}} = [b_1, b_2, b_3, \ldots]
+\end{equation}
+
+\subsection{Musical Significance}
+
+The canonical epimoric notation was developed explicitly for musical purposes as an alternative to Monzo notation by Jan Machalski in their procedural audiovisual composition \textit{Epimoric Music} (2021). In this system:
+
+\begin{itemize}
+\item $\varepsilon_1 = 2/1$ represents the octave (perfect doubling)
+\item $\varepsilon_2 = 3/2$ represents the perfect fifth
+\item $\varepsilon_3 = 5/4$ represents the major third
+\item $\varepsilon_4 = 7/6$ represents the minor third
+\end{itemize}
+
+These are the fundamental harmonic intervals that form the basis of Just Intonation and have been used in music for centuries.
+
+\subsection{Canonical Epimoric vs Prime Representation}
+
+Consider $n = 60 = 2^2 \cdot 3 \cdot 5$ in prime factorization (monzo $[2, 1, 1]_\text{prime}$).
+
+In canonical epimoric form, we have:
+
+\begin{align}
+60 &= \left(\frac{2}{1}\right)^5 \cdot \left(\frac{3}{2}\right)^1 \cdot \left(\frac{5}{4}\right)^1\\
+&= [5, 1, 1]_{\text{can-epim}}
+\end{align}
+
+The difference in exponent vectors arises from the denominator contributions: the denominators $1, 2, 4$ must be ``paid for'' by accumulating exponents in the numerators of earlier ratios.
+
+\subsection{Conversion Formula}
+
+The conversion from canonical epimoric exponents $[b_1, b_2, \ldots]$ to standard prime exponents $[a_1, a_2, \ldots]$ is:
+
+\begin{equation}
+a_k = b_k - b_{k-1}
+\end{equation}
+
+with $b_0 := 0$. Conversely, to go from prime exponents to epimoric:
+
+\begin{equation}
+b_k = \sum_{j=1}^{k} a_j
+\end{equation}
+
+This cumulative sum structure reflects the \textit{entanglement} of the bases in the epimoric system, in contrast to the independence of the prime basis.
+
+\subsection{Why ``Canonical''?}
+
+This representation is canonical because:
+
+\begin{enumerate}
+\item It has minimal denominator variation (each denominator is one less than the numerator)
+\item It aligns with harmonic series structures in acoustics and music
+\item The numerators are exactly the primes, creating a direct correspondence
+\item It is the epimoric system most closely related to standard prime factorization
+\end{enumerate}
+
+In contrast, more general epimeric systems (like $(p_k + 2)/p_k$ or $(p_k + 3)/p_k$) are called \textit{non-canonical epimeric systems} and show greater structural complexity and less musical relevance.

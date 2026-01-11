@@ -1,0 +1,131 @@
+\subsection{Radicals in Epimoric Factorization}
+\label{subsec:radicals-epimoric}
+
+This section develops the theory of radicals within the epimoric multiplicative basis. The radical function, defined as the product of distinct prime factors, becomes a structural invariant within the cascade framework, directly related to the dimensionality of constraint polytopes, spectral growth rates, and topological entropy of dynamical systems.
+
+\subsection{Standard Radical and Its Epimoric Interpretation}
+\label{subsec:standard-radical}
+
+\begin{definition}[Standard Radical]
+\label{def:standard-radical}
+For a positive integer $n > 1$, the \emph{radical} of $n$ is defined as the product of the distinct prime divisors of $n$:
+\begin{equation}
+\operatorname{rad}(n) = \prod_{\substack{p \text{ prime} \\ p \mid n}} p
+\end{equation}
+
+For $n = 1$, the radical is $\operatorname{rad}(1) = 1$ by convention.
+\end{definition}
+
+\begin{observation}[Prime Factorization Relation]
+If $n = \prod_i p_i^{a_i}$ is the prime factorization of $n$, then $\operatorname{rad}(n) = \prod_i p_i$ regardless of the exponent values $a_i$. Thus, the radical ignores exponent multiplicities and records only which primes divide $n$.
+\end{observation}
+
+\subsection{Epimoric Radical and Coordinate Degeneracy}
+\label{subsec:epimoric-radical}
+
+The epimoric perspective transforms the radical from a multiplicative filter into a structural invariant that measures the pattern of coordinate degeneracy in the cascade system.
+
+\begin{definition}[Coordinate Degeneracy Modulo $n$]
+\label{def:coordinate-degeneracy-radical}
+For a positive integer $n$ with epimoric encoding $E(n) = (e_1, e_2, \ldots)$, a coordinate $e_k$ is \emph{degenerate modulo $n$} if $\gcd(k, n) > 1$. Equivalently, the denominator $k$ of the epimoric ratio $\frac{k+1}{k}$ shares a prime factor with $n$.
+
+The set of degenerate coordinate positions forms the \emph{degeneracy pattern} of $n$:
+\begin{equation}
+\mathcal{D}(n) := \{k : 1 \leq k \leq m, \; \gcd(k, n) > 1\}
+\end{equation}
+where $m = \max\{j : e_j \neq 0\}$ is the support size of the epimoric encoding.
+\end{definition}
+
+\begin{theorem}[Radical and Degeneracy Dimension]
+\label{thm:radical-degeneracy-dimension}
+Let $n$ be a positive integer with standard prime factorization $n = \prod_i p_i^{a_i}$ where $p_1 < p_2 < \cdots < p_r$ are the distinct prime divisors. Then:
+
+\begin{enumerate}
+\item The cardinal dimension of the degeneracy set is bounded by the number of distinct prime divisors: $|\mathcal{D}(n)| \leq r \cdot M(n)$ where $M(n)$ is the maximum index among all degenerate coordinates.
+
+\item For each prime $p_i$ dividing $n$, the set $\{k : p_i \mid k\}$ within $\mathcal{D}(n)$ forms an arithmetic progression of spacing $p_i$.
+
+\item The radical $\operatorname{rad}(n)$ encodes precisely which prime gaps create active cascade constraints. Specifically, for each prime $p \mid \operatorname{rad}(n)$, all multiples of $p$ become degenerate coordinates.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For any prime $p$ dividing $n$, the integers $k$ satisfying $p \mid k$ are precisely $k = p, 2p, 3p, \ldots$. Each such $k$ yields $\gcd(k, n) \geq p > 1$, so all such coordinates are degenerate.
+
+The set of all degenerate coordinates is the union of arithmetic progressions:
+\begin{equation}
+\mathcal{D}(n) = \bigcup_{p \mid n, \, p \text{ prime}} \{k : p \mid k, \, 1 \leq k \leq m\}
+\end{equation}
+
+By inclusion-exclusion, the cardinality is bounded by $\sum_p \frac{m}{p} < m \sum_p \frac{1}{p}$, which is finite for the finitely many primes dividing $n$. The exact bound depends on $m$ and the prime factorization structure of $n$.
+\end{proof}
+
+\begin{definition}[Epimoric Radical]
+\label{def:epimoric-radical}
+For a positive integer $n$ with epimoric encoding $E(n) = (e_1, e_2, \ldots, e_m)$, the \emph{epimoric radical} is defined as the product of epimoric atoms corresponding to nonzero exponents:
+\begin{equation}
+\operatorname{rad}_e(n) := \prod_{k : e_k > 0} \frac{k+1}{k}
+\end{equation}
+
+The epimoric radical function exhibits multiplicativity: if $\gcd(n_1, n_2) = 1$, then the active coordinates in $E(n_1 \cdot n_2)$ are the union of active coordinates in $E(n_1)$ and $E(n_2)$.
+\end{definition}
+
+\begin{example}[Epimoric Radical Computation]
+Consider $n = 10 = 2 \cdot 5$. The epimoric encoding is $E(10) = (e_1, e_2, e_3) = (3, 0, 1, 0, \ldots)$ corresponding to
+\begin{equation}
+10 = \left(\frac{2}{1}\right)^3 \cdot \left(\frac{5}{4}\right)^1 = \frac{2^3 \cdot 5}{1 \cdot 4} = \frac{40}{4} = 10
+\end{equation}
+
+The epimoric radical is
+\begin{equation}
+\operatorname{rad}_e(10) = \frac{2}{1} \cdot \frac{5}{4} = \frac{10}{4} = 2.5
+\end{equation}
+
+The degenerate coordinates modulo $10$ are $\{2, 5\}$ since $\gcd(2, 10) = 2$ and $\gcd(5, 10) = 5$.
+\end{example}
+
+\subsection{Radical as a Structural Invariant}
+\label{subsec:radical-structural-invariant}
+
+\begin{theorem}[Omega Function and Radical Rank]
+\label{thm:omega-radical-rank}
+The number of distinct prime divisors $\omega(n)$ equals the rank of the cascade deficit structure when restricted to divisors of $n$. Equivalently, $\omega(n)$ counts the number of linearly independent cascade constraints that become active modulo $n$.
+
+Each prime $p$ dividing $n$ induces a cascade constraint system modulo $p$, and the total number of such independent systems equals $\omega(n)$.
+\end{theorem}
+
+\begin{corollary}[Radical and Constraint Dimension]
+\label{cor:radical-constraint-dimension}
+For a positive integer $n$, the dimension of the solution space for valid exponent vectors in the cascade constraint system modulo $n$ is reduced by $\omega(n)$ (the rank of active constraints). Thus, small radicals correspond to low-dimensional solution spaces, while large radicals permit high-dimensional solution spaces.
+\end{corollary}
+
+\begin{observation}[Phase Boundary Interpretation]
+For a prime $n = p$, the cascade constraints force a unique pole in the transfer operator at spectral parameter $s = \log p$. For a composite number $n = \prod_i p_i^{a_i}$, the radical $\operatorname{rad}(n) = \prod_i p_i$ determines the spectral superposition: the transfer operator exhibits $\omega(n)$ distinct critical points corresponding to the $\omega(n)$ prime factors, each contributing a pole-like singularity at $s = \log p_i$.
+\end{observation}
+
+\subsection{Atom Skipping and Sparsity in Radicals}
+\label{subsec:atom-skipping}
+
+A striking structural property of epimoric encodings is that many integers skip intermediate epimoric atoms entirely.
+
+\begin{definition}[Atom Skipping]
+\label{def:atom-skipping}
+An epimoric atom $\frac{k+1}{k}$ is \emph{skipped} by an integer $n$ if $e_k = 0$ in the epimoric encoding $E(n)$. That is, the $k$-th epimoric ratio does not appear in the factorization of $n$.
+
+The \emph{support} of $E(n)$ is the set of indices where $e_k \neq 0$:
+\begin{equation}
+\text{supp}(E(n)) := \{k : 1 \leq k \leq m, \; e_k \neq 0\}
+\end{equation}
+
+The gaps in the support are skipped atoms.
+\end{definition}
+
+\begin{example}[Atom Skipping in Small Integers]
+Consider $n = 10$. The epimoric encoding is $E(10) = (3, 0, 1, 0, \ldots)$. The support is $\{1, 3\}$, so the atom $\frac{3}{2}$ (at position $k=2$) is skipped. This corresponds to the fact that $3$ does not divide $10$.
+\end{example}
+
+\begin{observation}[Radical and Sparsity]
+The sparsity of the epimoric encoding reflects the sparsity of the prime factorization. A number with few distinct prime factors has a small radical and a sparse epimoric encoding. Conversely, a number with many prime factors has a large radical and a denser encoding.
+
+The radical captures not just which primes divide $n$, but also encodes the path through the prime lattice that $n$ traces in the epimoric coordinate system.
+\end{observation}

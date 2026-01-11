@@ -1,0 +1,279 @@
+\subsection{Symbolic Dynamics and Entropy Theory: Cascade Constraints as Forbidden Patterns}
+\label{subsec:symbolic-entropy}
+
+\subsubsection{Motivation: Valid Vectors as Allowed Words}
+
+The cascade constraints define a \emph{symbolic dynamical system} where each exponent vector $\mathbf{b} = (b_1, \ldots, b_m)$ is a ``word'' in the alphabet $\mathbb{N}_0$ (non-negative integers). The validity condition restricts which words are allowed. This section develops the symbolic dynamics perspective following \cite{Lind1995, Walters1982, Katok1995}, showing that the spectral radius $\Lambda$ equals the topological entropy of the cascade system.
+
+\subsubsection{Shift Spaces and Symbolic Dynamics}
+
+\paragraph{Definition (Shift Space).}
+
+The \emph{shift space} is the space of all infinite sequences:
+\begin{equation}
+\Sigma := \mathbb{N}_0^{\mathbb{N}} = \{ (b_1, b_2, b_3, \ldots) : b_i \in \mathbb{N}_0 \}
+\end{equation}
+
+with the shift map $\sigma: \Sigma \to \Sigma$ defined by:
+\begin{equation}
+\sigma((b_1, b_2, b_3, \ldots)) = (b_2, b_3, b_4, \ldots)
+\end{equation}
+
+\paragraph{Definition (Subshift of Finite Type).}
+
+A subshift $\Sigma_A \subseteq \Sigma$ is of \emph{finite type} if it is defined by forbidding a finite set of finite patterns:
+\begin{equation}
+\Sigma_A := \{ (b_i) \in \Sigma : (b_j, \ldots, b_{j+k}) \neq \text{forbidden pattern} \, \forall j, k \}
+\end{equation}
+
+\paragraph{Definition (Cascade Constraint as Forbidden Pattern).}
+
+The cascade constraint $b_k \geq D_k(\mathbf{b}_{<k})$ forbids patterns where:
+\begin{equation}
+\text{Forbidden: } b_k < D_k(\mathbf{b}_{<k})
+\end{equation}
+
+For finite sequences truncated at position $m$, the set of valid exponent vectors $\mathcal{V}_{\text{valid}} \subseteq \mathbb{N}_0^m$ is exactly the set of allowed words.
+
+\subsubsection{Language and Generating Functions}
+
+\paragraph{Definition (Language of a Subshift).}
+
+The \emph{language} $L_n$ of a symbolic system is the set of allowed blocks of length $n$:
+\begin{equation}
+L_n := \{ (b_1, \ldots, b_n) : (b_1, \ldots, b_n, b_{n+1}, \ldots) \in \Sigma_A \text{ for some } b_{n+1}, \ldots \}
+\end{equation}
+
+For the cascade system:
+\begin{equation}
+L_m = V_m = \text{valid exponent vectors with } m \text{ components}
+\end{equation}
+
+\paragraph{Definition (Growth Function).}
+
+The \emph{growth function} counts words of length $n$:
+\begin{equation}
+p(n) := |L_n|
+\end{equation}
+
+For cascade systems with exponent sum bounded by $S$:
+\begin{equation}
+p(S) = V_{\text{valid}}(S)
+\end{equation}
+
+\paragraph{Theorem (Generating Function of Growth).}
+
+The generating function of the growth sequence is:
+\begin{equation}
+F(t) := \sum_{S=0}^\infty p(S) t^S = \sum_{S=0}^\infty V_{\text{valid}}(S) t^S
+\end{equation}
+
+If $p(S) \sim C \Lambda^S$, then $F(t)$ has a pole at $t = 1/\Lambda$:
+\begin{equation}
+F(t) = \frac{P(t)}{(1 - \Lambda t)^m}
+\end{equation}
+
+where $P(t)$ is a polynomial and $m$ is the dimension.
+
+\subsubsection{Topological Entropy}
+
+\paragraph{Definition (Topological Entropy).}
+
+The \emph{topological entropy} of a symbolic system is:
+\begin{equation}
+h_{\text{top}} := \lim_{n \to \infty} \frac{1}{n} \log p(n)
+\end{equation}
+
+This measures the exponential growth rate of allowed words.
+
+\paragraph{Theorem (Topological Entropy and Spectral Radius).}
+
+For the cascade system:
+\begin{equation}
+h_{\text{top}} = \log \Lambda
+\end{equation}
+
+where $\Lambda$ is the spectral radius of the transfer operator. Thus, the topological entropy equals the logarithm of the spectral radius.
+
+\emph{Proof:} The growth function satisfies:
+\begin{equation}
+p(S) \sim C \Lambda^S \quad \Rightarrow \quad h_{\text{top}} = \lim_{S \to \infty} \frac{\log p(S)}{S} = \lim_{S \to \infty} \frac{\log(C\Lambda^S)}{S} = \log \Lambda
+\end{equation}
+
+\subsubsection{Measure-Theoretic Entropy}
+
+\paragraph{Definition (Measure-Theoretic Entropy).}
+
+Let $\mu$ be an invariant probability measure on the subshift (a measure preserved by the shift map). The \emph{measure-theoretic (Kolmogorov-Sinai) entropy} is:
+\begin{equation}
+h_\mu(\sigma) := \lim_{n \to \infty} \frac{1}{n} H(P_n)
+\end{equation}
+
+where $P_n$ is the partition of the space into cylinders of length $n$, and $H$ is the Shannon entropy.
+
+\paragraph{Theorem (Variational Principle).}
+
+The topological entropy is the supremum over all invariant measures:
+\begin{equation}
+h_{\text{top}} = \sup_\mu h_\mu(\sigma)
+\end{equation}
+
+For the cascade system, the supremum is attained by the \emph{Gibbs measure}:
+\begin{equation}
+\mu^*(\mathbf{b}) \propto e^{\phi(\mathbf{b})}
+\end{equation}
+
+where $\phi(\mathbf{b}) = -\sum_k D_k(\mathbf{b}_{<k})$ is the constraint potential.
+
+\subsubsection{Pressure and Phase Transitions}
+
+\paragraph{Definition (Pressure).}
+
+The \emph{pressure} of a continuous function $\phi$ on a subshift is:
+\begin{equation}
+P(\phi) := \sup_\mu \left( h_\mu(\sigma) + \int \phi \, d\mu \right)
+\end{equation}
+
+This is the maximal sum of entropy and expected potential.
+
+\paragraph{Theorem (Pressure and Spectral Radius).}
+
+For the cascade constraint potential $\phi(\mathbf{b}) = -\sum_k D_k(\mathbf{b}_{<k})$ with Hölder continuous norm, the pressure is:
+\begin{equation}
+P(\phi) = h_{\text{top}} - \mathbb{E}[\phi] = \log \Lambda - \mathbb{E}\left[\sum_k D_k\right]
+\end{equation}
+
+The pressure equals zero at the equilibrium temperature, identifying the natural thermodynamic state.
+
+\subsubsection{Complexity and Forbidden Patterns}
+
+\paragraph{Definition (Complexity Function).}
+
+The \emph{complexity} is the number of distinct length-$n$ blocks:
+\begin{equation}
+c(n) := |L_n| = p(n)
+\end{equation}
+
+\paragraph{Theorem (Complexity Growth).}
+
+For a subshift with entropy $h = h_{\text{top}}$:
+\begin{equation}
+\log c(n) = h \cdot n + o(n)
+\end{equation}
+
+The complexity grows exponentially with rate $h = \log \Lambda$.
+
+\subsubsection{Recurrence and Return Times}
+
+\paragraph{Definition (Return Time).}
+
+For a point (exponent vector) $\mathbf{b} \in \mathcal{V}_{\text{valid}}$, the \emph{return time} is:
+\begin{equation}
+\tau(\mathbf{b}) := \min\{ n > 0 : \sigma^n(\mathbf{b}) = \mathbf{b} \text{ or is valid again} \}
+\end{equation}
+
+\paragraph{Theorem (Poincaré Recurrence).}
+
+For any invariant measure $\mu$, almost all points return to their neighborhood:
+\begin{equation}
+\mu\left( \{ \mathbf{b} : \tau(\mathbf{b}) < \infty \} \right) = 1
+\end{equation}
+
+The expected return time is:
+\begin{equation}
+\mathbb{E}[\tau] = 1 / \mu(B)
+\end{equation}
+
+where $B$ is the neighborhood.
+
+\subsubsection{Mixing and Decorrelation}
+
+\paragraph{Definition (Mixing).}
+
+A system is \emph{mixing} if:
+\begin{equation}
+\lim_{n \to \infty} \mu(A \cap \sigma^{-n} B) = \mu(A) \mu(B) \quad \forall A, B
+\end{equation}
+
+\paragraph{Theorem (Mixing Rate and Spectral Gap).}
+
+The decay of correlations relates to the spectral gap of the transfer operator:
+\begin{equation}
+|\mu(A \cap \sigma^{-n} B) - \mu(A) \mu(B)| \leq C(A, B) \cdot \gamma^n
+\end{equation}
+
+where $\gamma < 1$ is the spectral gap ratio (second-largest eigenvalue divided by largest).
+
+For cascade systems:
+\begin{equation}
+\gamma = \Lambda_2 / \Lambda_1
+\end{equation}
+
+\subsubsection{Monotonicity and Order}
+
+\paragraph{Definition (Eventual Monotonicity).}
+
+A sequence $(b_i)$ is eventually monotonic if there exists $N$ such that for all $i > N$, the sequence is either non-decreasing or non-increasing.
+
+\subsubsection{Reversals and Exceptional Vectors}
+
+\paragraph{Definition (Reversal Vector).}
+
+A valid vector exhibits a \emph{reversal} at position $k$ if $b_{k-1} > b_k$ (the exponent decreases). Reversals correspond to prime gaps: skipping from a large prime $p_{k-1}$ to a small prime $p_k$.
+
+\subsubsection{Cohomology and Homology of Symbolic Systems}
+
+\paragraph{Definition (Cycle in Shift Space).}
+
+A \emph{cycle} is a periodic exponent vector $\mathbf{b}^{(n)} = (b_1, \ldots, b_n, b_1, \ldots, b_n, \ldots)$ where the block repeats.
+
+\paragraph{Definition (Homology Group).}
+
+The homology of the shift space is:
+\begin{equation}
+H_*(\Sigma_A) = \text{homology of the directed graph whose vertices are allowed blocks and edges are shift edges}
+\end{equation}
+
+\paragraph{Theorem (Homology and Prime Cycles).}
+
+The first homology group $H_1(\Sigma_A)$ has rank equal to the number of ``independent'' prime cycles. Each generator corresponds to a distinct prime or prime combination.
+
+\subsubsection{Dynamical Zeta Functions}
+
+\paragraph{Definition (Dynamical Zeta Function).}
+
+For a subshift with transfer operator $T$, the \emph{dynamical zeta function} is:
+\begin{equation}
+\zeta_{\text{dyn}}(z) := \exp\left( \sum_{n=1}^\infty \frac{z^n}{n} \text{Tr}(T^n) \right)
+\end{equation}
+
+where $T^n$ is the $n$-step transfer matrix.
+
+\paragraph{Theorem (Zeta Function and Spectral Data).}
+
+The dynamical zeta function has the form:
+\begin{equation}
+\zeta_{\text{dyn}}(z) = \prod_i (1 - z/\lambda_i)^{-1}
+\end{equation}
+
+where $\lambda_i$ are the eigenvalues of the transfer operator. Poles of $\zeta_{\text{dyn}}$ occur at $z = 1/\lambda_i$.
+
+\subsubsection{Symbolic Code and Alphabet Reduction}
+
+\paragraph{Definition (Symbolic Coding).}
+
+For a generic trajectory through valid vectors, encode each exponent $b_k$ by a reduced alphabet:
+\begin{equation}
+\alpha_k : \mathbb{N}_0 \to \{0, 1, 2, \ldots, N_k\}
+\end{equation}
+
+where $N_k$ is chosen to capture the essential structure.
+
+\paragraph{Theorem (Markov Property).}
+
+The cascade constraint creates a Markov structure: the validity of $b_k$ depends only on $b_1, \ldots, b_{k-1}$ (first-order Markov property). This makes $\sigma$ a first-order Markov shift, with transition matrix:
+\begin{equation}
+P_{i,j} := \#\{ \text{valid transitions from state } i \text{ to } j \}
+\end{equation}
+
+The spectral radius of $P$ equals $\Lambda$.

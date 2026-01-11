@@ -1,0 +1,29 @@
+\section{Standard Prime Multiplicative Basis}
+
+The Fundamental Theorem of Arithmetic establishes that every natural number $n > 1$ has a unique factorization in terms of primes. In the language of multiplicative bases, we express this as:
+
+\begin{equation}
+n = \prod_{k=1}^{\infty} p_k^{a_k}
+\end{equation}
+
+where $p_k$ denotes the $k$-th prime ($p_1 = 2, p_2 = 3, p_3 = 5, \ldots$), and $a_k \in \mathbb{N}_0$ with only finitely many nonzero terms.
+
+The exponent vector representation, which we call \textbf{monzo notation}:
+
+\begin{equation}
+\mathbf{v}_n = [a_1, a_2, a_3, \ldots]
+\end{equation}
+
+uniquely encodes the integer $n$ via its prime content.
+
+\subsection{Independence Property of the Prime Basis}
+
+The prime multiplicative basis exhibits a fundamental property: the bases are \textbf{independent}. If we change the exponent $a_i$ of prime $p_i$, this modification does not affect the exponents of any other prime $p_j$ for $j \neq i$. This orthogonality is the defining feature of the prime basis and explains its ubiquity in number theory.
+
+For example, $n = 60 = 2^2 \cdot 3^1 \cdot 5^1$ has monzo $[2, 1, 1]_\text{prime}$. If we change the exponent of $3$ to increase the power, or decrease the power of $5$, the other exponents remain unaffected.
+
+\subsection{The Prime Basis as a Multiplicative Coordinate System}
+
+In abstract terms, the set of all positive rationals $\mathbb{Q}^+$ can be viewed as a vector space over $\mathbb{Z}$ with the primes as basis elements. Each element of $\mathbb{Q}^+$ corresponds uniquely to a vector of exponents (allowing negative integers). The integers $\mathbb{N} \subset \mathbb{Q}^+$ correspond exactly to those vectors with non-negative exponents.
+
+This structure makes the prime basis the \textit{canonical multiplicative coordinate system} for number theory.
